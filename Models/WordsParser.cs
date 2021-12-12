@@ -1,19 +1,15 @@
-public class WordsParser: IParser<Dictionary<string, string>>
+public class WordsParser: FileParser<string>
 {
 
-    public WordsParser(string filePath) 
-    {
-        FilePath = filePath;
-    }
+    public WordsParser(string defaultFile): 
+        base(new RuntimeDirectory(".local/share/dictionary",""), defaultFile) { }
 
-    public string FilePath { get; }
-
-    public Dictionary<string, string> ParseFile()
+    public override string ParseFile()
     {
-        return null;
+        return FileText;
     }
-    public bool HasErrors() 
+    protected override string DefaultFileText()
     {
-        return true;
+        return "word1, word2 | sinonym1\nword3, word4 | synonim2";
     }
 }

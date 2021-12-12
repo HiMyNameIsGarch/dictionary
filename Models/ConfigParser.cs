@@ -1,19 +1,18 @@
-public class ConfigParser: IParser<string>
+using Newtonsoft.Json;
+
+public class ConfigParser: FileParser<Config>
 {
 
-    public ConfigParser(string filePath)
-    {
-        FilePath = filePath;
-    }
+    public ConfigParser() : 
+        base(new RuntimeDirectory(".config/dictionary", ""), "config.json") {}
 
-    public string FilePath { get; }
-
-    public string ParseFile()
+    public override Config ParseFile()
     {
-        return "";
+        Config? conf = JsonConvert.DeserializeObject<Config>(FileText);
+        return conf;
     }
-    public bool HasErrors()
+    protected override string DefaultFileText()
     {
-        return true;
+        return "{ \n\t\"hasColors\": true \n}";
     }
 }

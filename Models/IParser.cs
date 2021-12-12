@@ -2,9 +2,9 @@ public interface IParser<T>
 {
     string FilePath { get; }
 
-    public T ParseFile();
+    string FileText { get; }
 
-    public bool HasErrors();
+    public T ParseFile();
 
 }
 
