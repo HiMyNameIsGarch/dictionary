@@ -2,14 +2,20 @@
 {
     public static void Main(string[] args)
     {
-        ConfigParser config = new ConfigParser("somefilename");
-        if(config.HasErrors())
+        Tuple<Config, string>? data = null;
+        try
         {
-            Console.WriteLine("Sorry, but your config has errors");
-            Environment.Exit(0);
+            data = GetInitialData();
         }
-        else { string anotherConf = config.ParseFile(); }
-
+        catch(Exception ex)
+        {
+            // Temp messages
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            return;
+        }
+        
+        // Start the session
         switch(args[0]) {
             case "start": 
                 break;
@@ -23,5 +29,16 @@
                 Console.WriteLine($"Sorry but {args[0]} is an invalid option");
                 break;
         }
+    }
+    private static Tuple<Config, string> GetInitialData()
+    {
+        // Parse config file
+        ConfigParser cParser = new ConfigParser();
+        Config config = cParser.ParseFile();
+        // Parse words file based on config
+        WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
+        string words = wParser.ParseFile();
+        // Return the values
+        return new Tuple<Config, string>(config, words);
     }
 }
