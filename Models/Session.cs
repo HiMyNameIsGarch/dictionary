@@ -1,7 +1,10 @@
 using static System.Console;
+using static ConsoleHelper;
 
 public class Session 
 {
+    private readonly DataSession _data;
+
     private Config config 
     { 
         get { return _data.Config; } 
@@ -10,8 +13,6 @@ public class Session
     { 
         get { return _data.Pairs; }
     }
-
-    private readonly DataSession _data;
 
     public Session(DataSession dataSession) 
     {
@@ -34,7 +35,6 @@ public class Session
 
     private bool AskQuestion(string[] words, string[] synonyms)
     {
-        // Display words
         string? response = "";
         do 
         {
@@ -44,12 +44,13 @@ public class Session
         while(string.IsNullOrWhiteSpace(response));
 
         bool isCorrect = synonyms.Any(response.Contains);
+
         if(isCorrect)
         {
-            WriteLine("yay, it's correct");
+            ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
         } else {
-            WriteLine("nope, that wasn't the answer");
-            Write("The answer is: ");
+            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
+            ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
             for(int i = 0; i < synonyms.Length; i++)
             {
                 Write(synonyms[i]);
