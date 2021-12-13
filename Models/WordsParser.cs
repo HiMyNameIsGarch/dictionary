@@ -28,8 +28,8 @@ public class WordsParser: FileParser<Dictionary<string[], string[]>>
     private Tuple<string[], string[]> GetPairs(string line) 
     {
         string[] pairs = line.Split('|');
-        string[] keys = pairs[0].Split(',');
-        string[] values = pairs[1].Split(',');
+        string[] keys = pairs[0].Split(',').RemoveWhiteSpace();
+        string[] values = pairs[1].Split(',').RemoveWhiteSpace();
 
         return new Tuple<string[], string[]>(keys, values);
     }

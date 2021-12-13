@@ -1,7 +1,5 @@
 using System.Runtime.InteropServices; 
 
-public record RuntimeDirectory(string Linux, string Windows);
-
 public abstract class FileParser<T>: IParser<T>
 {
 
