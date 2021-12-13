@@ -2,20 +2,28 @@ using static System.Console;
 
 public class Session 
 {
-    private Config config { get; }
-    private Dictionary<string[], string[]> pairs { get; }
+    private Config config 
+    { 
+        get { return _data.Config; } 
+    }
+    private Dictionary<string[], string[]> pairs 
+    { 
+        get { return _data.Pairs; }
+    }
 
-    public Session(DataSession data) 
+    private readonly DataSession _data;
+
+    public Session(DataSession dataSession) 
     {
-        config = data.Config;
-        pairs = data.Pairs;
+        _data = dataSession;
     }
 
     public void Start()
     {
         WriteLine($"Session started on file '{config.CurrentFile}'");
+        // Shuffle pairs
         int points = 0;
-        foreach(var words in pairs)
+        foreach(var words in ShufflePairs(pairs))
         {
             WriteLine("-----------------------");
             if(AskQuestion(words.Key, words.Value)) points++;
@@ -62,5 +70,13 @@ public class Session
         }
         question += ": ";
         return question;
+    }
+
+    private Dictionary<string[], string[]> 
+        ShufflePairs(Dictionary<string[], string[]> pairs)
+    {
+        Random rand = new Random();
+        return pairs.OrderBy(x => rand.Next())
+            .ToDictionary(item => item.Key, item => item.Value);
     }
 }
