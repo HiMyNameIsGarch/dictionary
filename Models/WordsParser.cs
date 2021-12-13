@@ -1,3 +1,5 @@
+using System.Text;
+
 public class WordsParser: FileParser<string>
 {
 
@@ -8,8 +10,14 @@ public class WordsParser: FileParser<string>
     {
         return FileText;
     }
+
     protected override string DefaultFileText()
     {
-        return "word1, word2 | sinonym1\nword3, word4 | synonim2";
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i < 10; i++)
+        {
+            sb.AppendLine($"word{i}, word{i+1} | synonym{i}, synonym{i+1}");
+        }
+        return sb.ToString();
     }
 }

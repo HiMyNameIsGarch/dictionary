@@ -16,6 +16,6 @@ public class ConfigParser: FileParser<Config>
     }
     protected override string DefaultFileText()
     {
-        return "{ \n\t\"hasColors\": true \n}";
+        return JsonConvert.SerializeObject(new Config());
     }
 }

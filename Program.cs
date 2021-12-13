@@ -30,6 +30,7 @@
                 break;
         }
     }
+
     private static Tuple<Config, string> GetInitialData()
     {
         // Parse config file
