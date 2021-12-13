@@ -2,7 +2,7 @@
 {
     public static void Main(string[] args)
     {
-        Tuple<Config, string>? data = null;
+        Tuple<Config, Dictionary<string[], string[]>>? data = null;
         try
         {
             data = GetInitialData();
@@ -31,15 +31,15 @@
         }
     }
 
-    private static Tuple<Config, string> GetInitialData()
+    private static Tuple<Config, Dictionary<string[], string[]>> GetInitialData()
     {
         // Parse config file
         ConfigParser cParser = new ConfigParser();
         Config config = cParser.ParseFile();
         // Parse words file based on config
         WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
-        string words = wParser.ParseFile();
+        var words = wParser.ParseFile();
         // Return the values
-        return new Tuple<Config, string>(config, words);
+        return new Tuple<Config, Dictionary<string[], string[]>>(config, words);
     }
 }

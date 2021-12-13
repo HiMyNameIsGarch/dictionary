@@ -1,14 +1,42 @@
 using System.Text;
+using System.Text.RegularExpressions;
 
-public class WordsParser: FileParser<string>
+public class WordsParser: FileParser<Dictionary<string[], string[]>>
 {
+
+    private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
     public WordsParser(string defaultFile): 
         base(new RuntimeDirectory(".local/share/dictionary",""), defaultFile) { }
 
-    public override string ParseFile()
+    public override Dictionary<string[], string[]> ParseFile()
     {
-        return FileText;
+        Dictionary<string[], string[]> PairsData = new Dictionary<string[], string[]>();
+        using (StringReader reader = new StringReader(FileText))
+        {
+            string? line = null;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if(IsInvalidLine(line)) continue;
+                var pairs = GetPairs(line);
+                PairsData.Add(pairs.Item1, pairs.Item2);
+            }
+        }
+        return PairsData;
+    }
+
+    private Tuple<string[], string[]> GetPairs(string line) 
+    {
+        string[] pairs = line.Split('|');
+        string[] keys = pairs[0].Split(',');
+        string[] values = pairs[1].Split(',');
+
+        return new Tuple<string[], string[]>(keys, values);
+    }
+
+    private bool IsInvalidLine(string line)
+    {
+        return string.IsNullOrWhiteSpace(line) || !Regex.Match(line, MatchPairRegex).Success;
     }
 
     protected override string DefaultFileText()
