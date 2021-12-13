@@ -43,22 +43,30 @@ public class Session
         }
         while(string.IsNullOrWhiteSpace(response));
 
-        bool isCorrect = synonyms.Any(response.Contains);
+        bool isCorrect = synonyms.Any(response.Equals);
 
-        if(isCorrect)
+        ShowReponseStatus(synonyms, isCorrect);
+
+        return isCorrect;
+    }
+
+    private void ShowReponseStatus(string[] values, bool isPositive)
+    {
+        if(isPositive)
         {
             ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
-        } else {
+        } 
+        else 
+        {
             ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
             ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
-            for(int i = 0; i < synonyms.Length; i++)
+            for(int i = 0; i < values.Length; i++)
             {
-                Write(synonyms[i]);
-                if(i + 1 != synonyms.Length) Write(" or ");
+                Write(values[i]);
+                if(i + 1 != values.Length) Write(" or ");
             }
             Write("\n");
         }
-        return isCorrect;
     }
 
     private string GetQuestionString(string[] words)
