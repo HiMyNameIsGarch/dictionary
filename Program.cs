@@ -4,7 +4,7 @@
     {
         if(args.Length == 0) 
         {
-            Console.WriteLine("Ooops, you didn't specified any argument...");
+            Console.WriteLine("Ooops, you didn't specified any argument...\n");
             HelpMenu();
             return;
         }
@@ -37,14 +37,23 @@
                 HelpMenu();
                 break;
             default: 
-                Console.WriteLine($"Sorry but {args[0]} is an invalid option");
+                Console.WriteLine($"Sorry but '{args[0]}' is an invalid option, check this help menu:\n");
+                HelpMenu();
                 break;
         }
     }
 
     private static void HelpMenu() 
     {
-        Console.WriteLine("this is a help menu");
+        Console.WriteLine("dictionary - is a simple program to help you get better with words.\n");
+        Console.WriteLine("Usage: dictionary <options>\n");
+        Console.WriteLine("Options:");
+        Console.WriteLine("start - Starts a session with the default configuration.");
+        Console.WriteLine("edit  - Opens an editor to edit either your config or words file.");
+        Console.WriteLine("             Example: 'dictionary edit config'.");
+        Console.WriteLine("select - Select the current words file.");
+        Console.WriteLine("status - Display status information about your sessions.");
+        Console.WriteLine("help   - Displays this help menu.");
     }
 
     private static DataSession GetInitialData()
