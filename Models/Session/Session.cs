@@ -1,36 +1,24 @@
 using static System.Console;
 using static ConsoleHelper;
 
-public class Session 
+public class Session : BaseSession
 {
-    private readonly DataSession _data;
 
-    private Config config 
-    { 
-        get { return _data.Config; } 
-    }
-    private Dictionary<string[], string[]> pairs 
-    { 
-        get { return _data.Pairs; }
-    }
+    public Session(DataSession sessionData) : base(sessionData) { }
 
-    public Session(DataSession dataSession) 
+    public override void Start()
     {
-        _data = dataSession;
-    }
-
-    public void Start()
-    {
-        WriteLine($"Session started on file '{config.CurrentFile}'");
-        // Shuffle pairs
-        int points = 0;
-        foreach(var words in ShufflePairs(pairs))
+        // Create a loop based on shuffled pairs
+        foreach(var words in pairs)
         {
             WriteLine("-----------------------");
-            if(AskQuestion(words.Key, words.Value)) points++;
+            if(AskQuestion(words.Key, words.Value)) Points++;
         }
+    }
 
-        WriteLine($"\nWow, you got {points} points out of {pairs.Count}");
+    public override void DisplayStatusFor(string logs)
+    {
+        throw new NotImplementedException();
     }
 
     private bool AskQuestion(string[] words, string[] synonyms)
@@ -79,13 +67,5 @@ public class Session
         }
         question += ": ";
         return question;
-    }
-
-    private Dictionary<string[], string[]> 
-        ShufflePairs(Dictionary<string[], string[]> pairs)
-    {
-        Random rand = new Random();
-        return pairs.OrderBy(x => rand.Next())
-            .ToDictionary(item => item.Key, item => item.Value);
     }
 }
