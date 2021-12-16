@@ -11,7 +11,7 @@
         DataSession? data = null;
         try
         {
-            data = GetInitialData();
+            data = GetInitialData(args);
         }
         catch(Exception ex)
         {
@@ -20,18 +20,20 @@
             Console.WriteLine(ex.StackTrace);
             return;
         }
-        Session mainSession = new Session(data);
-        
         // Start the session
+        ISession? mainSession = new Session(data);
+
         switch(args[0]) {
+            case "select":
             case "start": 
+                mainSession.DisplayBeforeSession();
                 mainSession.Start();
+                mainSession.DisplayAfterSession();
                 break;
-            case "edit": 
-                break;
-            case "select": 
+            case "edit":
                 break;
             case "status": 
+                mainSession.DisplayStatusFor("");
                 break;
             case "help": 
                 HelpMenu();
@@ -56,12 +58,40 @@
         Console.WriteLine("help   - Displays this help menu.");
     }
 
-    private static DataSession GetInitialData()
+    private static string SelectCustomFile()
+    {
+        string path = WordsParser.baseDirs.GetOSPath();
+        DirectoryInfo d = new DirectoryInfo(path);
+        int i = 0;
+        var allFiles = d.GetFiles("*.txt");
+        foreach(var file in allFiles) {
+            i++;
+            Console.WriteLine($"{i} -> {file.Name}");
+        }
+        string filePath = "";
+        do 
+        {
+            Console.WriteLine("Enter the number of your file: ");
+            char key = Console.ReadKey(true).KeyChar;
+            if(!Char.IsNumber(key)) continue;
+            int value = key - '0';
+            if(value > i || value == 0) continue;
+            filePath = allFiles[i - 1].FullName;
+        }
+        while(string.IsNullOrEmpty(filePath));
+
+        return Path.GetFileNameWithoutExtension(filePath);
+    }
+
+    private static DataSession GetInitialData(string[] args)
     {
         // Parse config file
         ConfigParser cParser = new ConfigParser();
         Config config = cParser.ParseFile();
-        // Parse words file based on config
+        string wordsFile = 
+            args[0] == "select" ? SelectCustomFile() : config.CurrentFile;
+        config.CurrentFile = wordsFile;
+        // Parse words file
         WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
         var words = wParser.ParseFile();
         // Return the values
