@@ -5,15 +5,9 @@ public abstract class FileParser<T>: IParser<T>
 
     public FileParser(RuntimeDirectory baseDirectoryNames, string fileName) 
     {
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-        {
-            BaseDirectory = $"/home/{Environment.UserName}/{baseDirectoryNames.Linux}";
-        } 
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-        {
-            BaseDirectory= $"C:\\Users\\{Environment.UserName}\\{baseDirectoryNames.Windows}";
-        }
-        else 
+        BaseDirectory = baseDirectoryNames.GetOSPath();
+
+        if(string.IsNullOrEmpty(BaseDirectory))
         {
             Console.WriteLine($"Platform not supported! Platform: {RuntimeInformation.OSDescription}");
             Environment.Exit(1);

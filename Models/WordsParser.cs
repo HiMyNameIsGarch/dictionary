@@ -3,11 +3,10 @@ using System.Text.RegularExpressions;
 
 public class WordsParser: FileParser<Dictionary<string[], string[]>>
 {
-
+    public static RuntimeDirectory baseDirs = new RuntimeDirectory(".local/share/dictionary","");
     private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
-    public WordsParser(string defaultFile): 
-        base(new RuntimeDirectory(".local/share/dictionary",""), defaultFile) { }
+    public WordsParser(string defaultFile): base(baseDirs, defaultFile) { }
 
     public override Dictionary<string[], string[]> ParseFile()
     {
