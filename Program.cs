@@ -21,7 +21,20 @@
             return;
         }
         // Start the session
-        ISession? mainSession = new Session(data);
+        ISession? mainSession = null;
+
+        switch(data.Config.FileType) {
+            case FileType.Words:
+                mainSession = new Session(data);
+                break;
+            case FileType.IrregularVerbs:
+                mainSession = new VerbsSession(data);
+                break;
+            default:
+                Console.WriteLine("File Extension not found setting, default");
+                mainSession = new Session(data);
+                break;
+        }
 
         switch(args[0]) {
             case "select":
@@ -76,7 +89,7 @@
             if(!Char.IsNumber(key)) continue;
             int value = key - '0';
             if(value > i || value == 0) continue;
-            filePath = allFiles[i - 1].FullName;
+            filePath = allFiles[value - 1].FullName;
         }
         while(string.IsNullOrEmpty(filePath));
 
@@ -91,6 +104,7 @@
         string wordsFile = 
             args[0] == "select" ? SelectCustomFile() : config.CurrentFile;
         config.CurrentFile = wordsFile;
+        config.SetFileType(wordsFile);
         // Parse words file
         WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
         var words = wParser.ParseFile();

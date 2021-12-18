@@ -21,6 +21,7 @@ public abstract class BaseSession: ISession
     {
         Points = 0;
         _data.ShufflePairs();
+        WriteLine($"Session type: {config.FileType.ToString()}");
         WriteLine($"Session started on file '{config.CurrentFile}'");
     }
 
