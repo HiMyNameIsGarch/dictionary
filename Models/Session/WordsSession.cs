@@ -1,14 +1,13 @@
 using static System.Console;
 using static ConsoleHelper;
 
-public class Session : BaseSession
+public class WordsSession : BaseSession
 {
 
-    public Session(DataSession sessionData) : base(sessionData) { }
+    public WordsSession(DataSession sessionData) : base(sessionData) { }
 
     public override void Start()
     {
-        // Create a loop based on shuffled pairs
         foreach(var words in pairs)
         {
             WriteLine("-----------------------");

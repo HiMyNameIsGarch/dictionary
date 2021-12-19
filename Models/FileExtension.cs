@@ -1,4 +1,4 @@
-public enum FileType
+public enum FileExtension
 {
     Words,
     IrregularVerbs
