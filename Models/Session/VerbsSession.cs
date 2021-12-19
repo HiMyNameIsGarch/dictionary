@@ -49,9 +49,27 @@ public class VerbsSession : BaseSession
             int correctVerbs = verbs.GetPointsFrom(input);
             Points += correctVerbs;
             ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
-            WriteLine($"The answer is: {verbs.First} | {verbs.Second} | {verbs.Third}");
-            WriteLine($"You got {Points} of {IrregularVerbs.MaxVerbs} pairs");
+            DisplayAnswerStatus(verbs, input);
+            WriteLine($"You got {correctVerbs} of {IrregularVerbs.MaxVerbs} pairs");
         }
+    }
+
+    private void DisplayAnswerStatus(IrregularVerbs wanted, IrregularVerbs got)
+    {
+        Write("The answer is: ");
+        ColorOutput(wanted.First, got.First);
+        Write(" | ");
+        ColorOutput(wanted.Second, got.Second);
+        Write(" | ");
+        ColorOutput(wanted.Third, got.Third);
+        Write("\n");
+    }
+
+    private void ColorOutput(string wanted, string got)
+    {
+        ColorWrite(wanted, 
+                wanted == got ? ConsoleColor.Green : ConsoleColor.Red, 
+                config.HasColors);
     }
 
     public override void DisplayAfterSession() 
