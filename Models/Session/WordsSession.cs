@@ -10,25 +10,14 @@ public class WordsSession : BaseSession
     {
         foreach(var words in pairs)
         {
-            WriteLine("-----------------------");
+            WriteLine(Delimiter);
             if(AskQuestion(words.Key, words.Value)) Points++;
         }
     }
 
-    public override void DisplayStatusFor(string logs)
-    {
-        throw new NotImplementedException();
-    }
-
     private bool AskQuestion(string[] words, string[] synonyms)
     {
-        string? response = "";
-        do 
-        {
-            Write(GetQuestionString(words));
-            response = ReadLine()?.Trim();
-        }
-        while(string.IsNullOrWhiteSpace(response));
+        string response = GetUserResponse(GetQuestionString(words));
 
         bool isCorrect = synonyms.Any(response.Equals);
 
@@ -47,11 +36,7 @@ public class WordsSession : BaseSession
         {
             ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
             ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
-            for(int i = 0; i < values.Length; i++)
-            {
-                Write(values[i]);
-                if(i + 1 != values.Length) Write(" or ");
-            }
+            Write(CombineWords(values));
             Write("\n");
         }
     }
@@ -59,12 +44,13 @@ public class WordsSession : BaseSession
     private string GetQuestionString(string[] words)
     {
         string question = "What means -> ";
-        for(int i = 0; i < words.Length; i++) 
-        {
-            question += words[i];
-            if(i + 1 != words.Length) question += " or ";
-        }
+        question += CombineWords(words);
         question += ": ";
         return question;
+    }
+
+    public override void DisplayStatusFor(string logs)
+    {
+        throw new NotImplementedException();
     }
 }

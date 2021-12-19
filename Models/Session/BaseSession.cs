@@ -4,9 +4,11 @@ public abstract class BaseSession: ISession
 {
     public BaseSession(DataSession data) { _data = data; }
 
-    public int Points { get; set; }
+    protected readonly string Delimiter = "-----------------------------------";
 
     private readonly DataSession _data;
+
+    public int Points { get; set; }
 
     private protected Config config
     { 
@@ -21,13 +23,41 @@ public abstract class BaseSession: ISession
     {
         Points = 0;
         _data.ShufflePairs();
-        WriteLine($"Session type: {config.FileExtension.ToString()}");
+        WriteLine($"\nSession type: {config.FileExtension.ToString()}");
         WriteLine($"Session started on file '{config.CurrentFile}'");
     }
 
     public virtual void DisplayAfterSession()
     {
         WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
+    }
+
+    public string GetUserResponse(string question)
+    {
+        string? response = "";
+        do 
+        {
+            WriteQuestion(question);
+            response = ReadLine()?.Trim();
+        }
+        while(string.IsNullOrWhiteSpace(response));
+        return response;
+    }
+
+    public virtual void WriteQuestion(string question = "AMA")
+    {
+        Write(question);
+    }
+
+    public string CombineWords(string[] words)
+    {
+        string combinedWords = "";
+        for(int i = 0; i < words.Length; i++) 
+        {
+            combinedWords += words[i];
+            if(i + 1 != words.Length) combinedWords += " or ";
+        }
+        return combinedWords;
     }
 
     public abstract void Start();
