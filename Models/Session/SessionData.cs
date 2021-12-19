@@ -1,6 +1,6 @@
-public class DataSession 
+public class SessionData 
 {
-    public DataSession(Config config, Dictionary<string[], string[]> pairs) 
+    public SessionData(Config config, Dictionary<string[], string[]> pairs) 
     {
         Config = config;
         Pairs = pairs;

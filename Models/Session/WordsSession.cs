@@ -4,7 +4,7 @@ using static ConsoleHelper;
 public class WordsSession : BaseSession
 {
 
-    public WordsSession(DataSession sessionData) : base(sessionData) { }
+    public WordsSession(SessionData sessionData) : base(sessionData) { }
 
     public override void Start()
     {

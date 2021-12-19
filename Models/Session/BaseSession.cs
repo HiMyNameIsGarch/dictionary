@@ -2,7 +2,7 @@ using static System.Console;
 
 public abstract class BaseSession: ISession 
 {
-    public BaseSession(DataSession data) { _data = data; }
+    public BaseSession(SessionData data) { _data = data; }
 
     protected int CurrentPair = 0;
 
@@ -16,7 +16,7 @@ public abstract class BaseSession: ISession
         }
     }
 
-    private readonly DataSession _data;
+    private readonly SessionData _data;
 
     public int Points { get; set; }
 

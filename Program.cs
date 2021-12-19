@@ -8,7 +8,7 @@
             HelpMenu();
             return 1;
         }
-        DataSession? data = null;
+        SessionData? data = null;
         try
         {
             data = GetInitialData(args);
@@ -84,7 +84,7 @@
         return Path.GetFileNameWithoutExtension(filePath);
     }
 
-    private static DataSession GetInitialData(string[] args)
+    private static SessionData GetInitialData(string[] args)
     {
         // Parse config file
         ConfigParser cParser = new ConfigParser();
@@ -97,6 +97,6 @@
         WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
         var words = wParser.ParseFile();
         // Return the values
-        return new DataSession(config, words);
+        return new SessionData(config, words);
     }
 }

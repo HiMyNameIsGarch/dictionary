@@ -3,7 +3,7 @@ using static ConsoleHelper;
 
 public class VerbsSession : BaseSession
 {
-    public VerbsSession(DataSession sessionData) : base(sessionData) {}
+    public VerbsSession(SessionData sessionData) : base(sessionData) {}
 
     public override void Start()
     {
