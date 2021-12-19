@@ -4,7 +4,17 @@ public abstract class BaseSession: ISession
 {
     public BaseSession(DataSession data) { _data = data; }
 
-    protected readonly string Delimiter = "-----------------------------------";
+    protected int CurrentPair = 0;
+
+    protected string Delimiter 
+    {
+        get {
+            if(CurrentPair != 0)
+                return $"-----------------< {CurrentPair} / {pairs.Count} >-----------------";
+            else
+                return "----------------------------------";
+        }
+    }
 
     private readonly DataSession _data;
 
@@ -24,12 +34,13 @@ public abstract class BaseSession: ISession
         Points = 0;
         _data.ShufflePairs();
         WriteLine($"\nSession type: {config.FileExtension.ToString()}");
-        WriteLine($"Session started on file '{config.CurrentFile}'");
+        WriteLine($"Session started on file '{config.CurrentFile}'\n");
     }
 
     public virtual void DisplayAfterSession()
     {
-        WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
+        if(config.DisplayFinalStats) 
+            WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
     }
 
     public string GetUserResponse(string question)

@@ -4,6 +4,10 @@ public class Config
 {
     public bool HasColors { get; set; }
 
+    public bool DisplayFinalStats { get; set; }
+
+    public bool DisplayOnPairStats { get; set; }
+
     public FileExtension FileExtension { get; private set; }
 
     private string _currentFile = "default.words";

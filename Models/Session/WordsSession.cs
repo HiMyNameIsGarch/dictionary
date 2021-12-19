@@ -10,6 +10,7 @@ public class WordsSession : BaseSession
     {
         foreach(var words in pairs)
         {
+            CurrentPair++;
             WriteLine(Delimiter);
             if(AskQuestion(words.Key, words.Value)) Points++;
         }
@@ -21,7 +22,7 @@ public class WordsSession : BaseSession
 
         bool isCorrect = synonyms.Any(response.Equals);
 
-        ShowReponseStatus(synonyms, isCorrect);
+        if(config.DisplayOnPairStats) ShowReponseStatus(synonyms, isCorrect);
 
         return isCorrect;
     }

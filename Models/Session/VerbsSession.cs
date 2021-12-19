@@ -9,6 +9,7 @@ public class VerbsSession : BaseSession
     {
         foreach(var verbs in pairs)
         {
+            CurrentPair++;
             if(IrregularVerbs.CanBuildVerbPairs(verbs.Value))
             {
                 var verbsPairs = new IrregularVerbs(
@@ -31,7 +32,8 @@ public class VerbsSession : BaseSession
 
         bool IsCorrect = verbs.ArePairsCorrect(new IrregularVerbs(firstVerb, secondVerb, thirdVerb));
 
-        ShowResponseStatus(verbs, new IrregularVerbs(firstVerb, secondVerb, thirdVerb), IsCorrect);
+        if(config.DisplayOnPairStats) 
+            ShowResponseStatus(verbs, new IrregularVerbs(firstVerb, secondVerb, thirdVerb), IsCorrect);
 
         return IsCorrect;
     }
