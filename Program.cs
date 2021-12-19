@@ -1,12 +1,12 @@
 ﻿public class Program
 {
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
         if(args.Length == 0) 
         {
             Console.WriteLine("Ooops, you didn't specified any argument...\n");
             HelpMenu();
-            return;
+            return 1;
         }
         DataSession? data = null;
         try
@@ -18,23 +18,10 @@
             // Temp messages
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
-            return;
+            return 1;
         }
         // Start the session
-        ISession? mainSession = null;
-
-        switch(data.Config.FileType) {
-            case FileType.Words:
-                mainSession = new Session(data);
-                break;
-            case FileType.IrregularVerbs:
-                mainSession = new VerbsSession(data);
-                break;
-            default:
-                Console.WriteLine("File Extension not found setting, default");
-                mainSession = new Session(data);
-                break;
-        }
+        ISession mainSession = data.GetCurrentSession();
 
         switch(args[0]) {
             case "select":
@@ -56,6 +43,7 @@
                 HelpMenu();
                 break;
         }
+        return 0;
     }
 
     private static void HelpMenu() 
@@ -104,7 +92,7 @@
         string wordsFile = 
             args[0] == "select" ? SelectCustomFile() : config.CurrentFile;
         config.CurrentFile = wordsFile;
-        config.SetFileType(wordsFile);
+        config.SetFileExtension(wordsFile);
         // Parse words file
         WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
         var words = wParser.ParseFile();

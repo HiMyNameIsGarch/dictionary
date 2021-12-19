@@ -16,5 +16,19 @@ public class DataSession
         Pairs = Pairs.OrderBy(x => rand.Next())
             .ToDictionary(item => item.Key, item => item.Value);
     }
+
+    public ISession GetCurrentSession()
+    {
+        switch(Config.FileExtension) {
+            case FileExtension.Words:
+                return new WordsSession(this);
+            case FileExtension.IrregularVerbs:
+                return new VerbsSession(this);
+            default:
+                Console.WriteLine("File Extension not found, setting default");
+                return new WordsSession(this);
+        }
+    }
+
 }
 

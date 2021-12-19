@@ -4,7 +4,7 @@ public class Config
 {
     public bool HasColors { get; set; }
 
-    public FileType FileType { get; private set; }
+    public FileExtension FileExtension { get; private set; }
 
     private string _currentFile = "default.words";
 
@@ -13,14 +13,14 @@ public class Config
         set { if(!string.IsNullOrEmpty(value)) _currentFile = value; }
     }
 
-    public void SetFileType(string fileName)
+    public void SetFileExtension(string fileName)
     {
         fileName = fileName + ".txt";
         string extension = Regex.Match(fileName, @"(?<=\w+\.)\w+(?=\.txt)").Value;
-        FileType newExtension = FileType.Words;
-        if(Enum.TryParse<FileType>(extension, true, out newExtension))
+        FileExtension newExtension = FileExtension.Words;
+        if(Enum.TryParse<FileExtension>(extension, true, out newExtension))
         {
-            FileType = newExtension;
+            FileExtension = newExtension;
         } 
         else 
         {
