@@ -3,9 +3,7 @@ using Newtonsoft.Json;
 public class ConfigParser: FileParser<Config>
 {
 
-    public static RuntimeDirectory baseDirs = new RuntimeDirectory(".config/dictionary", "");
-
-    public ConfigParser() : base(baseDirs, "config.json") {}
+    public ConfigParser() : base(".config/dictionary", "", "config.json") {}
 
     public override Config ParseFile()
     {

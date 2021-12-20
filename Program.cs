@@ -42,21 +42,26 @@ public class Program
                 } 
                 else 
                 {
+                    string baseDirectory = "";
+                    string extension = "";
                     switch(args[1])
                     {
                         case "config":
-                            string config = ConfigParser.baseDirs.GetFullFilePath("json");
-                            OpenFile(config);
+                            baseDirectory = new ConfigParser().BaseDirectory;
+                            extension = "json";
                             break;
                         case "words":
-                            string words = WordsParser.baseDirs.GetFullFilePath("txt");
-                            OpenFile(words);
+                            baseDirectory = new WordsParser(data.Config.CurrentFile).BaseDirectory;
+                            extension = "txt";
                             break;
                         default:
                             Console.WriteLine($"Invalid argument {args[1]}");
                             HelpMenu();
                             return 1;
                     }
+                    string words = CurrentOS.GetFullFilePath(baseDirectory, extension);
+                    OpenFile(words);
+
                 }
                 break;
             case "status": 
@@ -76,15 +81,8 @@ public class Program
     private static void OpenFile(string filePath)
     {
         Process process = new Process();
-        string defaultProgram = "";
-        
         // Configure the process
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-            defaultProgram = "nvim";
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-            defaultProgram = "notepad";
-
-        process.StartInfo.FileName = defaultProgram;
+        process.StartInfo.FileName = CurrentOS.GetEditor();
         process.StartInfo.Arguments = filePath;
         process.Start();
         process.WaitForExit();// Waits here for the process to exit.
@@ -111,8 +109,9 @@ public class Program
         Config config = cParser.ParseFile();
         string wordsFile = 
             args[0] == "select" ? 
-                WordsParser.baseDirs.GetFileName("txt") :
+                CurrentOS.GetFileName(new WordsParser(config.CurrentFile).BaseDirectory,"txt") :
                 config.CurrentFile;
+
         config.CurrentFile = wordsFile;
         config.SetFileExtension(wordsFile);
         // Parse words file

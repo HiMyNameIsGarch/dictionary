@@ -3,9 +3,10 @@ using System.Runtime.InteropServices;
 public abstract class FileParser<T>: IParser<T>
 {
 
-    public FileParser(RuntimeDirectory baseDirectoryNames, string fileName) 
+    public FileParser(string linuxDir, string windowsDir, string fileName) 
     {
-        BaseDirectory = baseDirectoryNames.Path;
+
+        BaseDirectory = CurrentOS.GetDirectoryPath(linuxDir, windowsDir);
 
         if(string.IsNullOrEmpty(BaseDirectory))
         {
@@ -28,6 +29,7 @@ public abstract class FileParser<T>: IParser<T>
         // Read the text from the file
         FileText = File.ReadAllText(FilePath);
     }
+
     public string FileText { get; }
     public string FilePath { get; }
     public string BaseDirectory { get; }
