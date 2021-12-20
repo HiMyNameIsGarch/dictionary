@@ -5,7 +5,7 @@ public abstract class FileParser<T>: IParser<T>
 
     public FileParser(RuntimeDirectory baseDirectoryNames, string fileName) 
     {
-        BaseDirectory = baseDirectoryNames.GetOSPath();
+        BaseDirectory = baseDirectoryNames.Path;
 
         if(string.IsNullOrEmpty(BaseDirectory))
         {

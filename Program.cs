@@ -1,4 +1,8 @@
-﻿public class Program
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices; 
+
+
+public class Program
 {
     public static int Main(string[] args)
     {
@@ -31,6 +35,29 @@
                 mainSession.DisplayAfterSession();
                 break;
             case "edit":
+                if(args.Length < 2)
+                {
+                    Console.WriteLine("No argument provided, please choose between 'config' or 'words'!");
+                    return 1;
+                } 
+                else 
+                {
+                    switch(args[1])
+                    {
+                        case "config":
+                            string config = ConfigParser.baseDirs.GetFullFilePath("json");
+                            OpenFile(config);
+                            break;
+                        case "words":
+                            string words = WordsParser.baseDirs.GetFullFilePath("txt");
+                            OpenFile(words);
+                            break;
+                        default:
+                            Console.WriteLine($"Invalid argument {args[1]}");
+                            HelpMenu();
+                            return 1;
+                    }
+                }
                 break;
             case "status": 
                 mainSession.DisplayStatusFor("");
@@ -46,6 +73,24 @@
         return 0;
     }
 
+    private static void OpenFile(string filePath)
+    {
+        Process process = new Process();
+        string defaultProgram = "";
+        
+        // Configure the process
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+            defaultProgram = "nvim";
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+            defaultProgram = "notepad";
+
+        process.StartInfo.FileName = defaultProgram;
+        process.StartInfo.Arguments = filePath;
+        process.Start();
+        process.WaitForExit();// Waits here for the process to exit.
+        Console.WriteLine($"Process exited with status code: {process.ExitCode}");
+    }
+
     private static void HelpMenu() 
     {
         Console.WriteLine("dictionary - is a simple program to help you get better with words.\n");
@@ -59,38 +104,15 @@
         Console.WriteLine("help   - Displays this help menu.");
     }
 
-    private static string SelectCustomFile()
-    {
-        string path = WordsParser.baseDirs.GetOSPath();
-        DirectoryInfo d = new DirectoryInfo(path);
-        int i = 0;
-        var allFiles = d.GetFiles("*.txt");
-        foreach(var file in allFiles) {
-            i++;
-            Console.WriteLine($"{i} -> {file.Name}");
-        }
-        string filePath = "";
-        do 
-        {
-            Console.WriteLine("Enter the number of your file: ");
-            char key = Console.ReadKey(true).KeyChar;
-            if(!Char.IsNumber(key)) continue;
-            int value = key - '0';
-            if(value > i || value == 0) continue;
-            filePath = allFiles[value - 1].FullName;
-        }
-        while(string.IsNullOrEmpty(filePath));
-
-        return Path.GetFileNameWithoutExtension(filePath);
-    }
-
     private static SessionData GetInitialData(string[] args)
     {
         // Parse config file
         ConfigParser cParser = new ConfigParser();
         Config config = cParser.ParseFile();
         string wordsFile = 
-            args[0] == "select" ? SelectCustomFile() : config.CurrentFile;
+            args[0] == "select" ? 
+                WordsParser.baseDirs.GetFileName("txt") :
+                config.CurrentFile;
         config.CurrentFile = wordsFile;
         config.SetFileExtension(wordsFile);
         // Parse words file

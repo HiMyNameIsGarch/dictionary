@@ -4,6 +4,8 @@ public interface IParser<T>
 
     string FileText { get; }
 
+    string BaseDirectory { get; }
+
     public T ParseFile();
 
 }
