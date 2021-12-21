@@ -9,6 +9,7 @@ public class VerbsSession : BaseSession
     {
         foreach(var verbs in pairs)
         {
+            var cursorTop = Console.CursorTop;
             CurrentPair++;
             if(IrregularVerbs.CanBuildVerbPairs(verbs.Value))
             {
@@ -18,6 +19,7 @@ public class VerbsSession : BaseSession
                             verbs.Value[2]);
                 WriteLine(Delimiter);
                 AskQuestion(verbs.Key, verbsPairs);
+                ClearScreen(cursorTop);
             }
         }
     }
@@ -52,6 +54,7 @@ public class VerbsSession : BaseSession
             DisplayAnswerStatus(verbs, input);
             WriteLine($"You got {correctVerbs} of {IrregularVerbs.MaxVerbs} pairs");
         }
+        PressKeyToContinue();
     }
 
     private void DisplayAnswerStatus(IrregularVerbs wanted, IrregularVerbs got)

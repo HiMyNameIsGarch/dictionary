@@ -8,6 +8,8 @@ public class Config
 
     public bool DisplayOnPairStats { get; set; }
 
+    public LayoutType Layout { get; set; }
+
     public FileExtension FileExtension { get; private set; }
 
     private string _currentFile = "default.words";

@@ -60,6 +60,31 @@ public abstract class BaseSession: ISession
         Write(question);
     }
 
+    public void ClearScreen(int cursorBefore)
+    {
+        if(config.Layout == LayoutType.Card)
+        {
+            int currentCursor = Console.CursorTop;
+            int linesToClear = cursorBefore - currentCursor - 1;
+            linesToClear = linesToClear * -1;
+            Console.SetCursorPosition(0, cursorBefore);
+            for (int i = 0; i < linesToClear; i++)
+            {
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
+        }
+    }
+
+    public void PressKeyToContinue()
+    {
+        if(config.Layout == LayoutType.Card) // Make sure statistics are one screen before clean
+        {
+            Console.Write("Press any key to continue - ");
+            Console.ReadKey(true);
+        }
+    }
+
     public string CombineWords(string[] words)
     {
         string combinedWords = "";

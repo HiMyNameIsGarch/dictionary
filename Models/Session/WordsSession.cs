@@ -8,11 +8,13 @@ public class WordsSession : BaseSession
 
     public override void Start()
     {
+        var cursorTop = Console.CursorTop;
         foreach(var words in pairs)
         {
             CurrentPair++;
             WriteLine(Delimiter);
             if(AskQuestion(words.Key, words.Value)) Points++;
+            ClearScreen(cursorTop);
         }
     }
 
@@ -40,6 +42,7 @@ public class WordsSession : BaseSession
             Write(CombineWords(values));
             Write("\n");
         }
+        PressKeyToContinue();
     }
 
     private string GetQuestionString(string[] words)
