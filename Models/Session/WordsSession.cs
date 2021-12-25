@@ -29,11 +29,20 @@ public class WordsSession : BaseSession
         return isCorrect;
     }
 
+    private void DisplayStatistics() 
+    {
+        if(config.Layout == LayoutType.Card)
+        {
+            ColorWriteLine(ResponseTimeText, ConsoleColor.Cyan, config.HasColors);
+        }
+    }
+
     private void ShowReponseStatus(string[] values, bool isPositive)
     {
         if(isPositive)
         {
             ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
+            DisplayStatistics();
         } 
         else 
         {

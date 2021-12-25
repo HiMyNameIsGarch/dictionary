@@ -24,40 +24,61 @@ public class VerbsSession : BaseSession
         }
     }
 
+    private string firstResponse = "";
+    private string secondResponse = "";
+    private string thirdResponse = "";
+
     public bool AskQuestion(string[] values, IrregularVerbs verbs) 
     {
         string prompt = CombineWords(values);
 
         string firstVerb = GetUserResponse($"Write <1ST> form of -> {prompt}: ");
+        firstResponse = "First " + ResponseTimeText;
         string secondVerb = GetUserResponse($"Write <2ND> form of -> {prompt}: ");
+        secondResponse = "Second " + ResponseTimeText;
         string thirdVerb = GetUserResponse($"Write <3RD> form of -> {prompt}: ");
+        thirdResponse = "Third " + ResponseTimeText;
 
-        bool IsCorrect = verbs.ArePairsCorrect(new IrregularVerbs(firstVerb, secondVerb, thirdVerb));
+        var InputVerbs = new IrregularVerbs(firstVerb, secondVerb, thirdVerb);
+        int CurrentPoints = verbs.GetPointsFrom(InputVerbs);
+        Points += CurrentPoints;
+
+        bool IsCorrect = verbs.ArePairsCorrect(InputVerbs);
 
         if(config.DisplayOnPairStats) 
-            ShowResponseStatus(verbs, new IrregularVerbs(firstVerb, secondVerb, thirdVerb), IsCorrect);
+            ShowResponseStatus(verbs, InputVerbs, CurrentPoints, IsCorrect);
 
         return IsCorrect;
     }
 
-    private void ShowResponseStatus(IrregularVerbs verbs, IrregularVerbs input, bool IsPositive)
+    private void DisplayStatistics()
+    {
+        if(config.Layout == LayoutType.Card)
+        {
+            ColorWriteLine(firstResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(secondResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(thirdResponse, ConsoleColor.Cyan, config.HasColors);
+        }
+    }
+
+    private void ShowResponseStatus(IrregularVerbs verbs, IrregularVerbs input, 
+            int currentPoints, bool IsPositive)
     {
         if(IsPositive)
         {
             ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
+            DisplayStatistics();
         }
         else
         {
-            int correctVerbs = verbs.GetPointsFrom(input);
-            Points += correctVerbs;
             ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
-            DisplayAnswerStatus(verbs, input);
-            WriteLine($"You got {correctVerbs} of {IrregularVerbs.MaxVerbs} pairs");
+            DisplayCorrectAnswer(verbs, input);
+            WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
         }
         PressKeyToContinue();
     }
 
-    private void DisplayAnswerStatus(IrregularVerbs wanted, IrregularVerbs got)
+    private void DisplayCorrectAnswer(IrregularVerbs wanted, IrregularVerbs got)
     {
         Write("The answer is: ");
         ColorOutput(wanted.First, got.First);
@@ -79,6 +100,7 @@ public class VerbsSession : BaseSession
     {
         int totalPoints = pairs.Count * IrregularVerbs.MaxVerbs;
         WriteLine($"Wow, you got {Points} of {totalPoints} points!");
+        WriteLine($"Avarage response time -> {GetAvarageResponseTime} seconds.");
     }
 
     public override void DisplayBeforeSession() { base.DisplayBeforeSession(); }

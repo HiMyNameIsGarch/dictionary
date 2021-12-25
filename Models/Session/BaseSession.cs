@@ -29,6 +29,23 @@ public abstract class BaseSession: ISession
         get { return _data.Pairs; }
     }
 
+    private protected double _timeSpan;
+
+    private protected string ResponseTimeText 
+    {
+        get { return "Took -> " + Math.Round(_timeSpan, + _decimals) + " seconds."; }
+    }
+
+    private const int _decimals = 2;
+
+    private List<double> _timeResponses = new List<double>();
+
+    private protected double GetAvarageResponseTime 
+    {
+        get { return _timeResponses.Count > 0 ? 
+                Math.Round(_timeResponses.Average(), _decimals)  : 0.0; }
+    }
+
     public virtual void DisplayBeforeSession() 
     {
         Points = 0;
@@ -40,7 +57,10 @@ public abstract class BaseSession: ISession
     public virtual void DisplayAfterSession()
     {
         if(config.DisplayFinalStats) 
+        {
             WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
+            WriteLine($"Avarage response time -> {GetAvarageResponseTime} seconds.");
+        }
     }
 
     public string GetUserResponse(string question)
@@ -49,7 +69,12 @@ public abstract class BaseSession: ISession
         do 
         {
             WriteQuestion(question);
+            var before = DateTime.Now;
             response = ReadLine()?.Trim();
+            var after = DateTime.Now;
+            var timeSpan = after - before;
+            _timeSpan = timeSpan.TotalSeconds;
+            _timeResponses.Add(_timeSpan);
         }
         while(string.IsNullOrWhiteSpace(response));
         return response;
@@ -78,7 +103,8 @@ public abstract class BaseSession: ISession
 
     public void PressKeyToContinue()
     {
-        if(config.Layout == LayoutType.Card) // Make sure statistics are one screen before clean
+        // Make sure statistics are on screen before clean
+        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
         {
             Console.Write("Press any key to continue - ");
             Console.ReadKey(true);
