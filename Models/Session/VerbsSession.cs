@@ -3,6 +3,15 @@ using static ConsoleHelper;
 
 public class VerbsSession : BaseSession
 {
+
+    private string _firstResponse = "";
+    private string _secondResponse = "";
+    private string _thirdResponse = "";
+
+    private int _currentPoints = 0;
+    private IrregularVerbs _currentVerbs = new IrregularVerbs("","","");
+    private IrregularVerbs _currentInputVerbs = new IrregularVerbs("","","");
+
     public VerbsSession(SessionData sessionData) : base(sessionData) {}
 
     public override void Start()
@@ -24,58 +33,49 @@ public class VerbsSession : BaseSession
         }
     }
 
-    private string firstResponse = "";
-    private string secondResponse = "";
-    private string thirdResponse = "";
-
     public bool AskQuestion(string[] values, IrregularVerbs verbs) 
     {
         string prompt = CombineWords(values);
+        _currentVerbs = verbs;
 
-        string firstVerb = GetUserResponse($"Write <1ST> form of -> {prompt}: ");
-        firstResponse = "First " + ResponseTimeText;
-        string secondVerb = GetUserResponse($"Write <2ND> form of -> {prompt}: ");
-        secondResponse = "Second " + ResponseTimeText;
-        string thirdVerb = GetUserResponse($"Write <3RD> form of -> {prompt}: ");
-        thirdResponse = "Third " + ResponseTimeText;
+        string firstVerb = GetForm(1, prompt);
+        _firstResponse = "First " + ResponseTimeText;
+        string secondVerb = GetForm(2, prompt);
+        _secondResponse = "Second " + ResponseTimeText;
+        string thirdVerb = GetForm(3, prompt);
+        _thirdResponse = "Third " + ResponseTimeText;
 
-        var InputVerbs = new IrregularVerbs(firstVerb, secondVerb, thirdVerb);
-        int CurrentPoints = verbs.GetPointsFrom(InputVerbs);
-        Points += CurrentPoints;
+        _currentInputVerbs = new IrregularVerbs(firstVerb, secondVerb, thirdVerb);
 
-        bool IsCorrect = verbs.ArePairsCorrect(InputVerbs);
+        _currentPoints = verbs.GetPointsFrom(_currentInputVerbs);
+        Points += _currentPoints;
 
-        if(config.DisplayOnPairStats) 
-            ShowResponseStatus(verbs, InputVerbs, CurrentPoints, IsCorrect);
+        bool IsCorrect = verbs.ArePairsCorrect(_currentInputVerbs);
+
+        ShowResponseStatus(IsCorrect);
 
         return IsCorrect;
     }
 
-    private void DisplayStatistics()
+    private string GetForm(int num, string prompt)
+    {
+        return GetUserResponse($"Write <{num}ST> form of -> {prompt}: ");
+    }
+
+    private protected override void OnPositiveResponse()
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(firstResponse, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(secondResponse, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(thirdResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(_firstResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(_secondResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(_thirdResponse, ConsoleColor.Cyan, config.HasColors);
         }
     }
 
-    private void ShowResponseStatus(IrregularVerbs verbs, IrregularVerbs input, 
-            int currentPoints, bool IsPositive)
+    private protected override void OnNegativeResponse()
     {
-        if(IsPositive)
-        {
-            ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
-            DisplayStatistics();
-        }
-        else
-        {
-            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
-            DisplayCorrectAnswer(verbs, input);
-            WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
-        }
-        PressKeyToContinue();
+        DisplayCorrectAnswer(_currentVerbs, _currentInputVerbs);
+        WriteLine($"You got {_currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
     }
 
     private void DisplayCorrectAnswer(IrregularVerbs wanted, IrregularVerbs got)
@@ -102,8 +102,6 @@ public class VerbsSession : BaseSession
         WriteLine($"Wow, you got {Points} of {totalPoints} points!");
         WriteLine($"Avarage response time -> {GetAvarageResponseTime} seconds.");
     }
-
-    public override void DisplayBeforeSession() { base.DisplayBeforeSession(); }
 
     public override void DisplayStatusFor(string logs) { throw new NotImplementedException(); }
 }

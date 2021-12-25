@@ -4,6 +4,8 @@ using static ConsoleHelper;
 public class WordsSession : BaseSession
 {
 
+    private string[] _currentValues = new string[0];
+
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
     public override void Start()
@@ -18,18 +20,21 @@ public class WordsSession : BaseSession
         }
     }
 
+
     private bool AskQuestion(string[] words, string[] synonyms)
     {
         string response = GetUserResponse(GetQuestionString(words));
 
         bool isCorrect = synonyms.Any(response.Equals);
 
-        if(config.DisplayOnPairStats) ShowReponseStatus(synonyms, isCorrect);
+        _currentValues = synonyms;
+
+        ShowResponseStatus(isCorrect);
 
         return isCorrect;
     }
 
-    private void DisplayStatistics() 
+    private protected override void OnPositiveResponse() 
     {
         if(config.Layout == LayoutType.Card)
         {
@@ -37,21 +42,11 @@ public class WordsSession : BaseSession
         }
     }
 
-    private void ShowReponseStatus(string[] values, bool isPositive)
+    private protected override void OnNegativeResponse() 
     {
-        if(isPositive)
-        {
-            ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
-            DisplayStatistics();
-        } 
-        else 
-        {
-            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
-            ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
-            Write(CombineWords(values));
-            Write("\n");
-        }
-        PressKeyToContinue();
+        ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
+        Write(CombineWords(_currentValues));
+        Write("\n");
     }
 
     private string GetQuestionString(string[] words)

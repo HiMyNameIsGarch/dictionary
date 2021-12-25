@@ -1,10 +1,13 @@
 using static System.Console;
+using static ConsoleHelper;
 
 public abstract class BaseSession: ISession 
 {
     public BaseSession(SessionData data) { _data = data; }
 
     protected int CurrentPair = 0;
+    private const int _decimals = 2;
+    public int Points { get; set; }
 
     protected string Delimiter 
     {
@@ -17,35 +20,34 @@ public abstract class BaseSession: ISession
     }
 
     private readonly SessionData _data;
-
-    public int Points { get; set; }
-
-    private protected Config config
-    { 
-        get { return _data.Config; } 
-    }
+    private protected Config config { get { return _data.Config; } }
     private protected Dictionary<string[], string[]> pairs
     { 
         get { return _data.Pairs; }
     }
 
     private protected double _timeSpan;
-
     private protected string ResponseTimeText 
     {
         get { return "Took -> " + Math.Round(_timeSpan, + _decimals) + " seconds."; }
     }
 
-    private const int _decimals = 2;
-
     private List<double> _timeResponses = new List<double>();
-
     private protected double GetAvarageResponseTime 
     {
         get { return _timeResponses.Count > 0 ? 
                 Math.Round(_timeResponses.Average(), _decimals)  : 0.0; }
     }
 
+    public abstract void Start();
+
+    public abstract void DisplayStatusFor(string logs);
+
+    private protected abstract void OnPositiveResponse();
+
+    private protected abstract void OnNegativeResponse();
+
+    //
     public virtual void DisplayBeforeSession() 
     {
         Points = 0;
@@ -85,6 +87,33 @@ public abstract class BaseSession: ISession
         Write(question);
     }
 
+
+    protected void ShowResponseStatus(bool isPositive)
+    {
+        if(!config.DisplayOnPairStats) return;
+        if(isPositive)
+        {
+            ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
+            OnPositiveResponse();
+        }
+        else
+        {
+            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
+            OnNegativeResponse();
+        }
+        PressKeyToContinue();
+    }
+
+    protected void PressKeyToContinue()
+    {
+        // Make sure statistics are on screen before clean
+        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
+        {
+            Console.Write("Press any key to continue - ");
+            Console.ReadKey(true);
+        }
+    }
+
     public void ClearScreen(int cursorBefore)
     {
         if(config.Layout == LayoutType.Card)
@@ -101,16 +130,6 @@ public abstract class BaseSession: ISession
         }
     }
 
-    public void PressKeyToContinue()
-    {
-        // Make sure statistics are on screen before clean
-        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
-        {
-            Console.Write("Press any key to continue - ");
-            Console.ReadKey(true);
-        }
-    }
-
     public string CombineWords(string[] words)
     {
         string combinedWords = "";
@@ -121,8 +140,4 @@ public abstract class BaseSession: ISession
         }
         return combinedWords;
     }
-
-    public abstract void Start();
-
-    public abstract void DisplayStatusFor(string logs);
 }
