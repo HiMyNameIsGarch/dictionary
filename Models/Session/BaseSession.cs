@@ -3,11 +3,17 @@ using static ConsoleHelper;
 
 public abstract class BaseSession: ISession 
 {
-    public BaseSession(SessionData data) { _data = data; }
+    public BaseSession(SessionData data) 
+    { 
+        _data = data; 
+        ResponseTime = new Avarage("Took -> ", " seconds.");
+        Accuracy = new Avarage("Accuracy -> ", "%.");
+    }
 
     protected int CurrentPair = 0;
-    private const int _decimals = 2;
     public int Points { get; set; }
+    public Avarage ResponseTime { get; }
+    public Avarage Accuracy { get; }
 
     protected string Delimiter 
     {
@@ -24,23 +30,6 @@ public abstract class BaseSession: ISession
     private protected Dictionary<string[], string[]> pairs
     { 
         get { return _data.Pairs; }
-    }
-
-    private double _timeSpan;
-    private protected double ResponseTime
-    {
-        get { return Math.Round(_timeSpan, _decimals); }
-    }
-    private protected string ResponseTimeText 
-    {
-        get { return "Took -> " + ResponseTime + " seconds."; }
-    }
-
-    private List<double> _timeResponses = new List<double>();
-    private protected double GetAvarageResponseTime 
-    {
-        get { return _timeResponses.Count > 0 ? 
-                Math.Round(_timeResponses.Average(), _decimals) : 0.0; }
     }
 
     public abstract void Start();
@@ -61,8 +50,19 @@ public abstract class BaseSession: ISession
         if(config.DisplayFinalStats) 
         {
             WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
-            WriteLine($"Avarage response time -> {GetAvarageResponseTime} seconds.");
+            WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
+            WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}%.");
         }
+    }
+
+    public double CalculateAccuracy(string wanted, string got)
+    {
+        return 0;
+    }
+
+    public double CalculateAccuracy(string[] wanted, string got)
+    {
+        return 0;
     }
 
     public string GetUserResponse(string question)
@@ -75,8 +75,7 @@ public abstract class BaseSession: ISession
             response = ReadLine()?.Trim();
             var after = DateTime.Now;
             var timeSpan = after - before;
-            _timeSpan = timeSpan.TotalSeconds;
-            _timeResponses.Add(_timeSpan);
+            ResponseTime.Values.Add(timeSpan.TotalSeconds);
         }
         while(string.IsNullOrWhiteSpace(response));
         return response;
@@ -86,7 +85,6 @@ public abstract class BaseSession: ISession
     {
         Write(question);
     }
-
 
     protected void ShowResponseStatus(bool isPositive, Action onPositive, Action onNegative)
     {
@@ -107,7 +105,7 @@ public abstract class BaseSession: ISession
     protected void PressKeyToContinue()
     {
         // Make sure statistics are on screen before clean
-        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
+        if(config.Layout == LayoutType.Card || CurrentPair != pairs.Count) 
         {
             Console.Write("Press any key to continue -> ");
             Console.ReadKey(true);

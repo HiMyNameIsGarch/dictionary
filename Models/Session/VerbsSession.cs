@@ -52,7 +52,7 @@ public class VerbsSession : BaseSession
     {
         string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
-        string response = numString  + ResponseTimeText;
+        string response = numString + ResponseTime.GetText().ToLower();
         return new Tuple<string, string>(verb, response);
     }
 
@@ -70,6 +70,7 @@ public class VerbsSession : BaseSession
             ColorWriteLine(second, ConsoleColor.Cyan, config.HasColors);
             ColorWriteLine(third, ConsoleColor.Cyan, config.HasColors);
         }
+        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
     }
 
     private void OnNegativeResponse(IrregularVerbs currentVerbs, IrregularVerbs
@@ -101,7 +102,8 @@ public class VerbsSession : BaseSession
     {
         int totalPoints = pairs.Count * IrregularVerbs.MaxVerbs;
         WriteLine($"Wow, you got {Points} of {totalPoints} points!");
-        WriteLine($"Avarage response time -> {GetAvarageResponseTime} seconds.");
+        WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
+        WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}.");
     }
 
     public override void DisplayStatusFor(string logs) { throw new NotImplementedException(); }

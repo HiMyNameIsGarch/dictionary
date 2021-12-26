@@ -35,8 +35,9 @@ public class WordsSession : BaseSession
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(ResponseTimeText, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(ResponseTime.GetText(), ConsoleColor.Cyan, config.HasColors);
         }
+        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
     }
 
     private void OnNegativeResponse(string[] correctWords) 
