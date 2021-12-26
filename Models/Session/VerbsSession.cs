@@ -4,14 +4,6 @@ using static ConsoleHelper;
 public class VerbsSession : BaseSession
 {
 
-    private string _firstResponse = "";
-    private string _secondResponse = "";
-    private string _thirdResponse = "";
-
-    private int _currentPoints = 0;
-    private IrregularVerbs _currentVerbs = new IrregularVerbs("","","");
-    private IrregularVerbs _currentInputVerbs = new IrregularVerbs("","","");
-
     public VerbsSession(SessionData sessionData) : base(sessionData) {}
 
     public override void Start()
@@ -36,46 +28,55 @@ public class VerbsSession : BaseSession
     public bool AskQuestion(string[] values, IrregularVerbs verbs) 
     {
         string prompt = CombineWords(values);
-        _currentVerbs = verbs;
 
-        string firstVerb = GetForm(1, prompt);
-        _firstResponse = "First " + ResponseTimeText;
-        string secondVerb = GetForm(2, prompt);
-        _secondResponse = "Second " + ResponseTimeText;
-        string thirdVerb = GetForm(3, prompt);
-        _thirdResponse = "Third " + ResponseTimeText;
+        var firstVerb = GetValue(1, prompt);
+        var secondVerb = GetValue(2, prompt);
+        var thirdVerb = GetValue(3, prompt);
 
-        _currentInputVerbs = new IrregularVerbs(firstVerb, secondVerb, thirdVerb);
+        var currentInputVerbs = new IrregularVerbs(firstVerb.Item1,
+                secondVerb.Item1, thirdVerb.Item1);
 
-        _currentPoints = verbs.GetPointsFrom(_currentInputVerbs);
-        Points += _currentPoints;
+        var currentPoints = verbs.GetPointsFrom(currentInputVerbs);
+        Points += currentPoints;
 
-        bool IsCorrect = verbs.ArePairsCorrect(_currentInputVerbs);
+        bool IsCorrect = verbs.ArePairsCorrect(currentInputVerbs);
 
-        ShowResponseStatus(IsCorrect);
+        ShowResponseStatus(IsCorrect, 
+                () => OnPositiveResponse(firstVerb.Item2, secondVerb.Item2, thirdVerb.Item2), 
+                () => OnNegativeResponse(verbs, currentInputVerbs, currentPoints));
 
         return IsCorrect;
     }
 
-    private string GetForm(int num, string prompt)
+    private Tuple<string,string> GetValue(int num, string prompt)
     {
-        return GetUserResponse($"Write <{num}ST> form of -> {prompt}: ");
+        string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
+        string verb = GetForm(num, prompt);
+        string response = numString  + ResponseTimeText;
+        return new Tuple<string, string>(verb, response);
     }
 
-    private protected override void OnPositiveResponse()
+    private string GetForm(int num, string prompt)
+    {
+        string termination = num == 1 ? "ST" : num == 2 ? "ND" : num == 3 ? "RD" : "";
+        return GetUserResponse($"Write <{num}{termination}> form of -> {prompt}: ");
+    }
+
+    private void OnPositiveResponse(string first, string second, string third)
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(_firstResponse, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(_secondResponse, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(_thirdResponse, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(first, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(second, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(third, ConsoleColor.Cyan, config.HasColors);
         }
     }
 
-    private protected override void OnNegativeResponse()
+    private void OnNegativeResponse(IrregularVerbs currentVerbs, IrregularVerbs
+            inputVerbs, int currentPoints)
     {
-        DisplayCorrectAnswer(_currentVerbs, _currentInputVerbs);
-        WriteLine($"You got {_currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
+        DisplayCorrectAnswer(currentVerbs, inputVerbs);
+        WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
     }
 
     private void DisplayCorrectAnswer(IrregularVerbs wanted, IrregularVerbs got)

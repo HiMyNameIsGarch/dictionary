@@ -4,8 +4,6 @@ using static ConsoleHelper;
 public class WordsSession : BaseSession
 {
 
-    private string[] _currentValues = new string[0];
-
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
     public override void Start()
@@ -27,14 +25,13 @@ public class WordsSession : BaseSession
 
         bool isCorrect = synonyms.Any(response.Equals);
 
-        _currentValues = synonyms;
-
-        ShowResponseStatus(isCorrect);
+        ShowResponseStatus(isCorrect, OnPositiveResponse, 
+                () => OnNegativeResponse(synonyms));
 
         return isCorrect;
     }
 
-    private protected override void OnPositiveResponse() 
+    private void OnPositiveResponse() 
     {
         if(config.Layout == LayoutType.Card)
         {
@@ -42,10 +39,10 @@ public class WordsSession : BaseSession
         }
     }
 
-    private protected override void OnNegativeResponse() 
+    private void OnNegativeResponse(string[] correctWords) 
     {
         ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
-        Write(CombineWords(_currentValues));
+        Write(CombineWords(correctWords));
         Write("\n");
     }
 

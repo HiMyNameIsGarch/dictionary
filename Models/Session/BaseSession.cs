@@ -26,26 +26,26 @@ public abstract class BaseSession: ISession
         get { return _data.Pairs; }
     }
 
-    private protected double _timeSpan;
+    private double _timeSpan;
+    private protected double ResponseTime
+    {
+        get { return Math.Round(_timeSpan, _decimals); }
+    }
     private protected string ResponseTimeText 
     {
-        get { return "Took -> " + Math.Round(_timeSpan, + _decimals) + " seconds."; }
+        get { return "Took -> " + ResponseTime + " seconds."; }
     }
 
     private List<double> _timeResponses = new List<double>();
     private protected double GetAvarageResponseTime 
     {
         get { return _timeResponses.Count > 0 ? 
-                Math.Round(_timeResponses.Average(), _decimals)  : 0.0; }
+                Math.Round(_timeResponses.Average(), _decimals) : 0.0; }
     }
 
     public abstract void Start();
 
     public abstract void DisplayStatusFor(string logs);
-
-    private protected abstract void OnPositiveResponse();
-
-    private protected abstract void OnNegativeResponse();
 
     //
     public virtual void DisplayBeforeSession() 
@@ -88,18 +88,18 @@ public abstract class BaseSession: ISession
     }
 
 
-    protected void ShowResponseStatus(bool isPositive)
+    protected void ShowResponseStatus(bool isPositive, Action onPositive, Action onNegative)
     {
         if(!config.DisplayOnPairStats) return;
         if(isPositive)
         {
             ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
-            OnPositiveResponse();
+            onPositive();
         }
         else
         {
             ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
-            OnNegativeResponse();
+            onNegative();
         }
         PressKeyToContinue();
     }
@@ -109,7 +109,7 @@ public abstract class BaseSession: ISession
         // Make sure statistics are on screen before clean
         if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
         {
-            Console.Write("Press any key to continue - ");
+            Console.Write("Press any key to continue -> ");
             Console.ReadKey(true);
         }
     }
