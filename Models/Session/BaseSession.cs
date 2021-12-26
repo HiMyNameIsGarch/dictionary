@@ -57,12 +57,12 @@ public abstract class BaseSession: ISession
 
     public double CalculateAccuracy(string wanted, string got)
     {
-        return 0;
+        return wanted.Length;
     }
 
     public double CalculateAccuracy(string[] wanted, string got)
     {
-        return 0;
+        return wanted.Length;
     }
 
     public string GetUserResponse(string question)

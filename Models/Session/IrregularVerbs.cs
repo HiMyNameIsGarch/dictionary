@@ -17,6 +17,10 @@ public class IrregularVerbs
     {
         return pairs.Length == MaxVerbs;
     }
+    public string[] ToArray()
+    {
+        return new string[3] { First, Second, Third };
+    }
 
     public bool ArePairsCorrect(IrregularVerbs userVerbs)
     {

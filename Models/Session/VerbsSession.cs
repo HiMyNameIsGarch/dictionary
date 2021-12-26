@@ -28,32 +28,34 @@ public class VerbsSession : BaseSession
     public bool AskQuestion(string[] values, IrregularVerbs verbs) 
     {
         string prompt = CombineWords(values);
+        var verbsArray = verbs.ToArray();
 
-        var firstVerb = GetValue(1, prompt);
-        var secondVerb = GetValue(2, prompt);
-        var thirdVerb = GetValue(3, prompt);
+        var firstVerb = GetValue(1, prompt, verbsArray);
+        var secondVerb = GetValue(2, prompt, verbsArray);
+        var thirdVerb = GetValue(3, prompt, verbsArray);
 
-        var currentInputVerbs = new IrregularVerbs(firstVerb.Item1,
-                secondVerb.Item1, thirdVerb.Item1);
+        var currentInputVerbs = new IrregularVerbs(firstVerb, secondVerb,
+                thirdVerb);
 
         var currentPoints = verbs.GetPointsFrom(currentInputVerbs);
         Points += currentPoints;
 
         bool IsCorrect = verbs.ArePairsCorrect(currentInputVerbs);
 
-        ShowResponseStatus(IsCorrect, 
-                () => OnPositiveResponse(firstVerb.Item2, secondVerb.Item2, thirdVerb.Item2), 
+        ShowResponseStatus(IsCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(verbs, currentInputVerbs, currentPoints));
 
         return IsCorrect;
     }
 
-    private Tuple<string,string> GetValue(int num, string prompt)
+    private string GetValue(int num, string prompt, string[] values)
     {
         string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
         string response = numString + ResponseTime.GetText().ToLower();
-        return new Tuple<string, string>(verb, response);
+        double accuracy = CalculateAccuracy(values[num - 1], verb);
+        Accuracy.Values.Add(accuracy);
+        return verb;
     }
 
     private string GetForm(int num, string prompt)
@@ -62,15 +64,14 @@ public class VerbsSession : BaseSession
         return GetUserResponse($"Write <{num}{termination}> form of -> {prompt}: ");
     }
 
-    private void OnPositiveResponse(string first, string second, string third)
+    private void OnPositiveResponse()
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(first, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(second, ConsoleColor.Cyan, config.HasColors);
-            ColorWriteLine(third, ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(ResponseTime.GetTextOnLast(3, false), ConsoleColor.Cyan, config.HasColors);
         }
-        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
+        WriteLine("-----");
+        ColorWriteLine(Accuracy.GetTextOnLast(3, false), ConsoleColor.Cyan, config.HasColors);
     }
 
     private void OnNegativeResponse(IrregularVerbs currentVerbs, IrregularVerbs
