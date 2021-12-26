@@ -4,6 +4,8 @@ public class Config
 {
     public bool HasColors { get; set; }
 
+    public bool DisplayAvarageStatistics { get; set; } // Only on irregular verbs
+
     public bool DisplayFinalStats { get; set; }
 
     public bool DisplayOnPairStats { get; set; }

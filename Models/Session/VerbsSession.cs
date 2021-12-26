@@ -68,10 +68,14 @@ public class VerbsSession : BaseSession
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(ResponseTime.GetTextOnLast(3, false), ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(ResponseTime.GetTextOnLast(3,
+                        config.DisplayAvarageStatistics), ConsoleColor.Cyan,
+                    config.HasColors);
         }
-        WriteLine("-----");
-        ColorWriteLine(Accuracy.GetTextOnLast(3, false), ConsoleColor.Cyan, config.HasColors);
+        if(!config.DisplayAvarageStatistics) WriteLine("-----");
+        ColorWriteLine(Accuracy.GetTextOnLast(3,
+                    config.DisplayAvarageStatistics), ConsoleColor.Cyan,
+                config.HasColors);
     }
 
     private void OnNegativeResponse(IrregularVerbs currentVerbs, IrregularVerbs
