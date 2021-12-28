@@ -72,16 +72,15 @@ public class VerbsSession : BaseSession
                         config.DisplayAvarageStatistics), ConsoleColor.Cyan,
                     config.HasColors);
         }
-        if(!config.DisplayAvarageStatistics) WriteLine("-----");
-        ColorWriteLine(Accuracy.GetTextOnLast(3,
-                    config.DisplayAvarageStatistics), ConsoleColor.Cyan,
-                config.HasColors);
     }
 
     private void OnNegativeResponse(IrregularVerbs currentVerbs, IrregularVerbs
             inputVerbs, int currentPoints)
     {
         DisplayCorrectAnswer(currentVerbs, inputVerbs);
+        ColorWriteLine(Accuracy.GetTextOnLast(3,
+                    config.DisplayAvarageStatistics), ConsoleColor.Cyan,
+                config.HasColors);
         WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
     }
 

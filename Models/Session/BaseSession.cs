@@ -57,7 +57,81 @@ public abstract class BaseSession: ISession
 
     public double CalculateAccuracy(string wanted, string got)
     {
-        return wanted.Length;
+        if(wanted == got) return 100;
+        char[] wantedArray = FillArray(wanted);
+        char[] gotArray = FillArray(got);
+        int[,] matrix = new int[gotArray.Length, wantedArray.Length];
+        int k = 0;
+        foreach(char c in gotArray)
+        {
+            matrix[k, 0] = k;
+            k++;
+        }
+        k = 0;
+        foreach(char c in wantedArray)
+        {
+            matrix[0, k] = k;
+            k++;
+        }
+        // Calculate edit distance
+        int editDistance = EditDistance(gotArray, wantedArray, matrix);
+        if(editDistance == 0) return 100;
+        // Display matrix
+        return 100 - (100 / (wanted.Length / editDistance));
+    }
+
+    private char[] FillArray(string word)
+    {
+        char[] array = new char[word.Length + 1];
+        array[0] = '0';
+        int i = 1;
+        foreach(char c in word)
+        {
+            array[i] = c;
+            i++;
+        }
+        return array;
+    }
+
+    private int EditDistance(char[] wanted, char[] got, int[,] matrix)
+    {
+        for (int i = 1; i < wanted.Length; i++)
+        {
+            for (int j = 1; j < got.Length; j++)
+            {
+                int min = Min(matrix, i, j);
+                if(wanted[i] == got[j])
+                    matrix[i,j] = min;
+                else
+                    matrix[i,j] = min + 1;
+            }
+        }
+        return matrix[wanted.Length - 1, got.Length - 1];
+    }
+
+    private int Min(int[,] matrix, int i, int j)
+    {
+        int insert = matrix[i, j - 1];
+        int delete = matrix[i - 1, j];
+        int replace = matrix[i - 1, j - 1];
+        if(insert < delete && insert < replace)
+            return insert;
+        else if (delete < insert && delete < replace)
+            return delete;
+        else 
+            return replace;
+    }
+
+    private void DisplayMatrix(int[,] matrix)
+    {
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                Console.Write(matrix[i,j] + "   ");
+            }
+            Console.WriteLine("\n");
+        }
     }
 
     public double CalculateAccuracy(string[] wanted, string got)

@@ -23,6 +23,8 @@ public class WordsSession : BaseSession
     {
         string response = GetUserResponse(GetQuestionString(words));
 
+        Accuracy.Values.Add(CalculateAccuracy(synonyms[0], response));
+
         bool isCorrect = synonyms.Any(response.Equals);
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
@@ -37,7 +39,6 @@ public class WordsSession : BaseSession
         {
             ColorWriteLine(ResponseTime.GetText(), ConsoleColor.Cyan, config.HasColors);
         }
-        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
     }
 
     private void OnNegativeResponse(string[] correctWords) 
@@ -45,6 +46,7 @@ public class WordsSession : BaseSession
         ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
         Write(CombineWords(correctWords));
         Write("\n");
+        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
     }
 
     private string GetQuestionString(string[] words)
