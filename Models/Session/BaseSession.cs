@@ -191,7 +191,7 @@ public abstract class BaseSession: ISession
     protected void PressKeyToContinue()
     {
         // Make sure statistics are on screen before clean
-        if(config.Layout == LayoutType.Card || CurrentPair != pairs.Count) 
+        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
         {
             Console.Write("Press any key to continue -> ");
             Console.ReadKey(true);
