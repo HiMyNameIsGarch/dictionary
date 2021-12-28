@@ -47,7 +47,7 @@ public abstract class BaseSession: ISession
 
     public virtual void DisplayAfterSession()
     {
-        if(config.DisplayFinalStats) 
+        if(config.DisplayFinalStatistics) 
         {
             WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
             WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
@@ -174,15 +174,15 @@ public abstract class BaseSession: ISession
 
     protected void ShowResponseStatus(bool isPositive, Action onPositive, Action onNegative)
     {
-        if(!config.DisplayOnPairStats) return;
+        if(!config.DisplayOnPairStatistics) return;
         if(isPositive)
         {
-            ColorWriteLine("Correct!", ConsoleColor.Green, config.HasColors);
+            ColorWriteLine("Correct!", ConsoleColor.Green, config.OutputHasColors);
             onPositive();
         }
         else
         {
-            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.HasColors);
+            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.OutputHasColors);
             onNegative();
         }
         PressKeyToContinue();

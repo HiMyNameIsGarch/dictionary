@@ -2,13 +2,13 @@ using System.Text.RegularExpressions;
 
 public class Config
 {
-    public bool HasColors { get; set; }
+    public bool OutputHasColors { get; set; }
 
     public bool DisplayAvarageStatistics { get; set; } // Only on irregular verbs
 
-    public bool DisplayFinalStats { get; set; }
+    public bool DisplayFinalStatistics { get; set; }
 
-    public bool DisplayOnPairStats { get; set; }
+    public bool DisplayOnPairStatistics { get; set; }
 
     public LayoutType Layout { get; set; }
 

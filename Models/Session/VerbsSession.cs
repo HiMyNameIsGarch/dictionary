@@ -70,7 +70,7 @@ public class VerbsSession : BaseSession
         {
             ColorWriteLine(ResponseTime.GetTextOnLast(3,
                         config.DisplayAvarageStatistics), ConsoleColor.Cyan,
-                    config.HasColors);
+                    config.OutputHasColors);
         }
     }
 
@@ -80,7 +80,7 @@ public class VerbsSession : BaseSession
         DisplayCorrectAnswer(currentVerbs, inputVerbs);
         ColorWriteLine(Accuracy.GetTextOnLast(3,
                     config.DisplayAvarageStatistics), ConsoleColor.Cyan,
-                config.HasColors);
+                config.OutputHasColors);
         WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
     }
 
@@ -99,7 +99,7 @@ public class VerbsSession : BaseSession
     {
         ColorWrite(wanted, 
                 wanted == got ? ConsoleColor.Green : ConsoleColor.Red, 
-                config.HasColors);
+                config.OutputHasColors);
     }
 
     public override void DisplayAfterSession() 

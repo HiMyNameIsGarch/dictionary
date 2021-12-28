@@ -38,7 +38,7 @@ public class WordsSession : BaseSession
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(ResponseTime.GetText(), ConsoleColor.Cyan, config.HasColors);
+            ColorWriteLine(ResponseTime.GetText(), ConsoleColor.Cyan, config.OutputHasColors);
         }
     }
 
@@ -46,13 +46,13 @@ public class WordsSession : BaseSession
     {
         if(correctWords.Length > 1)
         {
-            ColorWrite("Most accurate word: ", ConsoleColor.Blue, config.HasColors);
+            ColorWrite("Most accurate word: ", ConsoleColor.Blue, config.OutputHasColors);
             Write(mostAccurate + "\n");
         }
-        ColorWrite("The answer can be: ", ConsoleColor.Blue, config.HasColors);
+        ColorWrite("The answer can be: ", ConsoleColor.Blue, config.OutputHasColors);
         Write(CombineWords(correctWords) + "\n");
 
-        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
+        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.OutputHasColors);
     }
 
     private string GetQuestionString(string[] words)
