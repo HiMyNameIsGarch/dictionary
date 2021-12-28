@@ -161,7 +161,7 @@ public abstract class BaseSession: ISession
             response = ReadLine()?.Trim();
             var after = DateTime.Now;
             var timeSpan = after - before;
-            ResponseTime.Values.Add(timeSpan.TotalSeconds);
+            ResponseTime.Add(timeSpan.TotalSeconds);
         }
         while(string.IsNullOrWhiteSpace(response));
         return response;

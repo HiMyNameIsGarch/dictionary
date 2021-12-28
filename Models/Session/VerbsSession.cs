@@ -54,7 +54,7 @@ public class VerbsSession : BaseSession
         string verb = GetForm(num, prompt);
         string response = numString + ResponseTime.GetText().ToLower();
         double accuracy = CalculateAccuracy(values[num - 1], verb);
-        Accuracy.Values.Add(accuracy);
+        Accuracy.Add(accuracy);
         return verb;
     }
 

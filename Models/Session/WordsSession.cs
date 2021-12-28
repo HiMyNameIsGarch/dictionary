@@ -24,7 +24,7 @@ public class WordsSession : BaseSession
         string response = GetUserResponse(GetQuestionString(words));
 
         var acc = CalculateAccuracy(synonyms, response);
-        Accuracy.Values.Add(acc.Item2);
+        Accuracy.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
 

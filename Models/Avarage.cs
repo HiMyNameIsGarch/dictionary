@@ -9,8 +9,8 @@ public class Avarage
     public static int decimals = 2;
     private readonly string _before;
     private readonly string _after;
+    private List<double> Values = new List<double>();
 
-    public List<double> Values = new List<double>();
     public double LastValue
     {
         get { return Round(Values.Count > 0 ? Values.Last() : 0); }
@@ -19,7 +19,6 @@ public class Avarage
     {
         get { return GetAvarage(Values); }
     }
-
     public string GetText()
     {
         return _before + LastValue + _after;
@@ -28,6 +27,11 @@ public class Avarage
     {
         return _before + Round(value) + _after;
     }
+    public void Add(double value)
+    {
+        Values.Add(value);
+    }
+
     public string GetTextOnLast(int num, bool avarage)
     {
         if(Values.Count < num) return "";
@@ -43,12 +47,10 @@ public class Avarage
         }
         return text;
     }
-
     private double Round(double num)
     {
         return Math.Round(num, decimals);
     }
-
     private double GetAvarage(List<double> list)
     {
         return list.Count > 0 ? Round(list.Average()) : 0.0; 
