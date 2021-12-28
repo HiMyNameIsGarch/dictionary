@@ -74,16 +74,17 @@ public abstract class BaseSession: ISession
             k++;
         }
         // Calculate edit distance
-        int editDistance = EditDistance(gotArray, wantedArray, matrix);
+        double editDistance = EditDistance(gotArray, wantedArray, matrix);
         if(editDistance == 0) return 100;
         // Display matrix
-        return 100 - (100 / (wanted.Length / editDistance));
+        double num = (double)wanted.Length / editDistance;
+        return 100 - (100 / num);
     }
 
     private char[] FillArray(string word)
     {
         char[] array = new char[word.Length + 1];
-        array[0] = '0';
+        array[0] = ' ';
         int i = 1;
         foreach(char c in word)
         {
@@ -93,7 +94,7 @@ public abstract class BaseSession: ISession
         return array;
     }
 
-    private int EditDistance(char[] wanted, char[] got, int[,] matrix)
+    private double EditDistance(char[] wanted, char[] got, int[,] matrix)
     {
         for (int i = 1; i < wanted.Length; i++)
         {
@@ -134,9 +135,20 @@ public abstract class BaseSession: ISession
         }
     }
 
-    public double CalculateAccuracy(string[] wanted, string got)
+    public Tuple<string,double> CalculateAccuracy(string[] wanted, string got)
     {
-        return wanted.Length;
+        double mostAccurate = -1;
+        string correctWord = "";
+        foreach(var word in wanted)
+        {
+            double acc = CalculateAccuracy(word, got);
+            if(acc > mostAccurate)
+            {
+                mostAccurate = acc;
+                correctWord = word;
+            }
+        }
+        return new Tuple<string, double>(correctWord, mostAccurate);
     }
 
     public string GetUserResponse(string question)

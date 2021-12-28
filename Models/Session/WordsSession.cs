@@ -23,17 +23,18 @@ public class WordsSession : BaseSession
     {
         string response = GetUserResponse(GetQuestionString(words));
 
-        Accuracy.Values.Add(CalculateAccuracy(synonyms[0], response));
+        var acc = CalculateAccuracy(synonyms, response);
+        Accuracy.Values.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
-                () => OnNegativeResponse(synonyms));
+                () => OnNegativeResponse(synonyms, acc.Item1));
 
         return isCorrect;
     }
 
-    private void OnPositiveResponse() 
+    private void OnPositiveResponse()
     {
         if(config.Layout == LayoutType.Card)
         {
@@ -41,11 +42,16 @@ public class WordsSession : BaseSession
         }
     }
 
-    private void OnNegativeResponse(string[] correctWords) 
+    private void OnNegativeResponse(string[] correctWords, string mostAccurate)
     {
-        ColorWrite("The answer is: ", ConsoleColor.Blue, config.HasColors);
-        Write(CombineWords(correctWords));
-        Write("\n");
+        if(correctWords.Length > 1)
+        {
+            ColorWrite("Most accurate word: ", ConsoleColor.Blue, config.HasColors);
+            Write(mostAccurate + "\n");
+        }
+        ColorWrite("The answer can be: ", ConsoleColor.Blue, config.HasColors);
+        Write(CombineWords(correctWords) + "\n");
+
         ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.HasColors);
     }
 
