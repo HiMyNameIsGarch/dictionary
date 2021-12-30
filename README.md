@@ -9,10 +9,12 @@ Repetition is the key to learning.
 
 ## Table of contents
 - [Usage](#usage)
-- [File structure](#file-strucure)
-- [Statistics](#statistics)
+- [File structure](#file-structure)
 - [Configuration file](#configuration-file)
-- [Download](#download)
+- [Statistics](#statistics)
+- [Session Types](#session-types)
+- [How to install](#how-to-install)
+- [Report a bug](#report-a-bug)
 
 ## Usage
 Try the command `dictionary help` to get the full commands.
@@ -82,4 +84,14 @@ and it looks like this:
 | Words           | You will be asked what means a word and you need to answer to what translation you put in your file |
 | Irregular Verbs | For irregular verbs the file strucure needs to look like this <br> `word | word1, word2, word3` <br> you can add synonyms on the left side as well. <br> It works like `words` type but with 3 questions |
 
-## Download
+## How to install
+The application supports only 2 platforms `Linux` and `Windows` <br>
+If you want to install it, you can run:
+- On Linux: `dotnet publish -r linux-x64 --self-contained true --output <location>`
+- On Windows: `dotnet publish -r win-x64 --self-contained true --output <location>`
+
+## Report a bug
+> If you want to report a bug, please right an issue that will contain the followings: <br> 
+- Your configuration file settings
+- The pair on that the bug occured.
+
