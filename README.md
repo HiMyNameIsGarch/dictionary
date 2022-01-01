@@ -9,7 +9,7 @@ Repetition is the key to learning.
 
 ## Table of contents
 - [Usage](#usage)
-- [File structure](#file-structure)
+- [File and name structure](#file-and-name-structure)
 - [Configuration file](#configuration-file)
 - [Statistics](#statistics)
 - [Session Types](#session-types)
@@ -30,7 +30,9 @@ status - Display status information about your sessions.
 help   - Displays this help menu.
 ```
 
-## File structure
+## File and name structure
+
+#### File Structure
 The file structure is simple, on the left you have your main word or words and 
 on the right you have your translation to that word and they are separated by a
 pipe `|`:
@@ -49,6 +51,16 @@ you can put as many as you want for words as well for translations:
 ```
 word1, word2 | translation1, translation2
 ```
+#### File Name Structure
+The file name contains 3 parts:
+- File name ( that can be whatever you want to describe what is in that file )
+- Session Type ( see session types [here](#session-types) - this needs to be in all lower case ) \
+- Extension ( This needs to be `txt` ) 
+
+Example: `travel.words.txt` \
+`travel` - Means there will be travel related words \
+`words` - Session type - words \
+`txt` - text extension
 
 ## Configuration file
 The configuration file will help you have the best experience on your learning
@@ -66,6 +78,7 @@ and it looks like this:
 | Option                   | Description |
 |--------------------------|-------------|
 | OutputHasColors          | If you want to have colors in your output set this to true |
+| Over80IamCorrect         | If you got an accuracy over 80% that means the answer is correct ( remove typo mistakes )|
 | DisplayFinalStatistics   | At the end of every `session` it will be displayed statistics, toggle this as you like |
 | DisplayOnPairStatistics  | At the end of every `question` it will be displayed statistics, toggle this as you like <br> This is helpful if you want to simulate a completly blind test |
 | DisplayAvarageStatistics | `Only on irregular verbs session type` <br> it will display the avarage value from all 3 values |
@@ -82,7 +95,7 @@ and it looks like this:
 | Session         | Description |
 |-----------------|-------------|
 | Words           | You will be asked what means a word and you need to answer to what translation you put in your file |
-| Irregular Verbs | For irregular verbs the file strucure needs to look like this <br> `word | word1, word2, word3` <br> you can add synonyms on the left side as well. <br> It works like `words` type but with 3 questions |
+| Irregular Verbs | For irregular verbs the file strucure needs to look like this <br> `word \| word1, word2, word3` <br> you can add synonyms on the left side as well. <br> It works like `words` type but with 3 questions |
 
 ## How to install
 The application supports only 2 platforms `Linux` and `Windows` <br>
