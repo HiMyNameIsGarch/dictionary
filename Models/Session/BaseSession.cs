@@ -200,28 +200,27 @@ public abstract class BaseSession: ISession
 
     protected void PressKeyToContinue()
     {
+        if(config.Layout != LayoutType.Card) return;
+        if(CurrentPair == pairs.Count) return;
         // Make sure statistics are on screen before clean
-        if(config.Layout == LayoutType.Card && CurrentPair != pairs.Count) 
-        {
-            Console.Write("Press any key to continue -> ");
-            Console.ReadKey(true);
-        }
+        Console.Write("Press any key to continue -> ");
+        Console.ReadKey(true);
     }
 
     public void ClearScreen(int cursorBefore)
     {
-        if(config.Layout == LayoutType.Card)
+        if(config.Layout != LayoutType.Card) return;
+        if(CurrentPair == pairs.Count) return;
+        // 
+        int currentCursor = Console.CursorTop;
+        int linesToClear = cursorBefore - currentCursor - 1;
+        linesToClear = linesToClear * -1;
+        Console.SetCursorPosition(0, cursorBefore);
+        for (int i = 0; i < linesToClear; i++)
         {
-            int currentCursor = Console.CursorTop;
-            int linesToClear = cursorBefore - currentCursor - 1;
-            linesToClear = linesToClear * -1;
-            Console.SetCursorPosition(0, cursorBefore);
-            for (int i = 0; i < linesToClear; i++)
-            {
-                Console.Write(new string(' ', Console.BufferWidth));
-            }
-            Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
+            Console.Write(new string(' ', Console.BufferWidth));
         }
+        Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
     }
 
     public string CombineWords(string[] words)
