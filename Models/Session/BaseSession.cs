@@ -55,6 +55,16 @@ public abstract class BaseSession: ISession
         }
     }
 
+    private protected bool Over80IamCorrect(bool isCorrect, int lastRes = 1)
+    {
+        if(config.Over80IamCorrect)
+        {
+            if(!isCorrect && Accuracy.GetLast(lastRes) > 80)
+                return true;
+        }
+        return isCorrect;
+    }
+
     public double CalculateAccuracy(string wanted, string got)
     {
         if(wanted == got) return 100;

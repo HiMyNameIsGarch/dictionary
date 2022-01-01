@@ -40,12 +40,13 @@ public class VerbsSession : BaseSession
         var currentPoints = verbs.GetPointsFrom(currentInputVerbs);
         Points += currentPoints;
 
-        bool IsCorrect = verbs.ArePairsCorrect(currentInputVerbs);
+        bool isCorrect = verbs.ArePairsCorrect(currentInputVerbs);
+        isCorrect = Over80IamCorrect(isCorrect, 3);
 
-        ShowResponseStatus(IsCorrect, OnPositiveResponse, 
+        ShowResponseStatus(isCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(verbs, currentInputVerbs, currentPoints));
 
-        return IsCorrect;
+        return isCorrect;
     }
 
     private string GetValue(int num, string prompt, string[] values)

@@ -27,6 +27,7 @@ public class WordsSession : BaseSession
         Accuracy.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
+        isCorrect = Over80IamCorrect(isCorrect);
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(synonyms, acc.Item1));

@@ -47,6 +47,14 @@ public class Avarage
         }
         return text;
     }
+
+    public double GetLast(int num)
+    {
+        if(Values.Count < num) return 0;
+        var values = Values.TakeLast(num).ToList();
+        return GetAvarage(values);
+    }
+
     private double Round(double num)
     {
         return Math.Round(num, decimals);
