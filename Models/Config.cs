@@ -4,6 +4,8 @@ public class Config
 {
     public bool OutputHasColors { get; set; }
 
+    public bool AskMeSynonyms { get; set; } // on words type
+
     public bool DisplayOneRandomSynonym { get; set; }
 
     public bool Over80IamCorrect { get; set; }

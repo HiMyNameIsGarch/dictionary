@@ -13,13 +13,43 @@ public class WordsSession : BaseSession
         {
             CurrentPair++;
             WriteLine(Delimiter);
-            if(AskQuestion(words.Key, words.Value)) Points++;
+            Points += AskQuestions(words.Key, words.Value);
             ClearScreen(cursorTop);
         }
     }
 
+    private int AskQuestions(string[] words, string[] synonyms)
+    {
+        var data = AskQuestion(words, synonyms);
+        if(!data.Item2) return 0; // if you don't know one word, don't bother asking the others
+        if(synonyms.Length == 1 || !config.AskMeSynonyms) 
+            return data.Item2 ? 1 : 0;
 
-    private bool AskQuestion(string[] words, string[] synonyms)
+        ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan, config.OutputHasColors);
+        Thread.Sleep(2000);
+
+        return GetPointsFromSynonyms(words, 
+                synonyms.Where(s => s != data.Item1).ToArray());
+    }
+
+    private int GetPointsFromSynonyms(string[] words, string[] synonyms)
+    {
+        int points = 1; // the user already got a point from the previous question
+        while(synonyms.Length != 0)
+        {
+            var data = AskQuestion(words, synonyms);
+            if(data.Item2) // if question is correct
+            {
+                points++;
+                synonyms = RemoveElement(synonyms, data.Item1);
+                if(config.Layout == LayoutType.Card) Write("\n");
+            }
+            else break;
+        }
+        return points;
+    }
+
+    private Tuple<string,bool> AskQuestion(string[] words, string[] synonyms)
     {
         string response = GetUserResponse(GetQuestionString(words));
 
@@ -32,7 +62,7 @@ public class WordsSession : BaseSession
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(synonyms, acc.Item1));
 
-        return isCorrect;
+        return new Tuple<string, bool>(acc.Item1, isCorrect);
     }
 
     private void OnPositiveResponse()
@@ -62,6 +92,26 @@ public class WordsSession : BaseSession
         question += CombineWords(words);
         question += ": ";
         return question;
+    }
+
+    private string[] RemoveElement(string[] array, string element)
+    {
+        return array.Where(s => s != element).ToArray();
+    }
+
+
+    public override void DisplayAfterSession() 
+    {
+        int totalPoints = 0;
+        if(config.AskMeSynonyms)
+        {
+            foreach(var synonyms in pairs.Values) 
+                totalPoints += synonyms.Length;
+        } 
+        else totalPoints = pairs.Count;
+        WriteLine($"Wow, you got {Points} of {totalPoints} points!");
+        WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
+        WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}.");
     }
 
     public override void DisplayStatusFor(string logs)

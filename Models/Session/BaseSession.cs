@@ -198,12 +198,12 @@ public abstract class BaseSession: ISession
         PressKeyToContinue();
     }
 
-    protected void PressKeyToContinue()
+    protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(config.Layout != LayoutType.Card) return;
         if(CurrentPair == pairs.Count) return;
         // Make sure statistics are on screen before clean
-        Console.Write("Press any key to continue -> ");
+        Console.Write(prompt);
         Console.ReadKey(true);
     }
 
