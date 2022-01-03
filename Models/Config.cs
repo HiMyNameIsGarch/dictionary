@@ -4,6 +4,8 @@ public class Config
 {
     public bool OutputHasColors { get; set; }
 
+    public bool DisplayOneRandomSynonym { get; set; }
+
     public bool Over80IamCorrect { get; set; }
 
     public bool DisplayAvarageStatistics { get; set; } // Only on irregular verbs

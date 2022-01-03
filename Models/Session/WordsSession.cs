@@ -51,7 +51,7 @@ public class WordsSession : BaseSession
             Write(mostAccurate + "\n");
         }
         ColorWrite("The answer can be: ", ConsoleColor.Blue, config.OutputHasColors);
-        Write(CombineWords(correctWords) + "\n");
+        Write(CombineWords(correctWords, false) + "\n");
 
         ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.OutputHasColors);
     }

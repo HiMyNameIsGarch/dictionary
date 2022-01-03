@@ -223,8 +223,12 @@ public abstract class BaseSession: ISession
         Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
     }
 
-    public string CombineWords(string[] words)
+    public string CombineWords(string[] words, bool useSetting = true)
     {
+        if(config.DisplayOneRandomSynonym && useSetting) 
+        {
+            return GetRandomSynonym(words);
+        }
         string combinedWords = "";
         for(int i = 0; i < words.Length; i++) 
         {
@@ -232,5 +236,16 @@ public abstract class BaseSession: ISession
             if(i + 1 != words.Length) combinedWords += " or ";
         }
         return combinedWords;
+    }
+
+    public string GetRandomSynonym(string[] synonyms)
+    {
+        if(synonyms.Length == 0) return "";
+        if(synonyms.Length == 1) return synonyms[0];
+
+        Random rand = new Random();
+        int currentSynonym = rand.Next(0, synonyms.Length);
+
+        return synonyms[currentSynonym];
     }
 }
