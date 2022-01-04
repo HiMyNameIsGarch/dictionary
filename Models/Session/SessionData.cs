@@ -29,6 +29,5 @@ public class SessionData
                 return new WordsSession(this);
         }
     }
-
 }
 

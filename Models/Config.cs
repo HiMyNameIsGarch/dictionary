@@ -6,6 +6,8 @@ public class Config
 
     public bool AskMeSynonyms { get; set; } // on words type
 
+    public bool ReverseWords { get; set; } // on words type
+
     public bool DisplayOneRandomSynonym { get; set; }
 
     public bool Over80IamCorrect { get; set; }

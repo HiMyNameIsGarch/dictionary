@@ -9,7 +9,14 @@ public class WordsSession : BaseSession
     public override void Start()
     {
         var cursorTop = Console.CursorTop;
-        foreach(var words in pairs)
+        var values = new Dictionary<string[], string[]>();
+
+        if(config.ReverseWords)
+            values = pairs.ToDictionary(k => k.Value, v => v.Key);
+        else 
+            values = pairs;
+
+        foreach(var words in values)
         {
             CurrentPair++;
             WriteLine(Delimiter);

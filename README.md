@@ -70,6 +70,7 @@ and it looks like this:
     "OutputHasColors": true,
     "Over80IamCorrect": true,
     "AskMeSynonyms": true,
+    "ReverseWords": true,
     "DisplayOneRandomSynonym": true, 
     "CurrentFile": "default.words",
     "DisplayFinalStatistics": true,
@@ -83,6 +84,7 @@ and it looks like this:
 | OutputHasColors          | If you want to have colors in your output set this to true |
 | Over80IamCorrect         | If you got an accuracy over 80% that means the answer is correct ( remove typo mistakes )|
 | AskMeSynonyms            | If you decide to put synonyms in your pairs, enable this to get asked those as well |
+| ReverseWords             | `Only of words session type` <br> It will reverse the words with the translation |
 | DisplayOneRandomSynonym  | In the prompt you can be asked multiple words like <br> `What means -> word1 or word2` <br> Enable this to get a random one |
 | CurrentFile              | When you run `dictionary start` this is the file that the session will start with |
 | DisplayFinalStatistics   | At the end of every `session` it will be displayed statistics, toggle this as you like |
