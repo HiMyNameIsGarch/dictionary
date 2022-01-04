@@ -9,6 +9,16 @@ public static class CurrentOS
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     }
 
+    public static string GetSeparator()
+    {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+            return "/";
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return "\\";
+        else 
+            return "/";
+    }
+
     public static string GetEditor()
     {
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
@@ -29,10 +39,9 @@ public static class CurrentOS
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
             return $"/home/{Environment.UserName}/{linux}";
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            return $"C:\\Users\\{Environment.UserName}\\{windows}";
+            return $"C:\\Users\\{Environment.UserName}\\AppData\\Local\\dictionary\\{windows}";
         else 
             return "";
-
     }
 
     public static string GetFileName(string path, string extension)

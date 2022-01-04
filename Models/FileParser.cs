@@ -14,7 +14,7 @@ public abstract class FileParser<T>: IParser<T>
             Environment.Exit(1);
         }
 
-        FilePath = $"{BaseDirectory}/{fileName}";
+        FilePath = $"{BaseDirectory}{CurrentOS.GetSeparator()}{fileName}";
 
         if(!Directory.Exists(BaseDirectory)) 
         {
@@ -23,6 +23,7 @@ public abstract class FileParser<T>: IParser<T>
 
         if(!File.Exists(FilePath)) 
         {
+            Console.WriteLine($"File {fileName} doesn't exists, creating default at: {FilePath}");
             System.IO.File.WriteAllText(FilePath, DefaultFileText());
         }
         

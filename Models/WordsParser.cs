@@ -5,7 +5,7 @@ public class WordsParser: FileParser<Dictionary<string[], string[]>>
 {
     private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
-    public WordsParser(string defaultFile): base(".local/share/dictionary","", defaultFile) { }
+    public WordsParser(string defaultFile): base(".local/share/dictionary","data", defaultFile) { }
 
     public override Dictionary<string[], string[]> ParseFile()
     {
@@ -39,10 +39,11 @@ public class WordsParser: FileParser<Dictionary<string[], string[]>>
 
     protected override string DefaultFileText()
     {
+        Console.WriteLine("If this is your first time running this program, consider editing the default file");
         StringBuilder sb = new StringBuilder();
         for(int i = 1; i < 10; i++)
         {
-            sb.AppendLine($"word{i}, word{i+1} | synonym{i}, synonym{i+1}");
+            sb.AppendLine($"word{i}, word{i+1} | meaning{i}, meaning{i+1}");
         }
         return sb.ToString();
     }
