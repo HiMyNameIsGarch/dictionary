@@ -5,13 +5,14 @@ public abstract class BaseSession: ISession
 {
     public BaseSession(SessionData data) 
     { 
-        _data = data; 
+        Data = data; 
         ResponseTime = new Avarage("Took -> ", " seconds.");
         Accuracy = new Avarage("Accuracy -> ", "%.");
     }
 
     protected int CurrentPair = 0;
     public int Points { get; set; }
+    public int TotalPairs { get; set; }
     public Avarage ResponseTime { get; }
     public Avarage Accuracy { get; }
 
@@ -19,33 +20,50 @@ public abstract class BaseSession: ISession
     {
         get {
             if(CurrentPair != 0)
-                return $"-----------------< {CurrentPair} / {pairs.Count} >-----------------";
+                return $"-----------------< {CurrentPair} / {TotalPairs} >-----------------";
             else
-                return "----------------------------------";
+                return "------------------------------------------";
         }
     }
 
-    private readonly SessionData _data;
-    private protected Config config { get { return _data.Config; } }
-    private protected Dictionary<string[], string[]> pairs
-    { 
-        get { return _data.Pairs; }
+    public SessionData Data { get; }
+    public Config config { get { return Data.Config; } }
+    public Dictionary<string[], string[]> pairs { get { return Data.Pairs; } }
+
+    public void Start(Dictionary<string[], string[]> pairs)
+    {
+        Data.ResetWrongPairs();
+        TotalPairs = pairs.Count;
+        CurrentPair = 1;
+        foreach(var words in pairs)
+        {
+            int cursorTop = Console.CursorTop;
+            WriteLine(Delimiter);
+            int currentPoints = AskQuestion(words.Key, words.Value);
+
+            if(currentPoints == 0)
+                Data.WrongPairs.Add(words.Key, words.Value);
+            else 
+                Points += currentPoints;
+
+            ClearScreen(cursorTop);
+            CurrentPair++;
+        }
     }
 
-    public abstract void Start();
+    public abstract int AskQuestion(string[] words, string[] synonyms);
 
     public abstract void DisplayStatusFor(string logs);
 
-    //
-    public virtual void DisplayBeforeSession() 
+    // Hooks
+    public virtual void BeforeSessionHook()
     {
         Points = 0;
-        _data.ShufflePairs();
+        Data.ShufflePairs();
         WriteLine($"\nSession type: {config.FileExtension.ToString()}");
         WriteLine($"Session started on file '{config.CurrentFile}'\n");
     }
-
-    public virtual void DisplayAfterSession()
+    public virtual void AfterSessionHook()
     {
         if(config.DisplayFinalStatistics) 
         {
@@ -55,14 +73,14 @@ public abstract class BaseSession: ISession
         }
     }
 
-    private protected bool Over80IamCorrect(bool isCorrect, int lastRes = 1)
+    private protected bool IsAnswerRight(int lastAnswers = 1)
     {
+        double currentAccuracy = Accuracy.GetLast(lastAnswers);
         if(config.Over80IamCorrect)
         {
-            if(!isCorrect && Accuracy.GetLast(lastRes) > 80)
-                return true;
+            return currentAccuracy > 80;
         }
-        return isCorrect;
+        return currentAccuracy == (double)100;
     }
 
     public double CalculateAccuracy(string wanted, string got)

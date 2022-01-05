@@ -6,26 +6,7 @@ public class VerbsSession : BaseSession
 
     public VerbsSession(SessionData sessionData) : base(sessionData) {}
 
-    public override void Start()
-    {
-        foreach(var verbs in pairs)
-        {
-            var cursorTop = Console.CursorTop;
-            CurrentPair++;
-            if(IrregularVerbs.CanBuildVerbPairs(verbs.Value))
-            {
-                var verbsPairs = new IrregularVerbs(
-                            verbs.Value[0], 
-                            verbs.Value[1],
-                            verbs.Value[2]);
-                WriteLine(Delimiter);
-                AskQuestion(verbs.Key, verbsPairs);
-                ClearScreen(cursorTop);
-            }
-        }
-    }
-
-    public bool AskQuestion(string[] values, IrregularVerbs verbs) 
+    public override int AskQuestion(string[] values, string[] verbs) 
     {
         string prompt = CombineWords(values);
         var verbsArray = verbs.ToArray();
@@ -36,17 +17,15 @@ public class VerbsSession : BaseSession
 
         var currentInputVerbs = new IrregularVerbs(firstVerb, secondVerb,
                 thirdVerb);
+        var correctVerbs = new IrregularVerbs(verbs[0], verbs[1], verbs[2]);
 
-        var currentPoints = verbs.GetPointsFrom(currentInputVerbs);
-        Points += currentPoints;
-
-        bool isCorrect = verbs.ArePairsCorrect(currentInputVerbs);
-        isCorrect = Over80IamCorrect(isCorrect, 3);
+        int currentPoints = correctVerbs.GetPointsFrom(currentInputVerbs);
+        bool isCorrect = IsAnswerRight(3);
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
-                () => OnNegativeResponse(verbs, currentInputVerbs, currentPoints));
-
-        return isCorrect;
+                () => OnNegativeResponse(correctVerbs, currentInputVerbs,
+                                         currentPoints));
+        return currentPoints;
     }
 
     private string GetValue(int num, string prompt, string[] values)
@@ -103,7 +82,19 @@ public class VerbsSession : BaseSession
                 config.OutputHasColors);
     }
 
-    public override void DisplayAfterSession() 
+    public override void BeforeSessionHook()
+    {
+        base.BeforeSessionHook();
+        foreach(var verbs in Data.Pairs)
+        {
+            if(!IrregularVerbs.CanBuildVerbPairs(verbs.Value))
+            {
+                Data.Pairs.Remove(verbs.Key);
+            }
+        }
+    }
+    
+    public override void AfterSessionHook() 
     {
         int totalPoints = pairs.Count * IrregularVerbs.MaxVerbs;
         WriteLine($"Wow, you got {Points} of {totalPoints} points!");

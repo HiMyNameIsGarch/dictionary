@@ -6,28 +6,15 @@ public class WordsSession : BaseSession
 
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
-    public override void Start()
+    public override int AskQuestion(string[] words, string[] synonyms)
     {
-        var cursorTop = Console.CursorTop;
-        var values = new Dictionary<string[], string[]>();
-
+        var tempWords = words;
         if(config.ReverseWords)
-            values = pairs.ToDictionary(k => k.Value, v => v.Key);
-        else 
-            values = pairs;
-
-        foreach(var words in values)
         {
-            CurrentPair++;
-            WriteLine(Delimiter);
-            Points += AskQuestions(words.Key, words.Value);
-            ClearScreen(cursorTop);
+            words = synonyms;
+            synonyms = tempWords;
         }
-    }
-
-    private int AskQuestions(string[] words, string[] synonyms)
-    {
-        var data = AskQuestion(words, synonyms);
+        var data = GetSynonym(words, synonyms);
         if(!data.Item2) return 0; // if you don't know one word, don't bother asking the others
         if(synonyms.Length == 1 || !config.AskMeSynonyms) 
             return data.Item2 ? 1 : 0;
@@ -44,7 +31,7 @@ public class WordsSession : BaseSession
         int points = 1; // the user already got a point from the previous question
         while(synonyms.Length != 0)
         {
-            var data = AskQuestion(words, synonyms);
+            var data = GetSynonym(words, synonyms);
             if(data.Item2) // if question is correct
             {
                 points++;
@@ -56,7 +43,7 @@ public class WordsSession : BaseSession
         return points;
     }
 
-    private Tuple<string,bool> AskQuestion(string[] words, string[] synonyms)
+    private Tuple<string,bool> GetSynonym(string[] words, string[] synonyms)
     {
         string response = GetUserResponse(GetQuestionString(words));
 
@@ -64,7 +51,7 @@ public class WordsSession : BaseSession
         Accuracy.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
-        isCorrect = Over80IamCorrect(isCorrect);
+        if(!isCorrect) isCorrect = IsAnswerRight();
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(synonyms, acc.Item1));
@@ -106,11 +93,10 @@ public class WordsSession : BaseSession
         return array.Where(s => s != element).ToArray();
     }
 
-
-    public override void DisplayAfterSession() 
+    public override void AfterSessionHook() 
     {
         int totalPoints = 0;
-        if(config.AskMeSynonyms)
+        if(config.AskMeSynonyms && !config.ReverseWords)
         {
             foreach(var synonyms in pairs.Values) 
                 totalPoints += synonyms.Length;

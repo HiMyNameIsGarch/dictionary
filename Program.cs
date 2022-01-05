@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices; 
-
 
 public class Program
 {
@@ -30,9 +28,9 @@ public class Program
         switch(args[0]) {
             case "select":
             case "start": 
-                mainSession.DisplayBeforeSession();
-                mainSession.Start();
-                mainSession.DisplayAfterSession();
+                mainSession.BeforeSessionHook();
+                mainSession.Start(mainSession.Data.Pairs);
+                mainSession.AfterSessionHook();
                 break;
             case "edit":
                 if(args.Length < 2)
