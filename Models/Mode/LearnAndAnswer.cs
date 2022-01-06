@@ -12,7 +12,7 @@ public class LearnAndAnswer: IMode
             // Display pairs and remove them of key
             DisplayPairs(pair, session);
             Console.WriteLine($"( Session {n} of {pairs.Count} )");
-            session.Start(pair);
+            session.Start(session.Data.ShufflePairs(pair));
             session.AfterSessionHook();
             Console.WriteLine();
             n++;

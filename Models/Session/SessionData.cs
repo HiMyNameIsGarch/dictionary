@@ -43,6 +43,13 @@ public class SessionData
         WrongPairs = new Dictionary<string[], string[]>();
     }
 
+    public Dictionary<string[], string[]> ShufflePairs(Dictionary<string[], string[]> pairs)
+    {
+        Random rand = new Random();
+        return pairs.OrderBy(x => rand.Next())
+            .ToDictionary(item => item.Key, item => item.Value);
+    }
+
     public void ShufflePairs()
     {
         Random rand = new Random();
