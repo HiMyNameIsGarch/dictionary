@@ -23,14 +23,13 @@ public class Program
             return 1;
         }
         // Start the session
+        IMode mode = data.GetCurrentMode();
         ISession mainSession = data.GetCurrentSession();
 
         switch(args[0]) {
             case "select":
             case "start": 
-                mainSession.BeforeSessionHook();
-                mainSession.Start(mainSession.Data.Pairs);
-                mainSession.AfterSessionHook();
+                mode.Start(mainSession);
                 break;
             case "edit":
                 if(args.Length < 2)

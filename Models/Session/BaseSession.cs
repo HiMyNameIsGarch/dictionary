@@ -61,7 +61,8 @@ public abstract class BaseSession: ISession
         Points = 0;
         Data.ShufflePairs();
         WriteLine($"\nSession type: {config.FileExtension.ToString()}");
-        WriteLine($"Session started on file '{config.CurrentFile}'\n");
+        WriteLine($"Session started on file '{config.CurrentFile}'");
+        WriteLine($"Mode type: {config.Mode.ToString()}\n");
     }
     public virtual void AfterSessionHook()
     {

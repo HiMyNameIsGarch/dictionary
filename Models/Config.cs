@@ -20,6 +20,8 @@ public class Config
 
     public LayoutType Layout { get; set; }
 
+    public ModeType Mode { get; set; }
+
     public FileExtension FileExtension { get; private set; }
 
     private string _currentFile = "default.words";
