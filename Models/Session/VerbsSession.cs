@@ -19,7 +19,7 @@ public class VerbsSession : BaseSession
                 thirdVerb);
         var correctVerbs = new IrregularVerbs(verbs[0], verbs[1], verbs[2]);
 
-        int currentPoints = correctVerbs.GetPointsFrom(currentInputVerbs);
+        int currentPoints = currentInputVerbs.GetPointsFrom(correctVerbs);
         bool isCorrect = IsAnswerRight(3);
 
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
@@ -96,10 +96,10 @@ public class VerbsSession : BaseSession
     
     public override void AfterSessionHook() 
     {
-        int totalPoints = pairs.Count * IrregularVerbs.MaxVerbs;
+        int totalPoints = TotalPairs * IrregularVerbs.MaxVerbs;
         WriteLine($"Wow, you got {Points} of {totalPoints} points!");
         WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
-        WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}.");
+        WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}%.");
     }
 
     public override void DisplayStatusFor(string logs) { throw new NotImplementedException(); }

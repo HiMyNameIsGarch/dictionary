@@ -51,6 +51,7 @@ public static class CurrentOS
 
     public static string GetFullFilePath(string path, string extension)
     {
+        int currentCursor = Console.CursorTop;
         DirectoryInfo d = new DirectoryInfo(path);
         int i = 0;
         var allFiles = d.GetFiles("*." + extension);
@@ -69,12 +70,15 @@ public static class CurrentOS
         {
             Console.Write("Enter the number of your file: ");
             char key = Console.ReadKey(true).KeyChar;
+            Console.Write("\n");
             if(!Char.IsNumber(key)) continue;
             int value = key - '0';
             if(value > i || value == 0) continue;
             filePath = allFiles[value - 1].FullName;
         }
         while(string.IsNullOrEmpty(filePath));
+
+        ConsoleHelper.ClearScreen(currentCursor);
 
         return filePath;
     }

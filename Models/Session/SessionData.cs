@@ -13,8 +13,29 @@ public class SessionData
 
     public Dictionary<string[], string[]> WrongPairs { get; private set; }
 
-    public void DisplayPairsOf(int num)
+    public List<Dictionary<string[], string[]>> SplitPairsIn(int num)
     {
+        var list = new List<Dictionary<string[], string[]>>();
+        int currentNumber = 0;
+        int maxPairs = Pairs.Count;
+        int maxIterations = (int)Math.Ceiling((double)maxPairs / (double)num);
+        for(int i = 0; i < maxIterations; i++)
+        {
+            list.Add(Pairs.Skip(currentNumber).Take(num).ToDictionary(k => k.Key, v => v.Value));
+            currentNumber += list.Last().Count;
+        }
+        return list;
+    }
+
+    public void DisplayPairs(Dictionary<string[], string[]> pairs)
+    {
+        foreach(var pair in pairs)
+        {
+            Console.Write(pair.Key.Combine(", "));
+            Console.Write(" | ");
+            Console.Write(pair.Value.Combine(", "));
+            Console.WriteLine("");
+        }
     }
 
     public void ResetWrongPairs()
