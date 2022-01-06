@@ -13,6 +13,7 @@ Repetition is the key to learning.
 - [Configuration file](#configuration-file)
 - [Statistics](#statistics)
 - [Session Types](#session-types)
+- [Modes](#modes)
 - [How to install](#how-to-install)
 - [Report a bug](#report-a-bug)
 
@@ -77,6 +78,7 @@ and it looks like this:
     "DisplayOnPairStatistics": true,
     "DisplayAvarageStatistics": true,
     "Layout": "card"
+    "Mode": "persistent"
 }
 ```
 | Option                   | Description |
@@ -91,6 +93,7 @@ and it looks like this:
 | DisplayOnPairStatistics  | At the end of every `question` it will be displayed statistics, toggle this as you like <br> This is helpful if you want to simulate a completly blind test |
 | DisplayAvarageStatistics | `Only on irregular verbs session type` <br> it will display the avarage value from all 3 values |
 | Layout                   | Setting it to `card` it will replace the question with the new one <br>or setting it to `list` it won't delete anything and let all the output there |
+| Mode                     | It will set the current mode, see all the modes available [here](#modes), the mode must be written in lower case |
 
 ## Statistics
 | Type          | Description |
@@ -104,6 +107,13 @@ and it looks like this:
 |-----------------|-------------|
 | Words           | You will be asked what means a word and you need to answer to what translation you put in your file |
 | Irregular Verbs | For irregular verbs the file strucure needs to look like this <br> `word \| word1, word2, word3` <br> you can add synonyms on the left side as well. <br> It works like `words` type but with 3 questions |
+
+## Modes
+| Modes            | Description |
+|------------------|-------------|
+| Persistent       | You will have a normal session, but if you answer wrong to a question, it will be added to a list, after you finish the session, it will begin a new one with the wrong questions. This will be repeaded until you answer right to all the questions |
+| Learn and Answer | When you start a session, you will be presented with 10 pairs from your file in order to 'learn them'. After that when you are ready it will start the session with these pairs. The process will continue until all your pairs are completed. You can see how many session you have up top |
+| None             | This will change nothing to the behavior of the application |
 
 ## How to install
 The application supports only 2 platforms `Linux` and `Windows` <br>
