@@ -222,24 +222,15 @@ public abstract class BaseSession: ISession
         if(config.Layout != LayoutType.Card) return;
         if(CurrentPair == pairs.Count) return;
         // Make sure statistics are on screen before clean
-        Console.Write(prompt);
-        Console.ReadKey(true);
+        ConsoleHelper.PressKeyToContinue(prompt);
     }
 
     public void ClearScreen(int cursorBefore)
     {
         if(config.Layout != LayoutType.Card) return;
         if(CurrentPair == pairs.Count) return;
-        // 
-        int currentCursor = Console.CursorTop;
-        int linesToClear = cursorBefore - currentCursor - 1;
-        linesToClear = linesToClear * -1;
-        Console.SetCursorPosition(0, cursorBefore);
-        for (int i = 0; i < linesToClear; i++)
-        {
-            Console.Write(new string(' ', Console.BufferWidth));
-        }
-        Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
+
+        ConsoleHelper.ClearScreen(cursorBefore);
     }
 
     public string CombineWords(string[] words, bool useSetting = true)
@@ -248,13 +239,8 @@ public abstract class BaseSession: ISession
         {
             return GetRandomSynonym(words);
         }
-        string combinedWords = "";
-        for(int i = 0; i < words.Length; i++) 
-        {
-            combinedWords += words[i];
-            if(i + 1 != words.Length) combinedWords += " or ";
-        }
-        return combinedWords;
+
+        return words.Combine(" or ");
     }
 
     public string GetRandomSynonym(string[] synonyms)
