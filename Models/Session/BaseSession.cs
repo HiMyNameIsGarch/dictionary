@@ -10,6 +10,8 @@ public abstract class BaseSession: ISession
         Accuracy = new Avarage("Accuracy -> ", "%.");
     }
 
+    private const double MaxAccuracy = 100.0;
+    private const double TypoMystake = 80.0;
     protected int CurrentPair = 0;
     public int Points { get; set; }
     public int TotalPairs { get; set; }
@@ -72,6 +74,7 @@ public abstract class BaseSession: ISession
             WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
             WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}%.");
         }
+        Points = 0;
     }
 
     private protected bool IsAnswerRight(int lastAnswers = 1)
@@ -79,14 +82,14 @@ public abstract class BaseSession: ISession
         double currentAccuracy = Accuracy.GetLast(lastAnswers);
         if(config.Over80IamCorrect)
         {
-            return currentAccuracy > 80;
+            return currentAccuracy > TypoMystake;
         }
-        return currentAccuracy == (double)100;
+        return currentAccuracy == MaxAccuracy;
     }
 
     public double CalculateAccuracy(string wanted, string got)
     {
-        if(wanted == got) return 100;
+        if(wanted == got) return MaxAccuracy;
         char[] wantedArray = FillArray(wanted);
         char[] gotArray = FillArray(got);
         int[,] matrix = new int[gotArray.Length, wantedArray.Length];
@@ -104,10 +107,11 @@ public abstract class BaseSession: ISession
         }
         // Calculate edit distance
         double editDistance = EditDistance(gotArray, wantedArray, matrix);
-        if(editDistance == 0) return 100;
-        // Display matrix
+        if(editDistance == 0) return MaxAccuracy;
+        // Get the actual number
         double num = (double)wanted.Length / editDistance;
-        return 100 - (100 / num);
+        double accuracy = MaxAccuracy - ( MaxAccuracy / num );
+        return accuracy;
     }
 
     private char[] FillArray(string word)
@@ -129,11 +133,10 @@ public abstract class BaseSession: ISession
         {
             for (int j = 1; j < got.Length; j++)
             {
-                int min = Min(matrix, i, j);
                 if(wanted[i] == got[j])
-                    matrix[i,j] = min;
+                    matrix[i,j] = matrix[i - 1, j - 1];
                 else
-                    matrix[i,j] = min + 1;
+                    matrix[i,j] = Min(matrix, i, j) + 1;
             }
         }
         return matrix[wanted.Length - 1, got.Length - 1];
