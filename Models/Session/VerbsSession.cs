@@ -33,7 +33,7 @@ public class VerbsSession : BaseSession
         string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
         string response = numString + ResponseTime.GetText().ToLower();
-        double accuracy = CalculateAccuracy(values[num - 1], verb);
+        double accuracy = EditDistance.GetAccuracy(values[num - 1], verb);
         Accuracy.Add(accuracy);
         return verb;
     }

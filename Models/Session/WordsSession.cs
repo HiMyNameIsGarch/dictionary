@@ -47,7 +47,7 @@ public class WordsSession : BaseSession
     {
         string response = GetUserResponse(GetQuestionString(words));
 
-        var acc = CalculateAccuracy(synonyms, response);
+        var acc = EditDistance.GetAccuracy(synonyms, response);
         Accuracy.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
