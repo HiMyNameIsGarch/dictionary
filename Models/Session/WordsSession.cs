@@ -95,16 +95,14 @@ public class WordsSession : BaseSession
 
     public override void AfterSessionHook() 
     {
-        int totalPoints = 0;
+        TotalPairs = 0;
         if(config.AskMeSynonyms && !config.ReverseWords)
         {
             foreach(var synonyms in pairs.Values) 
-                totalPoints += synonyms.Length;
+                TotalPairs += synonyms.Length;
         } 
-        else totalPoints = pairs.Count;
-        WriteLine($"Wow, you got {Points} of {totalPoints} points!");
-        WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
-        WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}.");
+        else TotalPairs = pairs.Count;
+        base.AfterSessionHook();
     }
 
     public override void DisplayStatusFor(string logs)

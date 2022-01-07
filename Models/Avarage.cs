@@ -19,6 +19,11 @@ public class Avarage
     {
         get { return GetAvarage(Values); }
     }
+
+    public void ResetValue()
+    {
+        Values = new List<double>();
+    }
     public string GetText()
     {
         return _before + LastValue + _after;

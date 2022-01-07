@@ -70,11 +70,13 @@ public abstract class BaseSession: ISession
     {
         if(config.DisplayFinalStatistics) 
         {
-            WriteLine($"\nWow, you got {Points} points out of {pairs.Count}");
+            WriteLine($"\nWow, you got {Points} points out of {TotalPairs}");
             WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
             WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}%.");
         }
         Points = 0;
+        ResponseTime.ResetValue();
+        Accuracy.ResetValue();
     }
 
     private protected bool IsAnswerRight(int lastAnswers = 1)
