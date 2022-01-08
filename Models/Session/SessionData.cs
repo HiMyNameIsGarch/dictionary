@@ -1,3 +1,5 @@
+using System.Text;
+
 public class SessionData 
 {
     public SessionData(Config config, Dictionary<string[], string[]> pairs) 
@@ -29,13 +31,13 @@ public class SessionData
 
     public void DisplayPairs(Dictionary<string[], string[]> pairs)
     {
+        StringBuilder sb = new StringBuilder();
         foreach(var pair in pairs)
         {
-            Console.Write(pair.Key.Combine(", "));
-            Console.Write(" | ");
-            Console.Write(pair.Value.Combine(", "));
-            Console.WriteLine("");
+            string line = $"{pair.Key.Combine(", ")} | {pair.Value.Combine(", ")}";
+            sb.AppendLine(line);
         }
+        ConsoleHelper.DisplayColumn(sb.ToString());
     }
 
     public void ResetWrongPairs()

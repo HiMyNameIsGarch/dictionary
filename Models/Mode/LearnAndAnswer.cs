@@ -23,7 +23,6 @@ public class LearnAndAnswer: IMode
     {
         int initialCursor = Console.CursorTop;
         session.Data.DisplayPairs(pairs);
-        Console.WriteLine("");
         PressKeyToContinue("Press any key to begin -> ");
         ClearScreen(initialCursor);
     }

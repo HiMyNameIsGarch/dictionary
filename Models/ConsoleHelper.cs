@@ -1,3 +1,4 @@
+using System.Text;
 using static System.Console;
 
 public static class ConsoleHelper
@@ -34,6 +35,34 @@ public static class ConsoleHelper
         Console.Write(prompt);
         Console.ReadKey(true);
         Console.Write("\n");
+    }
+
+    public static void DisplayColumn(string input, char separator = '|')
+    {
+        string[] lines = input.Split('\n');
+        // Loop to see what is the biggest line
+        int biggestLine = -1;
+        List<Tuple<string,string>> pairs = new List<Tuple<string, string>>();
+        foreach(string line in lines)
+        {
+            if(string.IsNullOrEmpty(line)) continue;
+            string[] parts = line.Split(separator);
+            string first = parts[0];
+            string second = parts[1];
+            if(first.Length > biggestLine) biggestLine = first.Length;
+            second = separator + second;
+            pairs.Add(new Tuple<string,string>(first,second));
+        }
+        biggestLine = biggestLine * -1;
+        string format = "{0," + biggestLine + "}{1," + biggestLine + "}";
+
+        StringBuilder sb = new StringBuilder();
+        foreach(var pair in pairs)
+        {
+            string line = String.Format(format, pair.Item1, pair.Item2);
+            sb.AppendLine(line);
+        }
+        Console.WriteLine(sb.ToString());
     }
 
 }
