@@ -9,7 +9,7 @@ public class LearnAndAnswer: IMode
         int n = 1;
         foreach(var pair in pairs)
         {
-            // Display pairs and remove them of key
+            // Display pairs and remove them from key
             DisplayPairs(pair, session);
             Console.WriteLine($"( Session {n} of {pairs.Count} )");
             session.Start(session.Data.ShufflePairs(pair));

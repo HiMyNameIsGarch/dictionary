@@ -15,6 +15,10 @@ public class SessionData
 
     public Dictionary<string[], string[]> WrongPairs { get; private set; }
 
+    public void SetPairs(Dictionary<string[], string[]> newPairs)
+    {
+        if(newPairs.Count != 0 && newPairs != null) Pairs = newPairs;
+    }
     public List<Dictionary<string[], string[]>> SplitPairsIn(int num)
     {
         var list = new List<Dictionary<string[], string[]>>();

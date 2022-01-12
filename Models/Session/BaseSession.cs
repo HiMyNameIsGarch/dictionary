@@ -33,6 +33,7 @@ public abstract class BaseSession: ISession
 
     public void Start(Dictionary<string[], string[]> pairs)
     {
+        Data.SetPairs(pairs);
         Data.ResetWrongPairs();
         TotalPairs = pairs.Count;
         CurrentPair = 1;
