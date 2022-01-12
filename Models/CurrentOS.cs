@@ -69,10 +69,9 @@ public static class CurrentOS
         do 
         {
             Console.Write("Enter the number of your file: ");
-            char key = Console.ReadKey(true).KeyChar;
+            string? keys = Console.ReadLine();
             Console.Write("\n");
-            if(!Char.IsNumber(key)) continue;
-            int value = key - '0';
+            if(!int.TryParse(keys, out int value)) continue;
             if(value > i || value == 0) continue;
             filePath = allFiles[value - 1].FullName;
         }
