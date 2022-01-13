@@ -8,9 +8,9 @@ public class WordsSession : BaseSession
 
     public override int AskQuestion(string[] words, string[] synonyms)
     {
-        var tempWords = words;
         if(config.ReverseWords)
         {
+            var tempWords = words;
             words = synonyms;
             synonyms = tempWords;
         }
@@ -96,7 +96,7 @@ public class WordsSession : BaseSession
     public override void AfterSessionHook() 
     {
         TotalPairs = 0;
-        if(config.AskMeSynonyms && !config.ReverseWords)
+        if(config.AskMeSynonyms)
         {
             foreach(var synonyms in pairs.Values) 
                 TotalPairs += synonyms.Length;

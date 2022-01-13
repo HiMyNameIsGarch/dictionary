@@ -43,7 +43,7 @@ public abstract class BaseSession: ISession
             WriteLine(Delimiter);
             int currentPoints = AskQuestion(words.Key, words.Value);
 
-            if(currentPoints == 0)
+            if(currentPoints == 0 || (config.AskMeSynonyms && currentPoints < words.Value.Length))
                 Data.WrongPairs.Add(words.Key, words.Value);
             else 
                 Points += currentPoints;
