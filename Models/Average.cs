@@ -1,6 +1,6 @@
-public class Avarage
+public class Average
 {
-    public Avarage(string before, string after)
+    public Average(string before, string after)
     {
         _before = before;
         _after = after;

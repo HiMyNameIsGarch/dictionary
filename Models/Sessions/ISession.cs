@@ -6,9 +6,9 @@ public interface ISession
 
     int TotalPairs { get; set; }
 
-    Avarage ResponseTime { get; }
+    Average ResponseTime { get; }
 
-    Avarage Accuracy { get; }
+    Average Accuracy { get; }
 
     void Start(Dictionary<string[], string[]> pairs);
 

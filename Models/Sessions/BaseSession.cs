@@ -6,16 +6,16 @@ public abstract class BaseSession: ISession
     public BaseSession(SessionData data) 
     { 
         Data = data; 
-        ResponseTime = new Avarage("Took -> ", " seconds.");
-        Accuracy = new Avarage("Accuracy -> ", "%.");
+        ResponseTime = new Average("Took -> ", " seconds.");
+        Accuracy = new Average("Accuracy -> ", "%.");
     }
 
     private const double TypoMystake = 80.0;
     protected int CurrentPair = 0;
     public int Points { get; set; }
     public int TotalPairs { get; set; }
-    public Avarage ResponseTime { get; }
-    public Avarage Accuracy { get; }
+    public Average ResponseTime { get; }
+    public Average Accuracy { get; }
 
     protected string Delimiter 
     {
@@ -28,7 +28,7 @@ public abstract class BaseSession: ISession
     }
 
     public SessionData Data { get; }
-    public Config config { get { return Data.Config; } }
+    public ConfigOptions config { get { return Data.Config; } }
     public Dictionary<string[], string[]> pairs { get { return Data.Pairs; } }
 
     public void Start(Dictionary<string[], string[]> pairs)

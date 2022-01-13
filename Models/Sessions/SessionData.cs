@@ -2,14 +2,14 @@ using System.Text;
 
 public class SessionData 
 {
-    public SessionData(Config config, Dictionary<string[], string[]> pairs) 
+    public SessionData(ConfigOptions config, Dictionary<string[], string[]> pairs) 
     {
         Config = config;
         Pairs = pairs;
         WrongPairs = new Dictionary<string[], string[]>();
     }
 
-    public Config Config { get; }
+    public ConfigOptions Config { get; }
 
     public Dictionary<string[], string[]> Pairs { get; private set; }
 

@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-public class Config
+public class ConfigOptions
 {
     public bool OutputHasColors { get; set; }
 

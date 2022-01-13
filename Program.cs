@@ -103,7 +103,7 @@ public class Program
     {
         // Parse config file
         ConfigParser cParser = new ConfigParser();
-        Config config = cParser.ParseFile();
+        ConfigOptions config = cParser.ParseFile();
         string wordsFile = 
             args[0] == "select" ? 
                 CurrentOS.GetFileName(new WordsParser(config.CurrentFile).BaseDirectory,"txt") :
