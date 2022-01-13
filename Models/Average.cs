@@ -1,12 +1,17 @@
+using static System.Console;
+using static ConsoleHelper;
+
 public class Average
 {
-    public Average(string before, string after)
+    public Average(string before, string after, bool hasColors)
     {
         _before = before;
         _after = after;
+        _hasColors = hasColors;
     }
 
     public static int decimals = 2;
+    private readonly bool _hasColors;
     private readonly string _before;
     private readonly string _after;
     private List<double> Values = new List<double>();
@@ -24,48 +29,46 @@ public class Average
     {
         Values = new List<double>();
     }
-    public string GetText()
-    {
-        return _before + LastValue + _after;
-    }
-    public string GetText(double value)
-    {
-        return _before + Round(value) + _after;
-    }
     public void Add(double value)
     {
         Values.Add(value);
     }
 
-    public string GetTextOnLast(int num, bool avarage)
+    public void DisplayText(double value, ConsoleColor color)
     {
-        if(Values.Count < num) return "";
+        Write(_before);
+        ColorWrite(value.ToString(), color, _hasColors);
+        Write(_after);
+    }
+    public void DisplayTextOnLast(int num, bool isAverage)
+    {
+        if(Values.Count < num) return;
         var values = Values.TakeLast(num).ToList();
-        if(avarage)
-            return GetText(values.Average());
-
-        string text = "";
+        if(isAverage)
+        {
+            DisplayText(GetAvarage(values), ConsoleColor.Yellow);
+            Write("\n");
+            return;
+        }
         for(int i = 0; i < values.Count; i++)
         {
-            text += i + 1 + ". " + GetText(values[i]);
-            if(i + 1 != values.Count) text += "\n";
+            Write($"{i + 1}. ");
+            DisplayText(values[i], ConsoleColor.DarkYellow);
+            Write("\n");
         }
-        return text;
     }
-
     public double GetLast(int num)
     {
         if(Values.Count < num) return 0;
         var values = Values.TakeLast(num).ToList();
         return GetAvarage(values);
     }
-
-    private double Round(double num)
-    {
-        return Math.Round(num, decimals);
-    }
     private double GetAvarage(List<double> list)
     {
         return list.Count > 0 ? Round(list.Average()) : 0.0; 
+    }
+    private double Round(double num)
+    {
+        return Math.Round(num, decimals);
     }
 }

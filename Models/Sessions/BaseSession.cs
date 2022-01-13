@@ -6,8 +6,8 @@ public abstract class BaseSession: ISession
     public BaseSession(SessionData data) 
     { 
         Data = data; 
-        ResponseTime = new Average("Took -> ", " seconds.");
-        Accuracy = new Average("Accuracy -> ", "%.");
+        ResponseTime = new Average("Took -> ", " seconds.", config.OutputHasColors);
+        Accuracy = new Average("Accuracy -> ", "%.", config.OutputHasColors);
     }
 
     private const double TypoMystake = 80.0;
@@ -17,16 +17,18 @@ public abstract class BaseSession: ISession
     public Average ResponseTime { get; }
     public Average Accuracy { get; }
 
-    protected string Delimiter 
+    private void DisplayDelimiter()
     {
-        get {
-            if(CurrentPair != 0)
-                return $"-----------------< {CurrentPair} / {TotalPairs} >-----------------";
-            else
-                return "------------------------------------------";
+        if(CurrentPair != 0)
+        {
+            Write("-----------------< ");
+            ColorWrite(CurrentPair.ToString(), CurrentPair != TotalPairs ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue, config.OutputHasColors);
+            Write(" / ");
+            ColorWrite(TotalPairs.ToString(), ConsoleColor.DarkBlue, config.OutputHasColors);
+            Write(" >-----------------\n");
         }
+        else WriteLine("------------------------------------------");
     }
-
     public SessionData Data { get; }
     public ConfigOptions config { get { return Data.Config; } }
     public Dictionary<string[], string[]> pairs { get { return Data.Pairs; } }
@@ -40,7 +42,7 @@ public abstract class BaseSession: ISession
         foreach(var words in pairs)
         {
             int cursorTop = Console.CursorTop;
-            WriteLine(Delimiter);
+            DisplayDelimiter();
             int currentPoints = AskQuestion(words.Key, words.Value);
 
             if(currentPoints == 0 || (config.AskMeSynonyms && currentPoints < words.Value.Length))
@@ -62,17 +64,30 @@ public abstract class BaseSession: ISession
     {
         Points = 0;
         Data.ShufflePairs();
-        WriteLine($"\nSession type: {config.FileExtension.ToString()}");
-        WriteLine($"Session started on file '{config.CurrentFile}'");
-        WriteLine($"Mode type: {config.Mode.ToString()}\n");
+        Write("\nSession type: ");
+        ColorWrite(config.FileExtension.ToString(), ConsoleColor.DarkBlue, config.OutputHasColors);
+        Write("\nSession started on file: ");
+        ColorWrite(config.CurrentFile, ConsoleColor.DarkCyan, config.OutputHasColors);
+        Write("\nSession type: ");
+        ColorWrite(config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta, config.OutputHasColors);
     }
     public virtual void AfterSessionHook()
     {
         if(config.DisplayFinalStatistics) 
         {
-            WriteLine($"\nWow, you got {Points} points out of {TotalPairs}");
-            WriteLine($"Avarage response time -> {ResponseTime.AvarageNum} seconds.");
-            WriteLine($"Avarage accuracy -> {Accuracy.AvarageNum}%.");
+            Write("\nYou got ");
+            ColorWrite(Points.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green, config.OutputHasColors);
+            Write(" points out of ");
+            ColorWrite(TotalPairs.ToString(), ConsoleColor.Green, config.OutputHasColors);
+            Write("\n");
+
+            Write("Average response time -> ");
+            ColorWrite(ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan, config.OutputHasColors);
+            Write(" seconds.\n");
+
+            Write("Average accuracy -> ");
+            ColorWrite(Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow, config.OutputHasColors);
+            Write("%.\n");
         }
         Points = 0;
         ResponseTime.ResetValue();

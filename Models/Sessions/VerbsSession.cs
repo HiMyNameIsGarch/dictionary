@@ -32,7 +32,6 @@ public class VerbsSession : BaseSession
     {
         string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
-        string response = numString + ResponseTime.GetText().ToLower();
         double accuracy = EditDistance.GetAccuracy(values[num - 1], verb);
         Accuracy.Add(accuracy);
         return verb;
@@ -48,9 +47,7 @@ public class VerbsSession : BaseSession
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(ResponseTime.GetTextOnLast(3,
-                        config.DisplayAvarageStatistics), ConsoleColor.Cyan,
-                    config.OutputHasColors);
+            ResponseTime.DisplayTextOnLast(3, config.DisplayAvarageStatistics);
         }
     }
 
@@ -58,10 +55,12 @@ public class VerbsSession : BaseSession
             inputVerbs, int currentPoints)
     {
         DisplayCorrectAnswer(currentVerbs, inputVerbs);
-        ColorWriteLine(Accuracy.GetTextOnLast(3,
-                    config.DisplayAvarageStatistics), ConsoleColor.Cyan,
-                config.OutputHasColors);
-        WriteLine($"You got {currentPoints} of {IrregularVerbs.MaxVerbs} pairs");
+        Accuracy.DisplayTextOnLast(3, config.DisplayAvarageStatistics);
+        Write("You got ");
+        ColorWrite(currentPoints.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green, config.OutputHasColors);
+        Write(" points out of ");
+        ColorWrite(IrregularVerbs.MaxVerbs.ToString(), ConsoleColor.Green, config.OutputHasColors);
+        Write("\n");
     }
 
     private void DisplayCorrectAnswer(IrregularVerbs wanted, IrregularVerbs got)

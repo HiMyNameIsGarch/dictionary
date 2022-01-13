@@ -63,7 +63,7 @@ public class WordsSession : BaseSession
     {
         if(config.Layout == LayoutType.Card)
         {
-            ColorWriteLine(ResponseTime.GetText(), ConsoleColor.Cyan, config.OutputHasColors);
+            ResponseTime.DisplayText(ResponseTime.LastValue, ConsoleColor.Cyan);
         }
     }
 
@@ -77,7 +77,7 @@ public class WordsSession : BaseSession
         ColorWrite("The answer can be: ", ConsoleColor.Blue, config.OutputHasColors);
         Write(CombineWords(correctWords, false) + "\n");
 
-        ColorWriteLine(Accuracy.GetText(), ConsoleColor.Cyan, config.OutputHasColors);
+        Accuracy.DisplayText(Accuracy.LastValue, ConsoleColor.Cyan);
     }
 
     private string GetQuestionString(string[] words)
