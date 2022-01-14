@@ -19,7 +19,7 @@ public class WordsSession : BaseSession
         if(synonyms.Length == 1 || !config.AskMeSynonyms) 
             return data.Item2 ? 1 : 0;
 
-        ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan, config.OutputHasColors);
+        ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan);
         Thread.Sleep(2000);
 
         return GetPointsFromSynonyms(words, 
@@ -71,10 +71,10 @@ public class WordsSession : BaseSession
     {
         if(correctWords.Length > 1)
         {
-            ColorWrite("Most accurate word: ", ConsoleColor.Blue, config.OutputHasColors);
+            ColorWrite("Most accurate word: ", ConsoleColor.Blue);
             Write(mostAccurate + "\n");
         }
-        ColorWrite("The answer can be: ", ConsoleColor.Blue, config.OutputHasColors);
+        ColorWrite("The answer can be: ", ConsoleColor.Blue);
         Write(CombineWords(correctWords, false) + "\n");
 
         Accuracy.DisplayText(Accuracy.LastValue, ConsoleColor.Cyan);

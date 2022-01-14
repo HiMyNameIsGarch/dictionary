@@ -57,9 +57,9 @@ public class VerbsSession : BaseSession
         DisplayCorrectAnswer(currentVerbs, inputVerbs);
         Accuracy.DisplayTextOnLast(3, config.DisplayAvarageStatistics);
         Write("You got ");
-        ColorWrite(currentPoints.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green, config.OutputHasColors);
+        ColorWrite(currentPoints.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green);
         Write(" points out of ");
-        ColorWrite(IrregularVerbs.MaxVerbs.ToString(), ConsoleColor.Green, config.OutputHasColors);
+        ColorWrite(IrregularVerbs.MaxVerbs.ToString(), ConsoleColor.Green);
         Write("\n");
     }
 
@@ -76,9 +76,8 @@ public class VerbsSession : BaseSession
 
     private void ColorOutput(string wanted, string got)
     {
-        ColorWrite(wanted, 
-                wanted == got ? ConsoleColor.Green : ConsoleColor.Red, 
-                config.OutputHasColors);
+        ColorWrite(wanted, wanted == got ? ConsoleColor.Green :
+                ConsoleColor.Red);
     }
 
     public override void BeforeSessionHook()

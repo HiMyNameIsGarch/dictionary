@@ -6,8 +6,8 @@ public abstract class BaseSession: ISession
     public BaseSession(SessionData data) 
     { 
         Data = data; 
-        ResponseTime = new Average("Took -> ", " seconds.", config.OutputHasColors);
-        Accuracy = new Average("Accuracy -> ", "%.", config.OutputHasColors);
+        ResponseTime = new Average("Took -> ", " seconds.");
+        Accuracy = new Average("Accuracy -> ", "%.");
     }
 
     private const double TypoMystake = 80.0;
@@ -22,9 +22,9 @@ public abstract class BaseSession: ISession
         if(CurrentPair != 0)
         {
             Write("-----------------< ");
-            ColorWrite(CurrentPair.ToString(), CurrentPair != TotalPairs ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue, config.OutputHasColors);
+            ColorWrite(CurrentPair.ToString(), CurrentPair != TotalPairs ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
             Write(" / ");
-            ColorWrite(TotalPairs.ToString(), ConsoleColor.DarkBlue, config.OutputHasColors);
+            ColorWrite(TotalPairs.ToString(), ConsoleColor.DarkBlue);
             Write(" >-----------------\n");
         }
         else WriteLine("------------------------------------------");
@@ -65,28 +65,29 @@ public abstract class BaseSession: ISession
         Points = 0;
         Data.ShufflePairs();
         Write("\nSession type: ");
-        ColorWrite(config.FileExtension.ToString(), ConsoleColor.DarkBlue, config.OutputHasColors);
+        ColorWrite(config.FileExtension.ToString(), ConsoleColor.DarkBlue);
         Write("\nSession started on file: ");
-        ColorWrite(config.CurrentFile, ConsoleColor.DarkCyan, config.OutputHasColors);
+        ColorWrite(config.CurrentFile, ConsoleColor.DarkCyan);
         Write("\nSession type: ");
-        ColorWrite(config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta, config.OutputHasColors);
+        ColorWrite(config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta);
     }
     public virtual void AfterSessionHook()
     {
         if(config.DisplayFinalStatistics) 
         {
-            Write("\nYou got ");
-            ColorWrite(Points.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green, config.OutputHasColors);
+            if(config.Mode != ModeType.LearnAndAnswer || config.Layout == LayoutType.List) Write("\n");
+            Write("You got ");
+            ColorWrite(Points.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green);
             Write(" points out of ");
-            ColorWrite(TotalPairs.ToString(), ConsoleColor.Green, config.OutputHasColors);
+            ColorWrite(TotalPairs.ToString(), ConsoleColor.Green);
             Write("\n");
 
             Write("Average response time -> ");
-            ColorWrite(ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan, config.OutputHasColors);
+            ColorWrite(ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan);
             Write(" seconds.\n");
 
             Write("Average accuracy -> ");
-            ColorWrite(Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow, config.OutputHasColors);
+            ColorWrite(Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow);
             Write("%.\n");
         }
         Points = 0;
@@ -130,12 +131,12 @@ public abstract class BaseSession: ISession
         if(!config.DisplayOnPairStatistics) return;
         if(isPositive)
         {
-            ColorWriteLine("Correct!", ConsoleColor.Green, config.OutputHasColors);
+            ColorWriteLine("Correct!", ConsoleColor.Green);
             onPositive();
         }
         else
         {
-            ColorWriteLine("Incorrect!", ConsoleColor.Red, config.OutputHasColors);
+            ColorWriteLine("Incorrect!", ConsoleColor.Red);
             onNegative();
         }
         PressKeyToContinue();
@@ -144,7 +145,7 @@ public abstract class BaseSession: ISession
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(config.Layout != LayoutType.Card) return;
-        if(CurrentPair == pairs.Count) return;
+        if(config.Mode != ModeType.LearnAndAnswer && CurrentPair == pairs.Count) return;
         // Make sure statistics are on screen before clean
         ConsoleHelper.PressKeyToContinue(prompt);
     }
@@ -152,7 +153,7 @@ public abstract class BaseSession: ISession
     public void ClearScreen(int cursorBefore)
     {
         if(config.Layout != LayoutType.Card) return;
-        if(CurrentPair == pairs.Count) return;
+        if(config.Mode != ModeType.LearnAndAnswer && CurrentPair == pairs.Count) return;
 
         ConsoleHelper.ClearScreen(cursorBefore);
     }
