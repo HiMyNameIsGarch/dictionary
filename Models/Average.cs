@@ -3,15 +3,13 @@ using static ConsoleHelper;
 
 public class Average
 {
-    public Average(string before, string after, bool hasColors)
+    public Average(string before, string after)
     {
         _before = before;
         _after = after;
-        _hasColors = hasColors;
     }
 
     public static int decimals = 2;
-    private readonly bool _hasColors;
     private readonly string _before;
     private readonly string _after;
     private List<double> Values = new List<double>();
@@ -37,8 +35,8 @@ public class Average
     public void DisplayText(double value, ConsoleColor color)
     {
         Write(_before);
-        ColorWrite(value.ToString(), color, _hasColors);
-        Write(_after);
+        ColorWrite(value.ToString(), color);
+        Write(_after + "\n");
     }
     public void DisplayTextOnLast(int num, bool isAverage)
     {
@@ -47,7 +45,6 @@ public class Average
         if(isAverage)
         {
             DisplayText(GetAvarage(values), ConsoleColor.Yellow);
-            Write("\n");
             return;
         }
         for(int i = 0; i < values.Count; i++)

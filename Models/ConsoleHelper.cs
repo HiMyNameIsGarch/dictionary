@@ -3,16 +3,20 @@ using static System.Console;
 
 public static class ConsoleHelper
 {
-    public static void ColorWriteLine(string text, ConsoleColor color, bool canColor)
+    private static bool _canColor = true;
+    public static void EnableColors() { _canColor = true; }
+    public static void DisableColors() { _canColor = false; }
+
+    public static void ColorWriteLine(string text, ConsoleColor color)
     {
-        if(canColor) ForegroundColor = color;
+        if(_canColor) ForegroundColor = color;
         WriteLine(text);
         ResetColor();
     }
 
-    public static void ColorWrite(string text, ConsoleColor color, bool canColor)
+    public static void ColorWrite(string text, ConsoleColor color)
     {
-        if(canColor) ForegroundColor = color;
+        if(_canColor) ForegroundColor = color;
         Write(text);
         ResetColor();
     }
@@ -22,19 +26,19 @@ public static class ConsoleHelper
         int currentCursor = Console.CursorTop;
         int linesToClear = initialCursorPosition - currentCursor - 1;
         linesToClear = linesToClear * -1;
-        Console.SetCursorPosition(0, initialCursorPosition);
+        SetCursorPosition(0, initialCursorPosition);
         for (int i = 0; i < linesToClear; i++)
         {
-            Console.Write(new string(' ', Console.BufferWidth));
+            Write(new string(' ', Console.BufferWidth));
         }
-        Console.SetCursorPosition(0, currentCursor - (linesToClear - 1));
+        SetCursorPosition(0, currentCursor - (linesToClear - 1));
     }
 
     public static void PressKeyToContinue(string prompt)
     {
-        Console.Write(prompt);
-        Console.ReadKey(true);
-        Console.Write("\n");
+        Write(prompt);
+        ReadKey(true);
+        Write("\n");
     }
 
     public static void DisplayColumn(string input, char separator = '|')
@@ -62,7 +66,7 @@ public static class ConsoleHelper
             string line = String.Format(format, pair.Item1, pair.Item2);
             sb.AppendLine(line);
         }
-        Console.WriteLine(sb.ToString());
+        WriteLine(sb.ToString());
     }
 
 }

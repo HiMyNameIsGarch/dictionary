@@ -7,6 +7,11 @@ public class SessionData
         Config = config;
         Pairs = pairs;
         WrongPairs = new Dictionary<string[], string[]>();
+
+        if(config.OutputHasColors)
+            ConsoleHelper.EnableColors();
+        else 
+            ConsoleHelper.DisableColors();
     }
 
     public ConfigOptions Config { get; }
