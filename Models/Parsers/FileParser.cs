@@ -3,16 +3,15 @@ using System.Runtime.InteropServices;
 public abstract class FileParser<T>: IParser<T>
 {
 
+    public FileParser(string linuxDir, string windowsDir)
+    {
+        BaseDirectory = SetBaseDirectory(linuxDir, windowsDir);
+        FilePath = "";
+        FileText = "";
+    }
     public FileParser(string linuxDir, string windowsDir, string fileName) 
     {
-
-        BaseDirectory = CurrentOS.GetDirectoryPath(linuxDir, windowsDir);
-
-        if(string.IsNullOrEmpty(BaseDirectory))
-        {
-            Console.WriteLine($"Platform not supported! Platform: {RuntimeInformation.OSDescription}");
-            Environment.Exit(1);
-        }
+        BaseDirectory = SetBaseDirectory(linuxDir, windowsDir);
 
         FilePath = $"{BaseDirectory}{CurrentOS.GetSeparator()}{fileName}";
 
@@ -29,6 +28,17 @@ public abstract class FileParser<T>: IParser<T>
         
         // Read the text from the file
         FileText = File.ReadAllText(FilePath);
+    }
+
+    private string SetBaseDirectory(string linuxDir, string windowsDir)
+    {
+        var dir = CurrentOS.GetDirectoryPath(linuxDir, windowsDir);
+        if(string.IsNullOrEmpty(dir))
+        {
+            Console.WriteLine($"Platform not supported! Platform: {RuntimeInformation.OSDescription}");
+            Environment.Exit(1);
+        }
+        return dir;
     }
 
     public string FileText { get; }

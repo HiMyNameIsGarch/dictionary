@@ -7,6 +7,8 @@ public class WordsParser: FileParser<Dictionary<string[], string[]>>
 
     public WordsParser(string defaultFile): base(".local/share/dictionary","data", defaultFile) { }
 
+    public WordsParser(): base(".local/share/dictionary","data") { }
+
     public override Dictionary<string[], string[]> ParseFile()
     {
         Dictionary<string[], string[]> PairsData = new Dictionary<string[], string[]>();
