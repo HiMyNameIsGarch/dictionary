@@ -45,10 +45,11 @@ public abstract class BaseSession: ISession
             DisplayDelimiter();
             int currentPoints = AskQuestion(words.Key, words.Value);
 
-            if(currentPoints == 0 || (config.AskMeSynonyms && currentPoints < words.Value.Length))
+            if(currentPoints == 0 || (config.AskMeSynonyms && currentPoints < (config.ReverseWords ? words.Key.Length : words.Value.Length)))
+            {
                 Data.WrongPairs.Add(words.Key, words.Value);
-            else 
-                Points += currentPoints;
+            }
+            Points += currentPoints;
 
             ClearScreen(cursorTop);
             CurrentPair++;

@@ -98,7 +98,7 @@ public class WordsSession : BaseSession
         TotalPairs = 0;
         if(config.AskMeSynonyms)
         {
-            foreach(var synonyms in pairs.Values) 
+            foreach(var synonyms in (config.ReverseWords ? pairs.Values.ToArray() : pairs.Keys.ToArray())) 
                 TotalPairs += synonyms.Length;
         } 
         else TotalPairs = pairs.Count;
