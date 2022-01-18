@@ -45,7 +45,7 @@ public abstract class BaseSession: ISession
             DisplayDelimiter();
             int currentPoints = AskQuestion(words.Key, words.Value);
 
-            if(currentPoints == 0 || (config.AskMeSynonyms && currentPoints < (config.ReverseWords ? words.Key.Length : words.Value.Length)))
+            if(currentPoints < Data.GetExpectedPoints(words.Key, words.Value))
             {
                 Data.WrongPairs.Add(words.Key, words.Value);
             }

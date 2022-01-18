@@ -17,7 +17,7 @@ public class WordsSession : BaseSession
         var data = GetSynonym(words, synonyms);
         if(!data.Item2) return 0; // if you don't know one word, don't bother asking the others
         if(synonyms.Length == 1 || !config.AskMeSynonyms) 
-            return data.Item2 ? 1 : 0;
+            return data.Item2 ? synonyms.Length : 0;
 
         ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan);
         Thread.Sleep(2000);

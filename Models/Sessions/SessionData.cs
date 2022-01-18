@@ -20,6 +20,21 @@ public class SessionData
 
     public Dictionary<string[], string[]> WrongPairs { get; private set; }
 
+    public int GetExpectedPoints(string[] keys, string[] values)
+    {
+        if(Config.FileExtension == FileExtension.IrregularVerbs)
+        {
+            return IrregularVerbs.MaxVerbs;
+        }
+        if(Config.ReverseWords)
+        {
+            return keys.Length;
+        }
+        else
+        {
+            return values.Length;
+        }
+    }
     public void SetPairs(Dictionary<string[], string[]> newPairs)
     {
         if(newPairs.Count != 0 && newPairs != null) Pairs = newPairs;
