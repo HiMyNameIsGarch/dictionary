@@ -16,13 +16,13 @@ public abstract class BaseSession: ISession
     {
         if(CurrentPair != 0)
         {
-            Write("-----------------< ");
+            Write("─────────────────┤ ");
             ColorWrite(CurrentPair.ToString(), CurrentPair != Data.TotalPoints ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
             Write(" / ");
             ColorWrite(Data.TotalPoints.ToString(), ConsoleColor.DarkBlue);
-            Write(" >-----------------\n");
+            Write(" ├─────────────────\n");
         }
-        else WriteLine("------------------------------------------");
+        else WriteLine("──────────────────────────────────────────");
     }
 
     public void Start(Dictionary<string[], string[]> pairs)
@@ -57,12 +57,12 @@ public abstract class BaseSession: ISession
     {
         Data.Points = 0;
         Data.ShufflePairs();
-        Write("\nSession type: ");
-        ColorWrite(Data.Config.FileExtension.ToString(), ConsoleColor.DarkBlue);
-        Write("\nSession started on file: ");
+        Write("\nSession Type    : ");
+        ColorWrite(Data.Config.FileExtension.ToFormattedString(), ConsoleColor.DarkBlue);
+        Write("\nStarted on file : ");
         ColorWrite(Data.Config.CurrentFile, ConsoleColor.DarkCyan);
-        Write("\nSession type: ");
-        ColorWrite(Data.Config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta);
+        Write("\nWith mode       : ");
+        ColorWrite(Data.Config.Mode.ToFormattedString() + "\n\n", ConsoleColor.DarkMagenta);
     }
     public virtual void AfterSessionHook()
     {
@@ -79,7 +79,7 @@ public abstract class BaseSession: ISession
             ColorWrite(Data.ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan);
             Write(" seconds.\n");
 
-            Write("Average accuracy -> ");
+            Write("Average accuracy      -> ");
             ColorWrite(Data.Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow);
             Write("%.\n");
         }
