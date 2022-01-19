@@ -95,13 +95,12 @@ public class WordsSession : BaseSession
 
     public override void AfterSessionHook() 
     {
-        Data.TotalPoints = 0;
         if(Data.Config.AskMeSynonyms)
         {
+            Data.TotalPoints = 0;
             foreach(var synonyms in (Data.Config.ReverseWords ? Data.Pairs.Values.ToArray() : Data.Pairs.Keys.ToArray())) 
                 Data.TotalPoints += synonyms.Length;
         } 
-        else Data.TotalPoints = Data.Pairs.Count;
         base.AfterSessionHook();
     }
 
