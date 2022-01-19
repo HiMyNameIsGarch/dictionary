@@ -8,7 +8,7 @@ public class WordsSession : BaseSession
 
     public override int AskQuestion(string[] words, string[] synonyms)
     {
-        if(config.ReverseWords)
+        if(Data.Config.ReverseWords)
         {
             var tempWords = words;
             words = synonyms;
@@ -16,7 +16,7 @@ public class WordsSession : BaseSession
         }
         var data = GetSynonym(words, synonyms);
         if(!data.Item2) return 0; // if you don't know one word, don't bother asking the others
-        if(synonyms.Length == 1 || !config.AskMeSynonyms) 
+        if(synonyms.Length == 1 || !Data.Config.AskMeSynonyms) 
             return data.Item2 ? synonyms.Length : 0;
 
         ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan);
@@ -36,7 +36,7 @@ public class WordsSession : BaseSession
             {
                 points++;
                 synonyms = RemoveElement(synonyms, data.Item1);
-                if(config.Layout == LayoutType.Card) Write("\n");
+                if(Data.Config.Layout == LayoutType.Card) Write("\n");
             }
             else break;
         }
@@ -48,7 +48,7 @@ public class WordsSession : BaseSession
         string response = GetUserResponse(GetQuestionString(words));
 
         var acc = EditDistance.GetAccuracy(synonyms, response);
-        Accuracy.Add(acc.Item2);
+        Data.Accuracy.Add(acc.Item2);
 
         bool isCorrect = synonyms.Any(response.Equals);
         if(!isCorrect) isCorrect = IsAnswerRight();
@@ -61,9 +61,9 @@ public class WordsSession : BaseSession
 
     private void OnPositiveResponse()
     {
-        if(config.Layout == LayoutType.Card)
+        if(Data.Config.Layout == LayoutType.Card)
         {
-            ResponseTime.DisplayText(ResponseTime.LastValue, ConsoleColor.Cyan);
+            Data.ResponseTime.DisplayText(Data.ResponseTime.LastValue, ConsoleColor.Cyan);
         }
     }
 
@@ -77,7 +77,7 @@ public class WordsSession : BaseSession
         ColorWrite("The answer can be: ", ConsoleColor.Blue);
         Write(CombineWords(correctWords, false) + "\n");
 
-        Accuracy.DisplayText(Accuracy.LastValue, ConsoleColor.Cyan);
+        Data.Accuracy.DisplayText(Data.Accuracy.LastValue, ConsoleColor.Cyan);
     }
 
     private string GetQuestionString(string[] words)
@@ -95,13 +95,13 @@ public class WordsSession : BaseSession
 
     public override void AfterSessionHook() 
     {
-        TotalPairs = 0;
-        if(config.AskMeSynonyms)
+        Data.TotalPoints = 0;
+        if(Data.Config.AskMeSynonyms)
         {
-            foreach(var synonyms in (config.ReverseWords ? pairs.Values.ToArray() : pairs.Keys.ToArray())) 
-                TotalPairs += synonyms.Length;
+            foreach(var synonyms in (Data.Config.ReverseWords ? Data.Pairs.Values.ToArray() : Data.Pairs.Keys.ToArray())) 
+                Data.TotalPoints += synonyms.Length;
         } 
-        else TotalPairs = pairs.Count;
+        else Data.TotalPoints = Data.Pairs.Count;
         base.AfterSessionHook();
     }
 

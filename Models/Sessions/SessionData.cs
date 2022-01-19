@@ -7,12 +7,22 @@ public class SessionData
         Config = config;
         Pairs = pairs;
         WrongPairs = new Dictionary<string[], string[]>();
+        ResponseTime = new Average("Took -> ", " seconds.");
+        Accuracy = new Average("Accuracy -> ", "%.");
 
         if(config.OutputHasColors)
             ConsoleHelper.EnableColors();
         else 
             ConsoleHelper.DisableColors();
     }
+
+    public int Points { get; set; }
+
+    public int TotalPoints { get; set; }
+
+    public Average ResponseTime { get; }
+
+    public Average Accuracy { get; }
 
     public ConfigOptions Config { get; }
 

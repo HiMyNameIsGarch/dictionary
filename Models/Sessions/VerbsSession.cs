@@ -33,7 +33,7 @@ public class VerbsSession : BaseSession
         string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
         double accuracy = EditDistance.GetAccuracy(values[num - 1], verb);
-        Accuracy.Add(accuracy);
+        Data.Accuracy.Add(accuracy);
         return verb;
     }
 
@@ -45,9 +45,9 @@ public class VerbsSession : BaseSession
 
     private void OnPositiveResponse()
     {
-        if(config.Layout == LayoutType.Card)
+        if(Data.Config.Layout == LayoutType.Card)
         {
-            ResponseTime.DisplayTextOnLast(3, config.DisplayAvarageStatistics);
+            Data.ResponseTime.DisplayTextOnLast(3, Data.Config.DisplayAvarageStatistics);
         }
     }
 
@@ -55,9 +55,9 @@ public class VerbsSession : BaseSession
             inputVerbs, int currentPoints)
     {
         DisplayCorrectAnswer(currentVerbs, inputVerbs);
-        Accuracy.DisplayTextOnLast(3, config.DisplayAvarageStatistics);
+        Data.Accuracy.DisplayTextOnLast(3, Data.Config.DisplayAvarageStatistics);
         Write("You got ");
-        ColorWrite(currentPoints.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green);
+        ColorWrite(currentPoints.ToString(), Data.Points != Data.TotalPoints ? ConsoleColor.DarkGreen : ConsoleColor.Green);
         Write(" points out of ");
         ColorWrite(IrregularVerbs.MaxVerbs.ToString(), ConsoleColor.Green);
         Write("\n");
@@ -94,7 +94,7 @@ public class VerbsSession : BaseSession
     
     public override void AfterSessionHook() 
     {
-        TotalPairs = TotalPairs * IrregularVerbs.MaxVerbs;
+        Data.TotalPoints = Data.TotalPoints * IrregularVerbs.MaxVerbs;
         base.AfterSessionHook();
     }
 

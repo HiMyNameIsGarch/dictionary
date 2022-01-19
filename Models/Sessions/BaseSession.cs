@@ -6,38 +6,30 @@ public abstract class BaseSession: ISession
     public BaseSession(SessionData data) 
     { 
         Data = data; 
-        ResponseTime = new Average("Took -> ", " seconds.");
-        Accuracy = new Average("Accuracy -> ", "%.");
     }
 
     private const double TypoMystake = 80.0;
     protected int CurrentPair = 0;
-    public int Points { get; set; }
-    public int TotalPairs { get; set; }
-    public Average ResponseTime { get; }
-    public Average Accuracy { get; }
+    public SessionData Data { get; }
 
     private void DisplayDelimiter()
     {
         if(CurrentPair != 0)
         {
             Write("-----------------< ");
-            ColorWrite(CurrentPair.ToString(), CurrentPair != TotalPairs ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
+            ColorWrite(CurrentPair.ToString(), CurrentPair != Data.TotalPoints ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
             Write(" / ");
-            ColorWrite(TotalPairs.ToString(), ConsoleColor.DarkBlue);
+            ColorWrite(Data.TotalPoints.ToString(), ConsoleColor.DarkBlue);
             Write(" >-----------------\n");
         }
         else WriteLine("------------------------------------------");
     }
-    public SessionData Data { get; }
-    public ConfigOptions config { get { return Data.Config; } }
-    public Dictionary<string[], string[]> pairs { get { return Data.Pairs; } }
 
     public void Start(Dictionary<string[], string[]> pairs)
     {
         Data.SetPairs(pairs);
         Data.ResetWrongPairs();
-        TotalPairs = pairs.Count;
+        Data.TotalPoints = pairs.Count;
         CurrentPair = 1;
         foreach(var words in pairs)
         {
@@ -49,7 +41,7 @@ public abstract class BaseSession: ISession
             {
                 Data.WrongPairs.Add(words.Key, words.Value);
             }
-            Points += currentPoints;
+            Data.Points += currentPoints;
 
             ClearScreen(cursorTop);
             CurrentPair++;
@@ -63,43 +55,43 @@ public abstract class BaseSession: ISession
     // Hooks
     public virtual void BeforeSessionHook()
     {
-        Points = 0;
+        Data.Points = 0;
         Data.ShufflePairs();
         Write("\nSession type: ");
-        ColorWrite(config.FileExtension.ToString(), ConsoleColor.DarkBlue);
+        ColorWrite(Data.Config.FileExtension.ToString(), ConsoleColor.DarkBlue);
         Write("\nSession started on file: ");
-        ColorWrite(config.CurrentFile, ConsoleColor.DarkCyan);
+        ColorWrite(Data.Config.CurrentFile, ConsoleColor.DarkCyan);
         Write("\nSession type: ");
-        ColorWrite(config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta);
+        ColorWrite(Data.Config.Mode.ToString() + "\n\n", ConsoleColor.DarkMagenta);
     }
     public virtual void AfterSessionHook()
     {
-        if(config.DisplayFinalStatistics) 
+        if(Data.Config.DisplayFinalStatistics) 
         {
-            if(config.Mode != ModeType.LearnAndAnswer || config.Layout == LayoutType.List) Write("\n");
+            if(Data.Config.Mode != ModeType.LearnAndAnswer || Data.Config.Layout == LayoutType.List) Write("\n");
             Write("You got ");
-            ColorWrite(Points.ToString(), Points != TotalPairs ? ConsoleColor.DarkGreen : ConsoleColor.Green);
+            ColorWrite(Data.Points.ToString(), Data.Points != Data.TotalPoints ? ConsoleColor.DarkGreen : ConsoleColor.Green);
             Write(" points out of ");
-            ColorWrite(TotalPairs.ToString(), ConsoleColor.Green);
+            ColorWrite(Data.TotalPoints.ToString(), ConsoleColor.Green);
             Write("\n");
 
             Write("Average response time -> ");
-            ColorWrite(ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan);
+            ColorWrite(Data.ResponseTime.AvarageNum.ToString(), ConsoleColor.DarkCyan);
             Write(" seconds.\n");
 
             Write("Average accuracy -> ");
-            ColorWrite(Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow);
+            ColorWrite(Data.Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow);
             Write("%.\n");
         }
-        Points = 0;
-        ResponseTime.ResetValue();
-        Accuracy.ResetValue();
+        Data.Points = 0;
+        Data.ResponseTime.ResetValue();
+        Data.Accuracy.ResetValue();
     }
 
     private protected bool IsAnswerRight(int lastAnswers = 1)
     {
-        double currentAccuracy = Accuracy.GetLast(lastAnswers);
-        if(config.Over80IamCorrect)
+        double currentAccuracy = Data.Accuracy.GetLast(lastAnswers);
+        if(Data.Config.Over80IamCorrect)
         {
             return currentAccuracy > TypoMystake;
         }
@@ -116,7 +108,7 @@ public abstract class BaseSession: ISession
             response = ReadLine()?.Trim();
             var after = DateTime.Now;
             var timeSpan = after - before;
-            ResponseTime.Add(timeSpan.TotalSeconds);
+            Data.ResponseTime.Add(timeSpan.TotalSeconds);
         }
         while(string.IsNullOrWhiteSpace(response));
         return response;
@@ -129,7 +121,7 @@ public abstract class BaseSession: ISession
 
     protected void ShowResponseStatus(bool isPositive, Action onPositive, Action onNegative)
     {
-        if(!config.DisplayOnPairStatistics) return;
+        if(!Data.Config.DisplayOnPairStatistics) return;
         if(isPositive)
         {
             ColorWriteLine("Correct!", ConsoleColor.Green);
@@ -145,23 +137,23 @@ public abstract class BaseSession: ISession
 
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
-        if(config.Layout != LayoutType.Card) return;
-        if(config.Mode != ModeType.LearnAndAnswer && CurrentPair == pairs.Count) return;
+        if(Data.Config.Layout != LayoutType.Card) return;
+        if(Data.Config.Mode != ModeType.LearnAndAnswer && CurrentPair == Data.Pairs.Count) return;
         // Make sure statistics are on screen before clean
         ConsoleHelper.PressKeyToContinue(prompt);
     }
 
     public void ClearScreen(int cursorBefore)
     {
-        if(config.Layout != LayoutType.Card) return;
-        if(config.Mode != ModeType.LearnAndAnswer && CurrentPair == pairs.Count) return;
+        if(Data.Config.Layout != LayoutType.Card) return;
+        if(Data.Config.Mode != ModeType.LearnAndAnswer && CurrentPair == Data.Pairs.Count) return;
 
         ConsoleHelper.ClearScreen(cursorBefore);
     }
 
     public string CombineWords(string[] words, bool useSetting = true)
     {
-        if(config.DisplayOneRandomSynonym && useSetting) 
+        if(Data.Config.DisplayOneRandomSynonym && useSetting) 
         {
             return GetRandomSynonym(words);
         }
