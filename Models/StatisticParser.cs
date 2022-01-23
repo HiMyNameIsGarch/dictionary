@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 public class StatisticParser : FileParser<StatisticModel>
 {
     public StatisticParser(string fileName):
-        base(".cache/dictionary","", fileName) { }
+        base(".cache/dictionary","statistics", fileName) { }
 
     public void StoreModel(StatisticModel model)
     {

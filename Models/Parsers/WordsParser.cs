@@ -41,7 +41,8 @@ public class WordsParser: FileParser<Dictionary<string[], string[]>>
 
     protected override string DefaultFileText()
     {
-        Console.WriteLine("If this is your first time running this program, consider editing the default file");
+        Console.WriteLine("Creating the default text for: '{0}'", FilePath);
+        Console.WriteLine("Consider editing it before starting the session");
         StringBuilder sb = new StringBuilder();
         for(int i = 1; i < 10; i++)
         {

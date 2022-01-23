@@ -25,6 +25,6 @@ public class ConfigParser: FileParser<ConfigOptions>
     }
     protected override string DefaultFileText()
     {
-        return JsonConvert.SerializeObject(new ConfigOptions());
+        return JsonConvert.SerializeObject(new ConfigOptions(), Formatting.Indented);
     }
 }

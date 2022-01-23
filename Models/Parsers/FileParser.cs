@@ -22,7 +22,6 @@ public abstract class FileParser<T>: IParser<T>
 
         if(!File.Exists(FilePath)) 
         {
-            Console.WriteLine($"File {fileName} doesn't exists, creating default at: {FilePath}");
             System.IO.File.WriteAllText(FilePath, DefaultFileText());
         }
         
