@@ -6,11 +6,13 @@ public abstract class BaseSession: ISession
     public BaseSession(SessionData data) 
     { 
         Data = data; 
+        Stats = new Statistics();
     }
 
     private const double TypoMystake = 80.0;
     protected int CurrentPair = 0;
     public SessionData Data { get; }
+    public Statistics Stats { get; }
 
     private void DisplayDelimiter()
     {
@@ -66,6 +68,7 @@ public abstract class BaseSession: ISession
     }
     public virtual void AfterSessionHook()
     {
+        Stats.Store(Data);
         if(Data.Config.DisplayFinalStatistics) 
         {
             if(Data.Config.Mode != ModeType.LearnAndAnswer || Data.Config.Layout == LayoutType.List) Write("\n");
