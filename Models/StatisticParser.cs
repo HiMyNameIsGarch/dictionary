@@ -7,7 +7,7 @@ public class StatisticParser : FileParser<StatisticModel>
 
     public void StoreModel(StatisticModel model)
     {
-        string text = JsonConvert.SerializeObject(model);
+        string text = JsonConvert.SerializeObject(model, Formatting.Indented);
         System.IO.File.WriteAllText(FilePath, text);
     }
     protected override string DefaultFileText()

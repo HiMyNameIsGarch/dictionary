@@ -12,7 +12,11 @@ public class Average
     public static int decimals = 2;
     private readonly string _before;
     private readonly string _after;
-    private List<double> Values = new List<double>();
+    private List<double> _values = new List<double>();
+    public List<double> Values { 
+        get { return _values; } 
+        private set { _values = value; }
+    }
 
     public double LastValue
     {
