@@ -9,7 +9,8 @@ public abstract class BaseSession: ISession
         Stats = new Statistics();
     }
 
-    private const double TypoMystake = 80.0;
+    private const string _separator = " or ";
+    private const double _typoMistake= 80.0;
     protected int CurrentPair = 0;
     public SessionData Data { get; }
     public Statistics Stats { get; }
@@ -96,7 +97,7 @@ public abstract class BaseSession: ISession
         double currentAccuracy = Data.Accuracy.GetLast(lastAnswers);
         if(Data.Config.Over80IamCorrect)
         {
-            return currentAccuracy > TypoMystake;
+            return currentAccuracy > _typoMistake;
         }
         return currentAccuracy == EditDistance.MaxAccuracy;
     }
@@ -119,7 +120,12 @@ public abstract class BaseSession: ISession
 
     public virtual void WriteQuestion(string question = "AMA")
     {
-        Write(question);
+        string[] parts = question.Split(_separator);
+        for(int i = 0; i < parts.Length; i++)
+        {
+            Write(parts[i]);
+            if(i != parts.Length - 1) ColorWrite(_separator, ConsoleColor.Cyan);
+        }
     }
 
     protected void ShowResponseStatus(bool isPositive, Action onPositive, Action onNegative)
@@ -161,7 +167,7 @@ public abstract class BaseSession: ISession
             return GetRandomSynonym(words);
         }
 
-        return words.Combine(" or ");
+        return words.Combine(_separator);
     }
 
     public string GetRandomSynonym(string[] synonyms)
