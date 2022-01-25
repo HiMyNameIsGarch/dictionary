@@ -6,7 +6,7 @@ public class VerbsSession : BaseSession
 
     public VerbsSession(SessionData sessionData) : base(sessionData) {}
 
-    public override int AskQuestion(string[] values, string[] verbs) 
+    public override Tuple<int,int> AskQuestion(string[] values, string[] verbs) 
     {
         string prompt = CombineWords(values);
         var verbsArray = verbs.ToArray();
@@ -25,7 +25,8 @@ public class VerbsSession : BaseSession
         ShowResponseStatus(isCorrect, OnPositiveResponse, 
                 () => OnNegativeResponse(correctVerbs, currentInputVerbs,
                                          currentPoints));
-        return currentPoints;
+
+        return new Tuple<int,int>(currentPoints, IrregularVerbs.MaxVerbs);
     }
 
     private string GetValue(int num, string prompt, string[] values)
@@ -90,12 +91,6 @@ public class VerbsSession : BaseSession
                 Data.Pairs.Remove(verbs.Key);
             }
         }
-    }
-    
-    public override void AfterSessionHook() 
-    {
-        Data.TotalPoints = Data.TotalPoints * IrregularVerbs.MaxVerbs;
-        base.AfterSessionHook();
     }
 
     public override void DisplayStatusFor(string logs) { throw new NotImplementedException(); }

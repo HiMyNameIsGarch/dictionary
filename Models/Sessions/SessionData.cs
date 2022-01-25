@@ -18,6 +18,8 @@ public class SessionData
 
     public int Points { get; set; }
 
+    public int TotalPairs { get; set; }
+
     public int TotalPoints { get; set; }
 
     public Average ResponseTime { get; }

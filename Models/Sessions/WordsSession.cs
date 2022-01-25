@@ -6,7 +6,7 @@ public class WordsSession : BaseSession
 
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
-    public override int AskQuestion(string[] words, string[] synonyms)
+    public override Tuple<int,int> AskQuestion(string[] words, string[] synonyms)
     {
         if(Data.Config.ReverseWords)
         {
@@ -14,16 +14,23 @@ public class WordsSession : BaseSession
             words = synonyms;
             synonyms = tempWords;
         }
+        int maxPoints = (Data.Config.AskMeSynonyms) ? synonyms.Length : 1;
         var data = GetSynonym(words, synonyms);
-        if(!data.Item2) return 0; // if you don't know one word, don't bother asking the others
+        
+        // if you don't know one word, don't bother asking the others
+        if(!data.Item2) return new Tuple<int,int>(0, maxPoints); 
         if(synonyms.Length == 1 || !Data.Config.AskMeSynonyms) 
-            return data.Item2 ? synonyms.Length : 0;
+        {
+            int currentPoints = data.Item2 ? synonyms.Length : 0;
+            return new Tuple<int, int>(currentPoints, maxPoints);
+        }
 
         ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan);
-        Thread.Sleep(2000);
+        Thread.Sleep(1500);
 
-        return GetPointsFromSynonyms(words, 
+        int pointsWithSynonyms = GetPointsFromSynonyms(words, 
                 synonyms.Where(s => s != data.Item1).ToArray());
+        return new Tuple<int,int>(pointsWithSynonyms, maxPoints);
     }
 
     private int GetPointsFromSynonyms(string[] words, string[] synonyms)
@@ -91,17 +98,6 @@ public class WordsSession : BaseSession
     private string[] RemoveElement(string[] array, string element)
     {
         return array.Where(s => s != element).ToArray();
-    }
-
-    public override void AfterSessionHook() 
-    {
-        if(Data.Config.AskMeSynonyms)
-        {
-            Data.TotalPoints = 0;
-            foreach(var synonyms in (Data.Config.ReverseWords ? Data.Pairs.Values.ToArray() : Data.Pairs.Keys.ToArray())) 
-                Data.TotalPoints += synonyms.Length;
-        } 
-        base.AfterSessionHook();
     }
 
     public override void DisplayStatusFor(string logs)

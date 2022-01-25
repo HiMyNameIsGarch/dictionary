@@ -20,9 +20,9 @@ public abstract class BaseSession: ISession
         if(CurrentPair != 0)
         {
             Write("─────────────────┤ ");
-            ColorWrite(CurrentPair.ToString(), CurrentPair != Data.TotalPoints ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
+            ColorWrite(CurrentPair.ToString(), CurrentPair != Data.TotalPairs ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
             Write(" / ");
-            ColorWrite(Data.TotalPoints.ToString(), ConsoleColor.DarkBlue);
+            ColorWrite(Data.TotalPairs.ToString(), ConsoleColor.DarkBlue);
             Write(" ├─────────────────\n");
         }
         else WriteLine("──────────────────────────────────────────");
@@ -32,26 +32,28 @@ public abstract class BaseSession: ISession
     {
         Data.SetPairs(pairs);
         Data.ResetWrongPairs();
-        Data.TotalPoints = pairs.Count;
+        Data.TotalPairs = pairs.Count;
         CurrentPair = 1;
         foreach(var words in pairs)
         {
             int cursorTop = Console.CursorTop;
             DisplayDelimiter();
-            int currentPoints = AskQuestion(words.Key, words.Value);
+            var points = AskQuestion(words.Key, words.Value);
 
-            if(currentPoints < Data.GetExpectedPoints(words.Key, words.Value))
+            if(points.Item1 < points.Item2)
             {
                 Data.WrongPairs.Add(words.Key, words.Value);
             }
-            Data.Points += currentPoints;
+            Data.Points += points.Item1;
+            Data.TotalPoints += points.Item2;
 
             ClearScreen(cursorTop);
             CurrentPair++;
         }
     }
 
-    public abstract int AskQuestion(string[] words, string[] synonyms);
+    //This will return a tuple that will contain the <current points> and the <maximum> the could achive
+    public abstract Tuple<int,int> AskQuestion(string[] words, string[] synonyms);
 
     public abstract void DisplayStatusFor(string logs);
 
@@ -88,6 +90,7 @@ public abstract class BaseSession: ISession
             Write("%.\n");
         }
         Data.Points = 0;
+        Data.TotalPoints = 0;
         Data.ResponseTime.ResetValue();
         Data.Accuracy.ResetValue();
     }
