@@ -3,11 +3,13 @@ using static ConsoleHelper;
 
 public class WordsSession : BaseSession
 {
+    private const int _timeBeforeSynonyms = 2000; // in miliseconds
 
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
     public override Tuple<int,int> AskQuestion(string[] words, string[] synonyms)
     {
+        var consolePosition = Console.CursorTop;
         if(Data.Config.ReverseWords)
         {
             var tempWords = words;
@@ -25,25 +27,40 @@ public class WordsSession : BaseSession
             return new Tuple<int, int>(currentPoints, maxPoints);
         }
 
-        ColorWriteLine("\nIt's show time, I hope you know synonyms!", ConsoleColor.Cyan);
-        Thread.Sleep(1500);
+        ColorWriteLine("It's show time, I hope you know synonyms!", ConsoleColor.Cyan);
+        Thread.Sleep(_timeBeforeSynonyms);
+
+        ClearScreen(consolePosition);
 
         int pointsWithSynonyms = GetPointsFromSynonyms(words, 
                 synonyms.Where(s => s != data.Item1).ToArray());
+
         return new Tuple<int,int>(pointsWithSynonyms, maxPoints);
+    }
+
+    private void DisplaySynonymCount(int current, int max)
+    {
+        Console.Write("Synonym Count: ( ");
+        ConsoleHelper.ColorWrite(current.ToString(), current == max ? ConsoleColor.DarkBlue : ConsoleColor.Cyan);
+        Console.Write(" out of ");
+        ConsoleHelper.ColorWrite(max.ToString(), ConsoleColor.DarkBlue);
+        Console.Write(" )\n");
     }
 
     private int GetPointsFromSynonyms(string[] words, string[] synonyms)
     {
         int points = 1; // the user already got a point from the previous question
+        int maxSynonyms = synonyms.Length;
         while(synonyms.Length != 0)
         {
+            var consolePosition = Console.CursorTop;
+            DisplaySynonymCount(points, maxSynonyms);
             var data = GetSynonym(words, synonyms);
             if(data.Item2) // if question is correct
             {
                 points++;
                 synonyms = RemoveElement(synonyms, data.Item1);
-                if(Data.Config.Layout == LayoutType.Card) Write("\n");
+                ClearScreen(consolePosition);
             }
             else break;
         }
