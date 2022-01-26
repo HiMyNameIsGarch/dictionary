@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices; 
+using System.Text;
 
 public static class CurrentOS
 {
@@ -52,28 +53,23 @@ public static class CurrentOS
     public static string GetFullFilePath(string path, string extension)
     {
         int currentCursor = Console.CursorTop;
-        DirectoryInfo d = new DirectoryInfo(path);
-        int i = 0;
-        var allFiles = d.GetFiles("*." + extension);
-        foreach(var file in allFiles) {
-            i++;
-            Console.WriteLine($"{i} -> {file.Name}");
-        }
+        DirectoryInfo dirInfo = new DirectoryInfo(path);
+        var fileNames = dirInfo.GetFiles("*." + extension);
+        var fileName = OrderAndDisplayFiles(fileNames.Select(s => s.Name).ToArray());
 
-        if(allFiles.Length == 1){
+        if(fileNames.Length == 1){
             Console.WriteLine("Found just one file, selecting it...");
-            return allFiles[0].FullName;
+            return fileNames[0].FullName;
         }
         
-        string filePath = "";
+        string? filePath = "";
         do 
         {
-            Console.Write("Enter the number of your file: ");
-            string? keys = Console.ReadLine();
-            Console.Write("\n");
+            Console.Write("Number of your file: ");
+            string? keys = "1";//Console.ReadLine();
             if(!int.TryParse(keys, out int value)) continue;
-            if(value > i || value == 0) continue;
-            filePath = allFiles[value - 1].FullName;
+            if(value > fileNames.Length || value == 0) continue;
+            filePath = fileNames.Where(s => s.Name == fileName[value]).FirstOrDefault()?.Name;
         }
         while(string.IsNullOrEmpty(filePath));
 
@@ -82,4 +78,52 @@ public static class CurrentOS
         return filePath;
     }
 
+    private static Tuple<IEnumerable<string>, IEnumerable<string>> OrderFiles(string[] files)
+    {
+        ICollection<string> words = new List<string>();
+        ICollection<string> irregularVerbs = new List<string>();
+        foreach(var file in files)
+        {
+            if(file.Contains(".irregularverbs.txt"))
+            {
+                irregularVerbs.Add(file.Split('.')[0]);
+            }
+            else if(file.Contains(".words.txt"))
+            {
+                words.Add(file.Split('.')[0]);
+            }
+        }
+        return new Tuple<IEnumerable<string>, IEnumerable<string>>(words, irregularVerbs);
+    }
+
+    private static string[] OrderAndDisplayFiles(string[] files)
+    {
+        var names = OrderFiles(files);
+        var words = names.Item1;
+        var verbs = names.Item2;
+        string[] finalList = new string[words.Count() + verbs.Count() + 2];
+        int i = 1; 
+        Console.WriteLine("Irregular Verbs:");
+        foreach(var verb in verbs)
+        {
+            finalList[i - 1] = verb;
+            DisplayFileWithColor(i, verb);
+            i++;
+        }
+        Console.WriteLine("\nWords:");
+        foreach(var word in words)
+        {
+            finalList[i - 1] = word;
+            DisplayFileWithColor(i, word);
+            i++;
+        }
+        return finalList;
+    }
+
+    private static void DisplayFileWithColor(int num, string name)
+    {
+        ConsoleHelper.ColorWrite(num.ToString(), ConsoleColor.Yellow);
+        ConsoleHelper.ColorWrite(" -> ", ConsoleColor.DarkYellow);
+        ConsoleHelper.ColorWrite(name + "\n", ConsoleColor.Magenta);
+    }
 }
