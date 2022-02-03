@@ -52,17 +52,11 @@ public static class CurrentOS
     public static string GetFullFilePath(string path, string extension)
     {
         int currentCursor = Console.CursorTop;
-        DirectoryInfo d = new DirectoryInfo(path);
-        int i = 0;
-        var allFiles = d.GetFiles("*." + extension);
-        foreach(var file in allFiles) {
-            i++;
-            Console.WriteLine($"{i} -> {file.Name}");
-        }
+        var allFiles = GetAndDisplayFilesFrom(new DirectoryInfo(path));
 
         if(allFiles.Length == 1){
             Console.WriteLine("Found just one file, selecting it...");
-            return allFiles[0].FullName;
+            return allFiles[0];
         }
         
         string filePath = "";
@@ -70,16 +64,51 @@ public static class CurrentOS
         {
             Console.Write("Enter the number of your file: ");
             string? keys = Console.ReadLine();
-            Console.Write("\n");
             if(!int.TryParse(keys, out int value)) continue;
-            if(value > i || value == 0) continue;
-            filePath = allFiles[value - 1].FullName;
+            if(value > allFiles.Length || value <= 0) continue;
+            filePath = allFiles[value - 1];
         }
         while(string.IsNullOrEmpty(filePath));
 
         ConsoleHelper.ClearScreen(currentCursor);
 
         return filePath;
+    }
+
+    private static string[] GetAndDisplayFilesFrom(DirectoryInfo di)
+    {
+        var types = GetEnumList<FileExtension>();
+        ICollection<string> lFiles = new List<string>();
+        int idx = 1;
+        foreach(var type in types)
+        {
+            string pattern = "*." + type.ToString().ToLower() + ".txt";
+            var files = di.GetFiles(pattern);
+            // Display header
+            ConsoleHelper.ColorWriteLine(type.ToFormattedString(), ConsoleColor.Blue);
+            // Display the list of the files
+            foreach(var file in files)
+            {
+                DisplayFile(file.Name, idx);
+                lFiles.Add(file.FullName);
+                idx++;
+            }
+        }
+        return lFiles.ToArray();
+    }
+
+    private static void DisplayFile(string fileName, int num)
+    {
+        ConsoleHelper.ColorWrite(num.ToString(), ConsoleColor.Yellow);
+        ConsoleHelper.ColorWrite(" -> ", ConsoleColor.DarkYellow);
+        ConsoleHelper.ColorWrite(fileName + "\n", ConsoleColor.Magenta);
+    }
+
+    private static List<T> GetEnumList<T>()
+    {
+        T[] array = (T[])Enum.GetValues(typeof(T));
+        List<T> list = new List<T>(array);
+        return list;
     }
 
 }

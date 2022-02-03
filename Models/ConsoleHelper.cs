@@ -51,6 +51,7 @@ public static class ConsoleHelper
         {
             if(string.IsNullOrEmpty(line)) continue;
             string[] parts = line.Split(separator);
+            if(parts.Length < 2) continue;
             string first = parts[0];
             string second = parts[1];
             if(first.Length > biggestLine) biggestLine = first.Length;

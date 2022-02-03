@@ -70,26 +70,22 @@ public static class Sessionizer
         } 
         else 
         {
-            string baseDirectory = "";
-            string extension = "";
             switch(args[1])
             {
                 case "config":
-                    baseDirectory = new ConfigParser().BaseDirectory;
-                    extension = "json";
+                    var cParser = new ConfigParser();
+                    OpenFile(cParser.FilePath);
                     break;
                 case "words":
-                    baseDirectory = new WordsParser().BaseDirectory;
-                    extension = "txt";
+                    var wordsDir = new WordsParser().BaseDirectory;
+                    string words = CurrentOS.GetFullFilePath(wordsDir, "txt");
+                    OpenFile(words);
                     break;
                 default:
                     Console.WriteLine($"Invalid argument {args[1]}");
                     HelpMenu();
                     return 1;
             }
-            string words = CurrentOS.GetFullFilePath(baseDirectory, extension);
-            OpenFile(words);
-
         }
         return 0;
     }
