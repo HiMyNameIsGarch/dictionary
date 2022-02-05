@@ -3,8 +3,6 @@ using static ConsoleHelper;
 
 public class WordsSession : BaseSession
 {
-    private const int _timeBeforeSynonyms = 2000; // in miliseconds
-
     public WordsSession(SessionData sessionData) : base(sessionData) { }
 
     public override Tuple<int,int> AskQuestion(string[] words, string[] synonyms)
@@ -16,26 +14,21 @@ public class WordsSession : BaseSession
             words = synonyms;
             synonyms = tempWords;
         }
-        int maxPoints = (Data.Config.AskMeSynonyms) ? synonyms.Length : 1;
-        var data = GetSynonym(words, synonyms);
-        
-        // if you don't know one word, don't bother asking the others
-        if(!data.Item2) return new Tuple<int,int>(0, maxPoints); 
-        if(synonyms.Length == 1 || !Data.Config.AskMeSynonyms) 
+
+        int maxPoints = 0;
+        int currentPoints = 0;
+        if(Data.Config.AskMeSynonyms)
         {
-            int currentPoints = data.Item2 ? synonyms.Length : 0;
-            return new Tuple<int, int>(currentPoints, maxPoints);
+            maxPoints = synonyms.Length;
+            currentPoints += GetPointsFromSynonyms(words, synonyms);
+        }
+        else
+        {
+            maxPoints = 1;
+            currentPoints += GetWord(words, synonyms).Item2 ? 1 : 0;
         }
 
-        ColorWriteLine("It's show time, I hope you know synonyms!", ConsoleColor.Cyan);
-        Thread.Sleep(_timeBeforeSynonyms);
-
-        ClearScreen(consolePosition);
-
-        int pointsWithSynonyms = GetPointsFromSynonyms(words, 
-                synonyms.Where(s => s != data.Item1).ToArray());
-
-        return new Tuple<int,int>(pointsWithSynonyms, maxPoints);
+        return new Tuple<int,int>(currentPoints, maxPoints);
     }
 
     private void DisplaySynonymCount(int current, int max)
@@ -49,13 +42,13 @@ public class WordsSession : BaseSession
 
     private int GetPointsFromSynonyms(string[] words, string[] synonyms)
     {
-        int points = 1; // the user already got a point from the previous question
+        int points = 0;
         int maxSynonyms = synonyms.Length;
         while(synonyms.Length != 0)
         {
             var consolePosition = Console.CursorTop;
-            DisplaySynonymCount(points, maxSynonyms);
-            var data = GetSynonym(words, synonyms);
+            if(maxSynonyms > 1) DisplaySynonymCount((points + 1), maxSynonyms);
+            var data = GetWord(words, synonyms);
             if(data.Item2) // if question is correct
             {
                 points++;
@@ -67,7 +60,7 @@ public class WordsSession : BaseSession
         return points;
     }
 
-    private Tuple<string,bool> GetSynonym(string[] words, string[] synonyms)
+    private Tuple<string, bool> GetWord(string[] words, string[] synonyms)
     {
         string response = GetUserResponse(GetQuestionString(words));
 
