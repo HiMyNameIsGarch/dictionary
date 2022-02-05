@@ -101,6 +101,7 @@ public static class CurrentOS
     {
         ConsoleHelper.ColorWrite(num.ToString(), ConsoleColor.Yellow);
         ConsoleHelper.ColorWrite(" -> ", ConsoleColor.DarkYellow);
+        fileName = fileName.Split('.')[0]; // remove the extension of the file
         ConsoleHelper.ColorWrite(fileName + "\n", ConsoleColor.Magenta);
     }
 
