@@ -15,6 +15,18 @@ public class Graph
         _axis = new int[_coordonates.Length];
     }
 
+    public void Draw()
+    {
+        if(!CanDrawGraph()) return;
+
+        var beforeTable = Console.GetCursorPosition();
+        beforeTable.Left += _yaxis.Max.ToString().Length;
+
+        DisplayTable();
+
+        DisplayValues(beforeTable.Left + 2, beforeTable.Top);
+    }
+
     private bool CanDrawGraph()
     {
 
@@ -96,17 +108,22 @@ public class Graph
 
     private void DisplayValues(int left, int top)
     {
-    }
-
-    public void Draw()
-    {
-        if(!CanDrawGraph()) return;
-
-        var beforeTable = Console.GetCursorPosition();
-        beforeTable.Left += _yaxis.Max.ToString().Length;
-
-        DisplayTable();
-
-        DisplayValues(beforeTable.Left + 2, beforeTable.Top);
+        var before = Console.GetCursorPosition();
+        for(int i = 0; i < _coordonates.Length; i++)
+        {
+            var value = _coordonates[i];
+            var cval = (_yaxis.Max - value) / _yaxis.Rate;
+            var dtop = top + cval;
+            var down = _yaxis.Values.Length - cval;
+            for(int j = dtop; j < dtop + down; j++)
+            {
+                for(int k = 0; k < _xaxis.Values[i].ToString().Length; k++)
+                {
+                    Console.SetCursorPosition(_axis[i] + k, j);
+                    Console.Write("█");
+                }
+            }
+        }
+        Console.SetCursorPosition(before.Left, before.Top);
     }
 }
