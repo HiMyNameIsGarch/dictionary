@@ -25,4 +25,9 @@ public static class Extenders
                 return "None";
         }
     }
+
+    public static int Length(this int num)
+    {
+        return num.ToString().Length;
+    }
 }
