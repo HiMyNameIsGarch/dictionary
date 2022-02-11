@@ -48,35 +48,28 @@ public class Graph
         return true;
     }
 
-    private string BuildSpaces(int max, int current)
+    private string BuildChar(int num, char c)
     {
         string s = "";
-        var maxSpaces = (max == current) ? 1 : max - current;
-        for(int i = 0; i < maxSpaces; i++)
+        for(int i = 0; i < num; i++)
         {
-            s += " ";
+            s += c;
         }
         return s;
     }
 
-    private string BuildSpaces(int max)
-    {
-        string s = "─";
-        for(int i = 0; i < max; i++)
-        {
-            s += s;
-        }
-        return s;
-    }
+    private int GetSpaces(int max, int current) => (max == current) ? 1 : max - current;
 
     private void DisplayLeftPart()
     {
         var numLength = _yaxis.Max.Length() + 1;
         for(int i = _yaxis.Max; i >= _yaxis.Min; i -= _yaxis.Rate)
         {
-            Console.WriteLine(i + BuildSpaces(numLength, i.Length()) + "│");
+            string spaces = BuildChar(GetSpaces(numLength, i.Length()), ' ');
+            Console.WriteLine(i + spaces + "│");
         }
-        Console.Write(BuildSpaces(numLength, _yaxis.Min.Length()) + " " + "└");
+        string space = BuildChar(GetSpaces(numLength, _yaxis.Min.Length()), ' ');
+        Console.Write(space + " " + "└");
     }
     private void DisplayBottomPart()
     {
@@ -86,7 +79,8 @@ public class Graph
         for(int i = _xaxis.Min; i <= _xaxis.Max; i += _xaxis.Rate)
         {
             var aj = Console.GetCursorPosition();
-            Console.Write(BuildSpaces(i.Length()));
+            string line = BuildChar(i.Length() + 1, '─');
+            Console.Write(line);
             Console.SetCursorPosition(aj.Left, aj.Top + 1);
             j++;
             _axis[j - 1] = aj.Left;
