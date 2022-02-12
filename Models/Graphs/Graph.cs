@@ -67,57 +67,55 @@ public class Graph
             string spaces = BuildChar(GetSpaces(numLength, i.Length()), ' ');
             Console.WriteLine(i + spaces + "│");
         }
-        string space = BuildChar(GetSpaces(numLength, _yaxis.Min.Length()), ' ');
-        Console.Write(space + " " + "└");
+        string cornerSpaces = BuildChar(GetSpaces(numLength, _yaxis.Min.Length()), ' ');
+        Console.Write(cornerSpaces + " " + "└");
     }
     private void DisplayBottomPart()
     {
         Console.Write("─");
-        var current = Console.GetCursorPosition();
+        var beforeDraw = Console.GetCursorPosition();
         int j = 0;
         for(int i = _xaxis.Min; i <= _xaxis.Max; i += _xaxis.Rate)
         {
-            var aj = Console.GetCursorPosition();
+            var currentCursor = Console.GetCursorPosition();
             string line = BuildChar(i.Length() + 1, '─');
             Console.Write(line);
-            Console.SetCursorPosition(aj.Left, aj.Top + 1);
+            Console.SetCursorPosition(currentCursor.Left, currentCursor.Top + 1);
+            _axis[j] = currentCursor.Left;
             j++;
-            _axis[j - 1] = aj.Left;
             Console.Write(i);
-            Console.SetCursorPosition(aj.Left + i.Length() + 1, aj.Top);
+            Console.SetCursorPosition(currentCursor.Left + i.Length() + 1, currentCursor.Top);
         }
         Console.Write("\n");
-        Console.SetCursorPosition(current.Left, current.Top + 2);
+        Console.SetCursorPosition(beforeDraw.Left, beforeDraw.Top + 2);
         Console.Write("\n");
     }
 
     private void DisplayTable()
     {
-        // Display left part
         DisplayLeftPart();
-        // Display bottom part
+
         DisplayBottomPart();
     }
 
     private void DisplayValues(int left, int top)
     {
-        var before = Console.GetCursorPosition();
+        var beforeDraw = Console.GetCursorPosition();
         for(int i = 0; i < _coordonates.Length; i++)
         {
-            var value = _coordonates[i];
-            var cval = (_yaxis.Max - value) / _yaxis.Rate;
-            var dtop = top + cval;
-            var down = _yaxis.Values.Length - cval;
-            for(int j = dtop; j < dtop + down; j++)
+            int valueOnGraph = (_yaxis.Max - _coordonates[i] ) / _yaxis.Rate;
+            int startPoint = top + valueOnGraph;
+            int downPoints = _yaxis.Values.Length - valueOnGraph;
+            for(int j = startPoint; j < startPoint + downPoints; j++)
             {
                 for(int k = 0; k < _xaxis.Values[i].Length(); k++)
                 {
                     Console.SetCursorPosition(_axis[i] + k, j);
-                    DisplayPoint(_yaxis.Values.Length - j + 1, j == dtop);
+                    DisplayPoint(_yaxis.Values.Length - j + 1, j == startPoint);
                 }
             }
         }
-        Console.SetCursorPosition(before.Left, before.Top);
+        Console.SetCursorPosition(beforeDraw.Left, beforeDraw.Top);
     }
 
     private void DisplayPoint(int current, bool isFirstPoint)
