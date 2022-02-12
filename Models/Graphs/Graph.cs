@@ -29,7 +29,6 @@ public class Graph
 
     private bool CanDrawGraph()
     {
-
         if(Console.WindowWidth < _xaxis.Values.Length)
         {
             Console.WriteLine("Values are bigger than screen, abording...");
@@ -114,10 +113,33 @@ public class Graph
                 for(int k = 0; k < _xaxis.Values[i].Length(); k++)
                 {
                     Console.SetCursorPosition(_axis[i] + k, j);
-                    Console.Write("█");
+                    DisplayPoint(_yaxis.Values.Length - j + 1, j == dtop);
                 }
             }
         }
         Console.SetCursorPosition(before.Left, before.Top);
+    }
+
+    private void DisplayPoint(int current, bool isFirstPoint)
+    {
+        int maxBound = _yaxis.Values.Length;
+        int minBound = (int)Math.Ceiling(0.3 * maxBound);
+        int middleBound = maxBound - minBound;
+        // Color 
+        Console.ForegroundColor = GetCurrentColorFor(maxBound, minBound, middleBound, current);
+        Console.Write(isFirstPoint ? "▄" : "█");
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    private ConsoleColor GetCurrentColorFor(int max, int min, int middle, int current)
+    {
+        if(current > middle && current <= max)
+            return ConsoleColor.Green;
+        else if(current > min && current <= middle)
+            return ConsoleColor.Yellow;
+        else if(current <= min)
+            return ConsoleColor.Red;
+        else 
+            return ConsoleColor.White;
     }
 }
