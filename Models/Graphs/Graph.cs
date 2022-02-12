@@ -111,7 +111,7 @@ public class Graph
                 for(int k = 0; k < _xaxis.Values[i].Length(); k++)
                 {
                     Console.SetCursorPosition(_axis[i] + k, j);
-                    DisplayPoint(_yaxis.Values.Length - j + 1, j == startPoint);
+                    DisplayPoint(_yaxis.Values.Length - (j - top), j == startPoint);
                 }
             }
         }
