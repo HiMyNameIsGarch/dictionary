@@ -4,14 +4,16 @@ public class Graph
     private Bar _xaxis;
     private int[] _coordonates;
     private int[] _axis;
+    private bool _invertColors;
 
-    public Graph(Bar yaxis, Bar xaxis, int[] coordonates)
+    public Graph(Bar yaxis, Bar xaxis, int[] coordonates, bool invertColors)
     {
         _yaxis = yaxis;
         _yaxis.ComputeValues();
         _xaxis = xaxis;
         _xaxis.ComputeValues();
         _coordonates = coordonates;
+        _invertColors = invertColors;
         _axis = new int[_coordonates.Length];
     }
 
@@ -19,12 +21,11 @@ public class Graph
     {
         if(!CanDrawGraph()) return;
 
-        var beforeTable = Console.GetCursorPosition();
-        beforeTable.Left += _yaxis.Max.Length();
+        int pointBeforeTable = Console.GetCursorPosition().Top;
 
         DisplayTable();
 
-        DisplayValues(beforeTable.Left + 2, beforeTable.Top);
+        DisplayValues(pointBeforeTable);
     }
 
     private bool CanDrawGraph()
@@ -67,8 +68,8 @@ public class Graph
             string spaces = BuildChar(GetSpaces(numLength, i.Length()), ' ');
             Console.WriteLine(i + spaces + "│");
         }
-        string cornerSpaces = BuildChar(GetSpaces(numLength, _yaxis.Min.Length()), ' ');
-        Console.Write(cornerSpaces + " " + "└");
+        string cornerSpaces = BuildChar(_yaxis.Max.Length() + 1, ' ');
+        Console.Write(cornerSpaces + "└");
     }
     private void DisplayBottomPart()
     {
@@ -98,20 +99,21 @@ public class Graph
         DisplayBottomPart();
     }
 
-    private void DisplayValues(int left, int top)
+    private void DisplayValues(int topPoint)
     {
         var beforeDraw = Console.GetCursorPosition();
         for(int i = 0; i < _coordonates.Length; i++)
         {
-            int valueOnGraph = (_yaxis.Max - _coordonates[i] ) / _yaxis.Rate;
-            int startPoint = top + valueOnGraph;
+            int valueOnGraph = _yaxis.Max - _coordonates[i];
+            valueOnGraph = (int)Math.Round((double)valueOnGraph / _yaxis.Rate);
+            int startPoint = topPoint + valueOnGraph;
             int downPoints = _yaxis.Values.Length - valueOnGraph;
             for(int j = startPoint; j < startPoint + downPoints; j++)
             {
                 for(int k = 0; k < _xaxis.Values[i].Length(); k++)
                 {
                     Console.SetCursorPosition(_axis[i] + k, j);
-                    DisplayPoint(_yaxis.Values.Length - (j - top), j == startPoint);
+                    DisplayPoint(_yaxis.Values.Length - (j - topPoint), j == startPoint);
                 }
             }
         }
@@ -132,11 +134,11 @@ public class Graph
     private ConsoleColor GetCurrentColorFor(int max, int min, int middle, int current)
     {
         if(current > middle && current <= max)
-            return ConsoleColor.Green;
+            return _invertColors ? ConsoleColor.Red : ConsoleColor.Green;
         else if(current > min && current <= middle)
             return ConsoleColor.Yellow;
         else if(current <= min)
-            return ConsoleColor.Red;
+            return _invertColors ? ConsoleColor.Green: ConsoleColor.Red;
         else 
             return ConsoleColor.White;
     }
