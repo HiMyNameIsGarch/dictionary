@@ -83,7 +83,7 @@ public static class CurrentOS
         foreach(var type in types)
         {
             string pattern = "*." + type.ToString().ToLower() + ".txt";
-            var files = di.GetFiles(pattern);
+            var files = di.GetFiles(pattern).OrderBy(s => s.Name).ToArray();
             // Display header
             ConsoleHelper.ColorWriteLine(type.ToFormattedString(), ConsoleColor.Blue);
             // Display the list of the files
