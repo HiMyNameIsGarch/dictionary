@@ -22,4 +22,13 @@ public class Statistics
         model.Accuracies = data.Accuracy.Values;
         return model;
     }
+
+    public void ShowOptions()
+    {
+    }
+
+    private ICollection<StatisticModel> GetAllStatistics()
+    {
+        return new StatisticParser().ParseFiles();
+    }
 }
