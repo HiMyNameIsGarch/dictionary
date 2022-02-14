@@ -101,6 +101,8 @@ public static class Sessionizer
     }
     private static int Status()
     {
+        var stats = new Statistics();
+        stats.ShowOptions();
         return 1;
     }
 
