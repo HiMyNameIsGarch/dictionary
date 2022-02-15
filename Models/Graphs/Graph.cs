@@ -2,19 +2,19 @@ public class Graph
 {
     private Bar _yaxis;
     private Bar _xaxis;
-    private int[] _coordonates;
+    private int[] _values;
     private int[] _axis;
     private bool _invertColors;
 
-    public Graph(Bar yaxis, Bar xaxis, int[] coordonates, bool invertColors)
+    public Graph(Bar yaxis, Bar xaxis, int[] values, bool invertColors)
     {
         _yaxis = yaxis;
         _yaxis.ComputeValues();
         _xaxis = xaxis;
         _xaxis.ComputeValues();
-        _coordonates = coordonates;
+        _values = values;
         _invertColors = invertColors;
-        _axis = new int[_coordonates.Length];
+        _axis = new int[_values.Length];
     }
 
     public void Draw()
@@ -28,19 +28,56 @@ public class Graph
         DisplayValues(pointBeforeTable);
     }
 
+    private int GetxaxisLength()
+    {
+        int length = 0;
+        for(int i = _xaxis.Max; i >= _xaxis.Min; i -= _xaxis.Rate)
+        {
+            length += i.Length();
+        }
+        length += _xaxis.Values.Length + _yaxis.Max.Length() + 3; // 2 spaces and the line
+        return length;
+    }
+
+    private void MinimizeValues()
+    {
+        while(Console.WindowWidth < GetxaxisLength())
+        {
+            // Increase the rate
+            _xaxis.Rate += _xaxis.Rate;
+            // Declare the new values
+            _xaxis.ComputeValues();
+
+            int[] shortValues = new int[_xaxis.Values.Length];
+            _axis = new int[_xaxis.Values.Length];
+            int i = 0;
+            foreach(var v in _xaxis.Values)
+            {
+                shortValues[i] = GetValuesFrom(v, _xaxis.Rate);
+                i++;
+            }
+            _values = shortValues;
+        }
+    }
+    private int GetValuesFrom(int position, int num)
+    {
+        double total = 0;
+        for(int i = position; i < position + num; i++)
+        {
+            if(_values.Length > i - 1) total += _values[i - 1];
+        }
+        return (int)Math.Round(total / num);
+    }
+
     private bool CanDrawGraph()
     {
-        if(Console.WindowWidth < _xaxis.Values.Length * 2)
-        {
-            Console.WriteLine("Values are bigger than screen, abording...");
-            return false;
-        }
+        MinimizeValues();
         if(_yaxis.Values.Length == 0 || _xaxis.Values.Length == 0)
         {
             Console.WriteLine("Cannot get the values for the outsides");
             return false;
         }
-        if(_coordonates.Length != _xaxis.Values.Length)
+        if(_values.Length != _xaxis.Values.Length)
         {
             Console.WriteLine("The values provided aren't equal to the _xaxis table");
             return false;
@@ -102,11 +139,11 @@ public class Graph
     private void DisplayValues(int topPoint)
     {
         var beforeDraw = Console.GetCursorPosition();
-        for(int i = 0; i < _coordonates.Length; i++)
+        for(int i = 0; i < _values.Length; i++)
         {
             // Make sure the values aren't bigger than max value on yaxis
-            _coordonates[i] = _coordonates[i] > _yaxis.Max ? _yaxis.Max : _coordonates[i]; 
-            int valueOnGraph = _yaxis.Max - _coordonates[i];
+            _values[i] = _values[i] > _yaxis.Max ? _yaxis.Max : _values[i]; 
+            int valueOnGraph = _yaxis.Max - _values[i];
             valueOnGraph = (int)Math.Round((double)valueOnGraph / _yaxis.Rate);
             int startPoint = topPoint + valueOnGraph;
             int downPoints = _yaxis.Values.Length - valueOnGraph;
