@@ -30,7 +30,7 @@ public class Graph
 
     private bool CanDrawGraph()
     {
-        if(Console.WindowWidth < _xaxis.Values.Length)
+        if(Console.WindowWidth < _xaxis.Values.Length * 2)
         {
             Console.WriteLine("Values are bigger than screen, abording...");
             return false;
@@ -104,6 +104,8 @@ public class Graph
         var beforeDraw = Console.GetCursorPosition();
         for(int i = 0; i < _coordonates.Length; i++)
         {
+            // Make sure the values aren't bigger than max value on yaxis
+            _coordonates[i] = _coordonates[i] > _yaxis.Max ? _yaxis.Max : _coordonates[i]; 
             int valueOnGraph = _yaxis.Max - _coordonates[i];
             valueOnGraph = (int)Math.Round((double)valueOnGraph / _yaxis.Rate);
             int startPoint = topPoint + valueOnGraph;
