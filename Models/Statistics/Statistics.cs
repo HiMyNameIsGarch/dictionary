@@ -80,6 +80,20 @@ public class Statistics
         WriteLine("Evolution of accuracy: ");
         Graph agraph = GetAccuracyGraph(acc);
         agraph.Draw();
+
+        int[] points = data.Select(s => GetAccuracy(s.TotalPoints, s.Points)).ToArray();
+        WriteLine("Evolution of points: ");
+        Graph pGraph = GetAccuracyGraph(points);
+        pGraph.Draw();
+    }
+
+    private int GetAccuracy(int max, int current)
+    {
+        if(max == current) return 100;
+        double num = (double)max / current;
+        double accuracy = EditDistance.MaxAccuracy / num;
+        if(accuracy < 0) accuracy = accuracy * -1;
+        return (int)accuracy;
     }
 
     private Graph GetResponseTimeGraph(int[] timeResponses)
