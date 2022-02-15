@@ -29,9 +29,17 @@ public class Statistics
     {
         WriteLine("Display the evolution for: ");
         WriteLine("1. Statistics for very last session");
-        WriteLine("2. Average Statistics of all sessions");
-        Write("Press the number of the option: ");
-        char key = Console.ReadKey().KeyChar;
+        WriteLine("2. Average statistics of all sessions");
+        WriteLine("3. Average statistics per all files");
+        WriteLine("4. Average statistics per all modes");
+        char key = '0';
+        do
+        {
+            Write("Press the number of the option: ");
+            key = Console.ReadKey().KeyChar;
+        }
+        while(char.IsWhiteSpace(key) && !char.IsDigit(key));
+
         Write("\n\n");
         DisplayOptionFor(key);
     }
@@ -47,7 +55,14 @@ public class Statistics
             case '2':
                 AvarageStatisticsForAllSessions(data);
                 break;
+            case '3':
+                AvarageStatisticsPerFiles(data);
+                break;
+            case '4':
+                AvarageStatisticsPerMode(data);
+                break;
            default: 
+                WriteLine("Invalid Option");
                 break;
         }
     }
@@ -85,6 +100,14 @@ public class Statistics
         WriteLine("Evolution of points: ");
         Graph pGraph = GetAccuracyGraph(points);
         pGraph.Draw();
+    }
+
+    private void AvarageStatisticsPerFiles(ICollection<StatisticModel> data)
+    {
+    }
+
+    private void AvarageStatisticsPerMode(ICollection<StatisticModel> data)
+    {
     }
 
     private int GetAccuracy(int max, int current)
