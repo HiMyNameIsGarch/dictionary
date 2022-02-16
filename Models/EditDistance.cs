@@ -24,8 +24,10 @@ public static class EditDistance
         double editDistance = ComputeEditDistance(gotArray, wantedArray, matrix);
         if(editDistance == 0) return MaxAccuracy;
         // Get the actual number
-        double num = (double)wanted.Length / editDistance;
-        double accuracy = MaxAccuracy - ( MaxAccuracy / num );
+        double num = wanted.Length < editDistance ? 
+            got.Length / editDistance :
+            wanted.Length / editDistance; 
+        double accuracy = MaxAccuracy - (MaxAccuracy / num);
         return accuracy;
     }
 
