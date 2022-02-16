@@ -30,8 +30,7 @@ public class Statistics
         WriteLine("Display the evolution for: ");
         WriteLine("1. Statistics for very last session");
         WriteLine("2. Average statistics of all sessions");
-        WriteLine("3. Average statistics per all files");
-        WriteLine("4. Average statistics per all modes");
+        WriteLine("3. Average points accuracy per all files");
         char key = '0';
         do
         {
@@ -56,10 +55,7 @@ public class Statistics
                 AvarageStatisticsForAllSessions(data);
                 break;
             case '3':
-                AvarageStatisticsPerFiles(data);
-                break;
-            case '4':
-                AvarageStatisticsPerMode(data);
+                AvaragePointsAccuracyForAllFiles(data);
                 break;
            default: 
                 WriteLine("Invalid Option");
@@ -102,12 +98,28 @@ public class Statistics
         pGraph.Draw();
     }
 
-    private void AvarageStatisticsPerFiles(ICollection<StatisticModel> data)
+    private void AvaragePointsAccuracyForAllFiles(ICollection<StatisticModel> data)
     {
-    }
-
-    private void AvarageStatisticsPerMode(ICollection<StatisticModel> data)
-    {
+        Dictionary<string, int> pairs = new Dictionary<string, int>();
+        foreach(var d in data)
+        {
+            int accuracy = GetAccuracy(d.TotalPoints, d.Points);
+            if(pairs.ContainsKey(d.FileName))
+            {
+                pairs[d.FileName] = (int)Math.Round((double)(pairs[d.FileName] + accuracy) / 2);
+                continue;
+            }
+            pairs.Add(d.FileName, accuracy);
+        }
+        Graph graph = GetAccuracyGraph(pairs.Values.ToArray());
+        graph.Draw();
+        WriteLine("Legend: ");
+        int i = 1;
+        foreach(var pair in pairs)
+        {
+            WriteLine(i + " - " + pair.Key);
+            i++;
+        }
     }
 
     private int GetAccuracy(int max, int current)
@@ -118,7 +130,6 @@ public class Statistics
         if(accuracy < 0) accuracy = accuracy * -1;
         return (int)accuracy;
     }
-
     private Graph GetResponseTimeGraph(int[] timeResponses)
     {
         var yaxis = new Bar(0, 5, 1);
@@ -126,7 +137,6 @@ public class Statistics
         var graph = new Graph(yaxis, xaxis, timeResponses, true);
         return graph;
     }
-
     private Graph GetAccuracyGraph(int[] accuracies)
     {
         var yaxis = new Bar(10, 100, 10);
