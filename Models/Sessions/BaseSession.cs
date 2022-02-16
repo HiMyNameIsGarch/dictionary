@@ -71,7 +71,6 @@ public abstract class BaseSession: ISession
     }
     public virtual void AfterSessionHook()
     {
-        Stats.Store(Data);
         if(Data.Config.DisplayFinalStatistics) 
         {
             if(Data.Config.Mode != ModeType.LearnAndAnswer || Data.Config.Layout == LayoutType.List) Write("\n");

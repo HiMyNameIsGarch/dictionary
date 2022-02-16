@@ -4,6 +4,7 @@ public class None: IMode
     {
         session.BeforeSessionHook();
         session.Start(session.Data.Pairs);
+        session.Stats.Store(session.Data);
         session.AfterSessionHook();
     }
 }
