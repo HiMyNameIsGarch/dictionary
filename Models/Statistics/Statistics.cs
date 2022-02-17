@@ -27,6 +27,7 @@ public class Statistics
 
     public void ShowOptions()
     {
+        int cursorTop = Console.CursorTop;
         WriteLine("Display the evolution for: ");
         WriteLine("1. Statistics for very last session");
         WriteLine("2. Average statistics of all sessions");
@@ -38,8 +39,8 @@ public class Statistics
             key = Console.ReadKey().KeyChar;
         }
         while(char.IsWhiteSpace(key) && !char.IsDigit(key));
+        ConsoleHelper.ClearScreen(cursorTop);
 
-        Write("\n\n");
         DisplayOptionFor(key);
     }
 
