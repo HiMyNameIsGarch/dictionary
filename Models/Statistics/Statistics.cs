@@ -133,15 +133,15 @@ public class Statistics
     }
     private Graph GetResponseTimeGraph(int[] timeResponses)
     {
-        var yaxis = new Bar(0, 5, 1);
-        var xaxis = new Bar(1, timeResponses.Length, 1);
+        var yaxis = new Axis(0, 5, 1);
+        var xaxis = new Axis(1, timeResponses.Length, 1);
         var graph = new Graph(yaxis, xaxis, timeResponses, true);
         return graph;
     }
     private Graph GetAccuracyGraph(int[] accuracies)
     {
-        var yaxis = new Bar(10, 100, 10);
-        var xaxis = new Bar(1, accuracies.Length, 1);
+        var yaxis = new Axis(10, 100, 10);
+        var xaxis = new Axis(1, accuracies.Length, 1);
         var graph = new Graph(yaxis, xaxis, accuracies, false);
         return graph;
     }

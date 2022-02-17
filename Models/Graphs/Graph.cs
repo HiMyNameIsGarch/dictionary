@@ -1,12 +1,12 @@
 public class Graph
 {
-    private Bar _yaxis;
-    private Bar _xaxis;
+    private Axis _yaxis;
+    private Axis _xaxis;
     private int[] _values;
     private int[] _axis;
     private bool _invertColors;
 
-    public Graph(Bar yaxis, Bar xaxis, int[] values, bool invertColors)
+    public Graph(Axis yaxis, Axis xaxis, int[] values, bool invertColors)
     {
         _yaxis = yaxis;
         _yaxis.ComputeValues();
@@ -19,6 +19,8 @@ public class Graph
 
     public void Draw()
     {
+        MinimizeValues();
+
         if(!CanDrawGraph()) return;
 
         int pointBeforeTable = Console.GetCursorPosition().Top;
@@ -45,7 +47,6 @@ public class Graph
         {
             // Increase the rate
             _xaxis.Rate += _xaxis.Rate;
-            // Declare the new values
             _xaxis.ComputeValues();
 
             int[] shortValues = new int[_xaxis.Values.Length];
@@ -71,15 +72,14 @@ public class Graph
 
     private bool CanDrawGraph()
     {
-        MinimizeValues();
         if(_yaxis.Values.Length == 0 || _xaxis.Values.Length == 0)
         {
-            Console.WriteLine("Cannot get the values for the outsides");
+            Console.WriteLine("One of the axis is empty");
             return false;
         }
         if(_values.Length != _xaxis.Values.Length)
         {
-            Console.WriteLine("The values provided aren't equal to the _xaxis table");
+            Console.WriteLine("The values provided aren't equal to the x axis");
             return false;
         }
         return true;
