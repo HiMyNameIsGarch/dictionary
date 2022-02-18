@@ -3,6 +3,8 @@ using System.Text;
 
 public class Statistics
 {
+    private const int MinimumDataForStatistics = 5;
+
     public void Store(SessionData data)
     {
         var model = MapData(data);
@@ -48,6 +50,13 @@ public class Statistics
     private void DisplayOptionFor(char key)
     {
         var data = GetAllStatistics();
+        if(data.Count < MinimumDataForStatistics)
+        {
+            WriteLine("> Unfortunately, you have to little data in order to show statistics");
+            WriteLine("> You have to have at least {0} sessions completed", MinimumDataForStatistics);
+            WriteLine("> Thanks!");
+            return;
+        }
         switch(key)
         {
             case '1':
