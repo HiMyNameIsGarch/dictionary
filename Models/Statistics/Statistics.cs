@@ -1,4 +1,5 @@
 using static System.Console;
+using System.Text;
 
 public class Statistics
 {
@@ -114,13 +115,15 @@ public class Statistics
         }
         Graph graph = GetAccuracyGraph(pairs.Values.ToArray());
         graph.Draw();
+        StringBuilder sb = new StringBuilder();
         WriteLine("Legend: ");
         int i = 1;
         foreach(var pair in pairs)
         {
-            WriteLine(i + " - " + pair.Key);
+            sb.AppendLine(i + " - " + pair.Key);
             i++;
         }
+        ConsoleHelper.DisplayColumn(sb.ToString(), '-');
     }
 
     private int GetAccuracy(int max, int current)
