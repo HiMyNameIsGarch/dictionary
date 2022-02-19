@@ -111,11 +111,12 @@ public static class Sessionizer
         WriteLine("dictionary - is a simple program to help you get better with words.\n");
         WriteLine("Usage: dictionary <options>\n");
         WriteLine("Options:");
-        WriteLine("start - Starts a session with the default configuration.");
-        WriteLine("edit  - Opens an editor to edit either your config or words file.");
-        WriteLine("             Example: 'dictionary edit config'.");
-        WriteLine("select - Select the current words file.");
-        WriteLine("status - Display status information about your sessions.");
+        WriteLine("start  - Starts a session with the current file in config.");
+        WriteLine("edit   - Opens an editor to edit either your config or words file.");
+        WriteLine("             Example: 'dictionary edit config' - To edit your config file.");
+        WriteLine("                  Or: 'dictionary edit words'  - To edit one of your words file.");
+        WriteLine("select - Select the current words file and start a session with it.");
+        WriteLine("status - Display statistics ( point / word accuracy and response time ) about your sessions.");
         WriteLine("help   - Displays this help menu.");
     }
 }
