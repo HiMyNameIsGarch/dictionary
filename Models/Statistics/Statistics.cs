@@ -1,8 +1,15 @@
 using static System.Console;
+using static ConsoleHelper;
 using System.Text;
 
 public class Statistics
 {
+    List<string> _options = new List<string>()
+    {
+        "Statistics for very last session",
+        "Average statistics of all sessions",
+        "Average points accuracy per all files"
+    };
     private const int MinimumDataForStatistics = 5;
 
     public void Store(SessionData data)
@@ -31,20 +38,30 @@ public class Statistics
     public void ShowOptions()
     {
         int cursorTop = Console.CursorTop;
-        WriteLine("Display the evolution for: ");
-        WriteLine("1. Statistics for very last session");
-        WriteLine("2. Average statistics of all sessions");
-        WriteLine("3. Average points accuracy per all files");
+        DisplayOptions();
         char key = '0';
         do
         {
-            Write("Press the number of the option: ");
+            ColorWrite("Press the number of the option: ", ConsoleColor.DarkYellow);
             key = Console.ReadKey().KeyChar;
         }
         while(char.IsWhiteSpace(key) && !char.IsDigit(key));
         ConsoleHelper.ClearScreen(cursorTop);
 
         DisplayOptionFor(key);
+    }
+
+    private void DisplayOptions()
+    {
+        ColorWriteLine("Display the evolution for: ", ConsoleColor.Yellow);
+        int i = 1;
+        foreach(var option in _options)
+        {
+            ConsoleHelper.ColorWrite(i + ". ", ConsoleColor.DarkBlue);
+            ConsoleHelper.ColorWrite(option, ConsoleColor.Blue);
+            Write("\n");
+            i++;
+        }
     }
 
     private void DisplayOptionFor(char key)
