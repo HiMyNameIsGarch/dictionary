@@ -9,6 +9,4 @@ public interface ISession
     void BeforeSessionHook();
 
     void AfterSessionHook();
-
-    void DisplayStatusFor(string logs);
 }

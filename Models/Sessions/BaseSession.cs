@@ -54,9 +54,7 @@ public abstract class BaseSession: ISession
 
     //This will return a tuple that will contain the <current points> and the <maximum> the could achive
     public abstract Tuple<int,int> AskQuestion(string[] words, string[] synonyms);
-
-    public abstract void DisplayStatusFor(string logs);
-
+    
     // Hooks
     public virtual void BeforeSessionHook()
     {

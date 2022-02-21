@@ -110,8 +110,4 @@ public class WordsSession : BaseSession
         return array.Where(s => s != element).ToArray();
     }
 
-    public override void DisplayStatusFor(string logs)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -31,7 +31,6 @@ public class VerbsSession : BaseSession
 
     private string GetValue(int num, string prompt, string[] values)
     {
-        string numString = num == 1 ? "First " : num == 2 ? "Second " : num == 3 ? "Third " : "";
         string verb = GetForm(num, prompt);
         double accuracy = EditDistance.GetAccuracy(values[num - 1], verb);
         Data.Accuracy.Add(accuracy);
@@ -92,6 +91,4 @@ public class VerbsSession : BaseSession
             }
         }
     }
-
-    public override void DisplayStatusFor(string logs) { throw new NotImplementedException(); }
 }
