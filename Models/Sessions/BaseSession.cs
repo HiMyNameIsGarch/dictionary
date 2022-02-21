@@ -73,7 +73,7 @@ public abstract class BaseSession: ISession
     {
         if(Data.Config.DisplayFinalStatistics) 
         {
-            if(Data.Config.Mode != ModeType.LearnAndAnswer || Data.Config.Layout == LayoutType.List) Write("\n");
+            if(Data.Config.Layout == LayoutType.List) Write("\n");
             Write("You got ");
             ColorWrite(Data.Points.ToString(), Data.Points != Data.TotalPoints ? ConsoleColor.DarkGreen : ConsoleColor.Green);
             Write(" points out of ");
@@ -146,20 +146,25 @@ public abstract class BaseSession: ISession
         PressKeyToContinue();
     }
 
+    private bool IsLastQuestion() => 
+        Data.Config.Mode != ModeType.LearnAndAnswer && 
+        CurrentPair == Data.Pairs.Count;
+
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(Data.Config.Layout != LayoutType.Card) return;
-        if(Data.Config.Mode != ModeType.LearnAndAnswer && CurrentPair == Data.Pairs.Count) return;
-        // Make sure statistics are on screen before clean
+        if(IsLastQuestion()) return;
+
         ConsoleHelper.PressKeyToContinue(prompt);
     }
 
     public void ClearScreen(int cursorBefore)
     {
         if(Data.Config.Layout != LayoutType.Card) return;
-        if(Data.Config.Mode != ModeType.LearnAndAnswer && CurrentPair == Data.Pairs.Count) return;
 
         ConsoleHelper.ClearScreen(cursorBefore);
+
+        if(IsLastQuestion()) DisplayDelimiter();
     }
 
     public string CombineWords(string[] words, bool useSetting = true)
