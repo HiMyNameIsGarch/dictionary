@@ -27,7 +27,7 @@ public static class Sessionizer
 
         switch(args[0]) {
             case "select":
-                string wordsFile = CurrentOS.GetFileName(new WordsParser(config.CurrentFile).BaseDirectory,"txt");
+                string wordsFile = CurrentOS.GetFileName(PairsParser._directory,"txt");
                 config.CurrentFile = wordsFile;
                 config.SetFileExtension(wordsFile);
                 return Start(config);
@@ -49,12 +49,8 @@ public static class Sessionizer
 
     private static int Start(ConfigOptions config)
     {
-        // Get all words
-        WordsParser wParser = new WordsParser($"{config.CurrentFile}.txt");
-        var words = wParser.ParseFile();
-
         // Initiate the data
-        SessionData data = new SessionData(config, words);
+        SessionData data = new SessionData(config);
         IMode mode = data.GetCurrentMode();
         ISession mainSession = data.GetCurrentSession();
 
@@ -77,7 +73,7 @@ public static class Sessionizer
                     OpenFile(cParser.FilePath);
                     break;
                 case "words":
-                    var wordsDir = new WordsParser().BaseDirectory;
+                    var wordsDir = PairsParser._directory;
                     string words = CurrentOS.GetFullFilePath(wordsDir, "txt");
                     OpenFile(words);
                     break;

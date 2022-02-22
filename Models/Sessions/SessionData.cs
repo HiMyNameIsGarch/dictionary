@@ -2,10 +2,10 @@ using System.Text;
 
 public class SessionData 
 {
-    public SessionData(ConfigOptions config, Dictionary<string[], string[]> pairs) 
+    public SessionData(ConfigOptions config) 
     {
         Config = config;
-        Pairs = pairs;
+        Pairs = GetCurrentPairs().ParseFile();
         WrongPairs = new Dictionary<string[], string[]>();
         ResponseTime = new Average("Took -> ", " seconds.");
         Accuracy = new Average("Accuracy -> ", "%.");
@@ -93,6 +93,20 @@ public class SessionData
         Random rand = new Random();
         Pairs = Pairs.OrderBy(x => rand.Next())
             .ToDictionary(item => item.Key, item => item.Value);
+    }
+
+    public PairsParser GetCurrentPairs()
+    {
+        switch(Config.FileExtension)
+        {
+            case FileExtension.Words:
+                return new WordsParser(Config);
+            case FileExtension.IrregularVerbs:
+                return new WordsParser(Config);
+            default:
+                Console.WriteLine("File Extension not found, setting default ( Words )");
+                return new WordsParser(Config);
+        }
     }
 
     public IMode GetCurrentMode()

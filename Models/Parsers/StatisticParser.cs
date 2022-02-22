@@ -2,10 +2,11 @@ using Newtonsoft.Json;
 
 public class StatisticParser : FileParser<StatisticModel>
 {
-    public StatisticParser(string fileName):
-        base(".cache/dictionary","statistics", fileName) { }
-    public StatisticParser():
-        base(".cache/dictionary","statistics") { }
+    private static string _directory = CurrentOS.GetDirectoryPath(".cache/dictionary","statistics");
+
+    public StatisticParser(string fileName): base(_directory, fileName) { }
+
+    public StatisticParser(): base(_directory) { }
 
     public void StoreModel(StatisticModel model)
     {

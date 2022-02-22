@@ -1,48 +1,42 @@
-using System.Runtime.InteropServices; 
-
-public abstract class FileParser<T>: IParser<T>
+public abstract class FileParser<T>
 {
 
-    public FileParser(string linuxDir, string windowsDir)
+    public string BaseDirectory { get; }
+    protected string FileText { get; }
+    public string FilePath { get; }
+    public abstract T ParseFile();
+    protected abstract string DefaultFileText();
+
+    public FileParser(string directory)
     {
-        BaseDirectory = SetBaseDirectory(linuxDir, windowsDir);
+        BaseDirectory = SetBaseDirectory(directory);
         FilePath = "";
         FileText = "";
     }
-    public FileParser(string linuxDir, string windowsDir, string fileName) 
+
+    public FileParser(string directory, string fileName) 
     {
-        BaseDirectory = SetBaseDirectory(linuxDir, windowsDir);
+        BaseDirectory = SetBaseDirectory(directory);
 
         FilePath = $"{BaseDirectory}{CurrentOS.GetSeparator()}{fileName}";
 
         if(!Directory.Exists(BaseDirectory)) 
-        {
             Directory.CreateDirectory(BaseDirectory);
-        }
 
         if(!File.Exists(FilePath)) 
-        {
             System.IO.File.WriteAllText(FilePath, DefaultFileText());
-        }
         
-        // Read the text from the file
         FileText = File.ReadAllText(FilePath);
     }
 
-    private string SetBaseDirectory(string linuxDir, string windowsDir)
+    private string SetBaseDirectory(string dir)
     {
-        var dir = CurrentOS.GetDirectoryPath(linuxDir, windowsDir);
         if(string.IsNullOrEmpty(dir))
         {
-            Console.WriteLine($"Platform not supported! Platform: {RuntimeInformation.OSDescription}");
+            Console.WriteLine($"Directory is empty, exiting...");
             Environment.Exit(1);
         }
         return dir;
     }
 
-    public string FileText { get; }
-    public string FilePath { get; }
-    public string BaseDirectory { get; }
-    public abstract T ParseFile();
-    protected abstract string DefaultFileText();
 }

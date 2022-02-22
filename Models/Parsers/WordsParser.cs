@@ -1,13 +1,13 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-public class WordsParser: FileParser<Dictionary<string[], string[]>>
+public class WordsParser: PairsParser
 {
     private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
-    public WordsParser(string defaultFile): base(".local/share/dictionary","data", defaultFile) { }
+    public WordsParser(): base() { }
 
-    public WordsParser(): base(".local/share/dictionary","data") { }
+    public WordsParser(ConfigOptions config): base(config) { }
 
     public override Dictionary<string[], string[]> ParseFile()
     {

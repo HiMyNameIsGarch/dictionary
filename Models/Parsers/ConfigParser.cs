@@ -3,7 +3,9 @@ using Newtonsoft.Json;
 public class ConfigParser: FileParser<ConfigOptions>
 {
 
-    public ConfigParser() : base(".config/dictionary", "config", "config.json") {}
+    private static string _directory = CurrentOS.GetDirectoryPath(".config/dictionary", "config");
+
+    public ConfigParser() : base(_directory, "config.json") {}
 
     public override ConfigOptions ParseFile()
     {
