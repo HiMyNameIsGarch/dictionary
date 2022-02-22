@@ -8,12 +8,14 @@ public class Persistent: IMode
     {
         session.BeforeSessionHook();
         var pairs = session.Data.Pairs;
+        int sessionCount = 0;
         do
         {
             session.Start(pairs);
             pairs = session.Data.WrongPairs;
-            if(pairs.Count == 0) session.Stats.Store(session.Data);
+            if(sessionCount == 0) session.Stats.Store(session.Data);
             session.AfterSessionHook();
+            sessionCount++;
             ContinueWithWrongPairs(pairs.Count);
         }
         while(pairs.Count > 0);
