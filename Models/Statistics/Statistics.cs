@@ -4,13 +4,16 @@ using System.Text;
 
 public class Statistics
 {
-    List<string> _options = new List<string>()
+    private List<string> _options = new List<string>()
     {
         "Statistics for very last session",
         "Average statistics of all sessions",
         "Average points accuracy per all files"
     };
-    private const int MinimumDataForStatistics = 5;
+    private const int _minimumDataForStatistics = 5;
+    private const int _maxValueOnTimeGraph = 50;
+    private const int _freqOnTimeGraph = 3;
+    private const int _addDecimals = 10;
 
     public void Store(SessionData data)
     {
@@ -67,10 +70,10 @@ public class Statistics
     private void DisplayOptionFor(char key)
     {
         var data = GetAllStatistics();
-        if(data.Count < MinimumDataForStatistics)
+        if(data.Count < _minimumDataForStatistics)
         {
             WriteLine("> Unfortunately, you have to little data in order to show statistics");
-            WriteLine("> You have to have at least {0} sessions completed", MinimumDataForStatistics);
+            WriteLine("> You have to have at least {0} sessions completed", _minimumDataForStatistics);
             WriteLine("> Thanks!");
             return;
         }
@@ -91,12 +94,14 @@ public class Statistics
         }
     }
 
+    private int RoundResponseTime(double value) => (int)value * _addDecimals;
+
     private void StatisticsForLastSession(StatisticModel lastSession)
     {
         WriteLine("Filename: " + lastSession.FileName);
         WriteLine("Mode: " + lastSession.Mode.ToFormattedString());
 
-        var timeResponses = lastSession.TimeResponses.Select(t => (int)t).ToArray();
+        var timeResponses = lastSession.TimeResponses.Select(t => RoundResponseTime(t)).ToArray();
         WriteLine("\nEvolution of response time: ");
         Graph graph = GetResponseTimeGraph(timeResponses);
         graph.Draw();
@@ -110,7 +115,7 @@ public class Statistics
 
     private void AvarageStatisticsForAllSessions(ICollection<StatisticModel> data)
     {
-        int[] times = data.Select(s => (int)s.AverageResponseTime).ToArray();
+        int[] times = data.Select(s => RoundResponseTime(s.AverageResponseTime)).ToArray();
         WriteLine("\nEvolution of response time: ");
         Graph graph = GetResponseTimeGraph(times);
         graph.Draw();
@@ -162,7 +167,7 @@ public class Statistics
     }
     private Graph GetResponseTimeGraph(int[] timeResponses)
     {
-        var yaxis = new Axis(0, 5, 1);
+        var yaxis = new Axis(0, _maxValueOnTimeGraph, _freqOnTimeGraph);
         var xaxis = new Axis(1, timeResponses.Length, 1);
         var graph = new Graph(yaxis, xaxis, timeResponses, true);
         return graph;
