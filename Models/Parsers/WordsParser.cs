@@ -1,11 +1,10 @@
 using System.Text;
-using System.Text.RegularExpressions;
 
 public class WordsParser: PairsParser
 {
-    private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
+    private const string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
-    public WordsParser(ConfigOptions config): base(config) { }
+    public WordsParser(ConfigOptions config): base(config, MatchPairRegex) { }
 
     public override Dictionary<string[], string[]> ParseFile()
     {
@@ -25,20 +24,6 @@ public class WordsParser: PairsParser
             }
         }
         return PairsData;
-    }
-
-    private Tuple<string[], string[]> GetPairs(string line) 
-    {
-        string[] pairs = line.Split('|');
-        string[] keys = pairs[0].Split(',').RemoveWhiteSpace();
-        string[] values = pairs[1].Split(',').RemoveWhiteSpace();
-
-        return new Tuple<string[], string[]>(keys, values);
-    }
-
-    private bool IsInvalidLine(string line)
-    {
-        return string.IsNullOrWhiteSpace(line) || !Regex.Match(line, MatchPairRegex).Success;
     }
 
     protected override string DefaultFileText()
