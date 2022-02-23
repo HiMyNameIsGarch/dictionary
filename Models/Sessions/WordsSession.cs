@@ -8,12 +8,6 @@ public class WordsSession : BaseSession
     public override Tuple<int,int> AskQuestion(string[] words, string[] synonyms)
     {
         var consolePosition = Console.CursorTop;
-        if(Data.Config.ReverseWords)
-        {
-            var tempWords = words;
-            words = synonyms;
-            synonyms = tempWords;
-        }
 
         int maxPoints = 0;
         int currentPoints = 0;

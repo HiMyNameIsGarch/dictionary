@@ -1,11 +1,11 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-public class WordsParser: PairsParser
+public class VerbsParser : PairsParser
 {
-    private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
+    private readonly string MatchPairRegex = @"^\w+.*\|\s?\w+\s?\,\s?\w+\s?\,\s?\w+";
 
-    public WordsParser(ConfigOptions config): base(config) { }
+    public VerbsParser(ConfigOptions config): base(config) { }
 
     public override Dictionary<string[], string[]> ParseFile()
     {
@@ -17,11 +17,7 @@ public class WordsParser: PairsParser
             {
                 if(IsInvalidLine(line)) continue;
                 var pairs = GetPairs(line);
-
-                if(Config.ReverseWords)
-                    PairsData.Add(pairs.Item2, pairs.Item1);
-                else
-                    PairsData.Add(pairs.Item1, pairs.Item2);
+                PairsData.Add(pairs.Item1, pairs.Item2);
             }
         }
         return PairsData;
@@ -48,7 +44,7 @@ public class WordsParser: PairsParser
         StringBuilder sb = new StringBuilder();
         for(int i = 1; i < 10; i++)
         {
-            sb.AppendLine($"word{i}, word{i+1} | meaning{i}, meaning{i+1}");
+            sb.AppendLine($"verb{i} | first_form, second_form, third_form");
         }
         return sb.ToString();
     }

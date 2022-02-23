@@ -102,7 +102,7 @@ public class SessionData
             case FileExtension.Words:
                 return new WordsParser(Config);
             case FileExtension.IrregularVerbs:
-                return new WordsParser(Config);
+                return new VerbsParser(Config);
             default:
                 Console.WriteLine("File Extension not found, setting default ( Words )");
                 return new WordsParser(Config);
