@@ -2,7 +2,7 @@
 <a href=""><img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white"></a>
 <a href=""><img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white"></a>
 <br>
-Repetition is the key to learning.
+<b>Repetition is the key to learning.</b>
 
 ## What is dictionary?
 `dictionary` is a CLI tool to help you get better at words.
@@ -23,11 +23,12 @@ Try the command `dictionary help` to get the full commands.
 Usage: dictionary <options>
 
 Options:
-start - Starts a session with the default configuration.
-edit  - Opens an editor to edit either your config or words file.
-             Example: 'dictionary edit config'.
-select - Select the current words file.
-status - Display status information about your sessions.
+start  - Starts a session with the current file in config.
+edit   - Opens an editor to edit either your config or words file.
+             Example: 'dictionary edit config' - To edit your config file.
+                  Or: 'dictionary edit words'  - To edit one of your words file.
+select - Select the current words file and start a session with it.
+status - Display statistics ( point / word accuracy and response time ) about your sessions.
 help   - Displays this help menu.
 ```
 
@@ -35,26 +36,26 @@ help   - Displays this help menu.
 
 #### File Structure
 The file structure is simple, on the left you have your main word or words and 
-on the right you have your translation to that word and they are separated by a
+on the right you have your meaning to that word and they are separated by a
 pipe `|`:
 ```
-word | translation
+word | meaning
 ```
 If you want to put some synonyms you can do it by adding a comma `,`: 
 ```
-word1, word2 | translation
+word1, word2 | meaning
 ```
 or 
 ```
-word | translation1, translation2
+word | meaning1, meaning2
 ```
-you can put as many as you want for words as well for translations:
+you can put as many as you want for words as well for meanings:
 ```
-word1, word2 | translation1, translation2
+word1, word2 | meaning1, meaning2
 ```
 #### File Name Structure
 The file name contains 3 parts:
-- File name ( that can be whatever you want to describe what is in that file )
+- Name ( that can be whatever you want to describe what is in that file )
 - Session Type ( see session types [here](#session-types) - this needs to be in all lower case )
 - Extension ( This needs to be `txt` )
 
@@ -84,11 +85,11 @@ and it looks like this:
 | Option                   | Description |
 |--------------------------|-------------|
 | OutputHasColors          | If you want to have colors in your output set this to true |
-| Over80IamCorrect         | If you got an accuracy over 80% that means the answer is correct ( remove typo mistakes )|
+| Over80IamCorrect         | If you got an accuracy over 80% that means the answer is correct ( you can toggle this to remove typo mistakes )|
 | AskMeSynonyms            | If you decide to put synonyms in your pairs, enable this to get asked those as well |
-| ReverseWords             | `Only of words session type` <br> It will reverse the words with the translation |
+| ReverseWords             | `Only in words session type` <br> It will reverse the words with the meaning |
 | DisplayOneRandomSynonym  | In the prompt you can be asked multiple words like <br> `What means -> word1 or word2` <br> Enable this to get a random one |
-| CurrentFile              | When you run `dictionary start` this is the file that the session will start with |
+| CurrentFile              | When you run `dictionary start` this is the file that the session will start with, when you run `dictionary select` it will simply change this setting, and start the session with it |
 | DisplayFinalStatistics   | At the end of every `session` it will be displayed statistics, toggle this as you like |
 | DisplayOnPairStatistics  | At the end of every `question` it will be displayed statistics, toggle this as you like <br> This is helpful if you want to simulate a completly blind test |
 | DisplayAvarageStatistics | `Only on irregular verbs session type` <br> it will display the avarage value from all 3 values |
@@ -98,14 +99,14 @@ and it looks like this:
 ## Statistics
 | Type          | Description |
 |---------------|-------------|
-| Points        | Every time you answer correct to a question it will be added a point and at the final you can see how many points you have accumulated |
+| Points        | Every time you answer correct to a question it will be added a point or points depending on your synonym settings and at the final you can see how many points you have accumulated |
 | Response Time | `Only on CARD layout` <br> Display how long it took you to respond to a question |
 | Accuracy      | With the help of `edit distance` algorithm and with some divisions you can see how well your answer matches in percentages % |
 
 ## Session Types
 | Session         | Description |
 |-----------------|-------------|
-| Words           | You will be asked what means a word and you need to answer to what translation you put in your file |
+| Words           | You will be asked what means a word and you need to answer to what meaning you have put in your file |
 | Irregular Verbs | For irregular verbs the file strucure needs to look like this <br> `word \| word1, word2, word3` <br> you can add synonyms on the left side as well. <br> It works like `words` type but with 3 questions |
 
 ## Modes
