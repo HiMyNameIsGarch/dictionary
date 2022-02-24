@@ -151,7 +151,7 @@ public abstract class BaseSession: ISession
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(Data.Config.Layout != LayoutType.Card) return;
-        if(IsLastQuestion()) return;
+        //if(IsLastQuestion()) return;
 
         ConsoleHelper.PressKeyToContinue(prompt);
     }

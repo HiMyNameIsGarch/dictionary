@@ -38,9 +38,9 @@ public class Average
 
     public void DisplayText(double value, ConsoleColor color)
     {
-        Write(_before);
+        ColorWrite(_before, ConsoleColor.Cyan);
         ColorWrite(value.ToString(), color);
-        Write(_after + "\n");
+        ColorWrite(_after + "\n", ConsoleColor.Cyan);
     }
     public void DisplayTextOnLast(int num, bool isAverage)
     {
