@@ -24,10 +24,10 @@ public class ConfigOptions
 
     public FileExtension FileExtension { get; private set; }
 
-    private string _currentFile = "default.words";
+    private string _currentFile = "default.words.txt";
 
     public string CurrentFile { 
-        get { return _currentFile; }
+        get { return _currentFile.EndsWith(".txt") ? _currentFile : _currentFile + ".txt"; }
         set { if(!string.IsNullOrEmpty(value)) _currentFile = value; }
     }
 
@@ -42,7 +42,7 @@ public class ConfigOptions
         } 
         else 
         {
-            Console.WriteLine($"Cannot find an extension from '{fileName}' file, setting the default one, <words>\n");
+            Console.WriteLine($"Cannot find an extension for '{fileName}' file, setting the default one, <words>\n");
         }
     }
 }
