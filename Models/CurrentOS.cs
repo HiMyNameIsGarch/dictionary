@@ -54,9 +54,15 @@ public static class CurrentOS
         int currentCursor = Console.CursorTop;
         var allFiles = GetAndDisplayFilesFrom(new DirectoryInfo(path));
 
-        if(allFiles.Length == 1){
+        if(allFiles.Length == 1)
+        {
             Console.WriteLine("Found just one file, selecting it...");
             return allFiles[0];
+        }
+        if(allFiles.Length < 1)
+        {
+            Console.WriteLine("No files found!");
+            return "";
         }
         
         string filePath = "";

@@ -23,6 +23,7 @@ public class StatisticParser : FileParser<StatisticModel>
         var di = new DirectoryInfo(BaseDirectory);
         var files = di.GetFiles("*.json");
         ICollection<StatisticModel> stats = new List<StatisticModel>();
+        if(files.Length < 1) return stats;
         foreach(var file in files)
         {
             var text = File.ReadAllText(file.FullName);

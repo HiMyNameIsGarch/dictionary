@@ -30,6 +30,11 @@ public abstract class BaseSession: ISession
 
     public void Start(Dictionary<string[], string[]> pairs)
     {
+        if(pairs.Count < 1)
+        {
+            ColorWriteLine("No pairs found, abording.", ConsoleColor.Red);
+            return;
+        }
         Data.SetPairs(pairs);
         Data.ResetWrongPairs();
         Data.TotalPairs = pairs.Count;
@@ -151,7 +156,6 @@ public abstract class BaseSession: ISession
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(Data.Config.Layout != LayoutType.Card) return;
-        //if(IsLastQuestion()) return;
 
         ConsoleHelper.PressKeyToContinue(prompt);
     }

@@ -10,6 +10,10 @@ public abstract class FileParser<T>
     public FileParser(string directory)
     {
         BaseDirectory = SetBaseDirectory(directory);
+
+        if(!Directory.Exists(BaseDirectory)) 
+            Directory.CreateDirectory(BaseDirectory);
+
         FilePath = "";
         FileText = "";
     }

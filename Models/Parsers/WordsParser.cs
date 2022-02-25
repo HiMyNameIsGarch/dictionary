@@ -4,6 +4,8 @@ public class WordsParser: PairsParser
 {
     private const string MatchPairRegex = @"^\w+.*\|\s?\w+.*";
 
+    public WordsParser() : base() {}
+
     public WordsParser(ConfigOptions config): base(config, MatchPairRegex) { }
 
     public override Dictionary<string[], string[]> ParseFile()

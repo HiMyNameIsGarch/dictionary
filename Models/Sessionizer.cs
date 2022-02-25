@@ -27,7 +27,9 @@ public static class Sessionizer
 
         switch(args[0]) {
             case "select":
-                string wordsFile = CurrentOS.GetFileName(PairsParser._directory,"txt");
+                string wordsFile = CurrentOS.GetFileName(new WordsParser().BaseDirectory, "txt");
+                if(string.IsNullOrEmpty(wordsFile)) return 1;
+
                 config.CurrentFile = wordsFile;
                 config.SetFileExtension(wordsFile);
                 return Start(config);
@@ -63,25 +65,22 @@ public static class Sessionizer
         {
             Console.WriteLine("No argument provided, please choose between 'config' or 'words'!");
             return 1;
-        } 
-        else 
+        }
+        switch(args[1])
         {
-            switch(args[1])
-            {
-                case "config":
-                    var cParser = new ConfigParser();
-                    OpenFile(cParser.FilePath);
-                    break;
-                case "words":
-                    var wordsDir = PairsParser._directory;
-                    string words = CurrentOS.GetFullFilePath(wordsDir, "txt");
-                    OpenFile(words);
-                    break;
-                default:
-                    Console.WriteLine($"Invalid argument {args[1]}");
-                    HelpMenu();
-                    return 1;
-            }
+            case "config":
+                var cParser = new ConfigParser();
+                OpenFile(cParser.FilePath);
+                break;
+            case "words":
+                var wordsDir = new WordsParser().BaseDirectory;
+                string words = CurrentOS.GetFullFilePath(wordsDir, "txt");
+                if(!string.IsNullOrEmpty(words)) OpenFile(words);
+                break;
+            default:
+                Console.WriteLine($"Invalid argument {args[1]}");
+                HelpMenu();
+                return 1;
         }
         return 0;
     }
