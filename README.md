@@ -14,23 +14,19 @@
 - [Statistics](#statistics)
 - [Session Types](#session-types)
 - [Modes](#modes)
+- [Examples](#examples-of-commands)
+    - [Edit your files](#edit)
+    - [Normal session](#normal-session)
+    - [Persistent mode](#persistent-mode)
+    - [Learn and anwser mode](#learn-and-answer-mode)
+    - [Status](#status)
 - [How to install](#how-to-install)
 - [Report a bug](#report-a-bug)
 
 ## Usage
 Try the command `dictionary help` to get the full commands.
-```
-Usage: dictionary <options>
 
-Options:
-start  - Starts a session with the current file in config.
-edit   - Opens an editor to edit either your config or words file.
-             Example: 'dictionary edit config' - To edit your config file.
-                  Or: 'dictionary edit words'  - To edit one of your words file.
-select - Select the current words file and start a session with it.
-status - Display statistics ( point / word accuracy and response time ) about your sessions.
-help   - Displays this help menu.
-```
+![help_menu.png](https://s10.gifyu.com/images/help_menu.png)
 
 ## File and name structure
 
@@ -115,6 +111,20 @@ and it looks like this:
 | Persistent       | You will have a normal session, but if you answer wrong to a question, it will be added to a list, after you finish the session, it will begin a new one with the wrong questions. This will be repeaded until you answer right to all the questions |
 | Learn and Answer | When you start a session, you will be presented with 10 pairs from your file in order to 'learn them'. After that when you are ready it will start the session with these pairs. The process will continue until all your pairs are completed. You can see how many session you have up top |
 | None             | This will change nothing to the behavior of the application |
+
+## Examples of commands
+#### Edit
+![](https://s10.gifyu.com/images/edit.gif)
+#### Normal session
+![](https://s10.gifyu.com/images/none-mode.gif)
+#### Persistent mode
+![](https://s10.gifyu.com/images/persistent-mode.gif)
+#### Learn and answer mode
+![](https://s10.gifyu.com/images/learnandanswer-mode.gif)
+#### Status
+This is a complete status information for 32 sessions
+
+![](https://s10.gifyu.com/images/status_command.png)
 
 ## How to install
 The application supports only 2 platforms `Linux` and `Windows` <br>
