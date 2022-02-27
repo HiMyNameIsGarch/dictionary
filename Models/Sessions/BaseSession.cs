@@ -10,7 +10,7 @@ public abstract class BaseSession: ISession
     }
 
     private const string _separator = " or ";
-    private const double _typoMistake= 80.0;
+    private protected const double _typoMistake = 80.0;
     protected int CurrentPair = 0;
     public SessionData Data { get; }
     public Statistics Stats { get; }
@@ -49,7 +49,12 @@ public abstract class BaseSession: ISession
             {
                 Data.WrongPairs.Add(words.Key, words.Value);
             }
-            Data.Points += points.Item1;
+
+            if(CanAddTypoMistake(Data.Accuracy.GetLast(1)))
+                Data.Points += points.Item2;
+            else
+                Data.Points += points.Item1;
+
             Data.TotalPoints += points.Item2;
 
             ClearScreen(cursorTop);
@@ -188,5 +193,16 @@ public abstract class BaseSession: ISession
         int currentSynonym = rand.Next(0, synonyms.Length);
 
         return synonyms[currentSynonym];
+    }
+
+    private bool CanAddTypoMistake(double current) => 
+        Data.Config.Over80IamCorrect && current > _typoMistake;
+
+    private protected void AddAccuracy(double currentAccuracy)
+    {
+        if(CanAddTypoMistake(currentAccuracy))
+            Data.Accuracy.Add(EditDistance.MaxAccuracy);
+        else 
+            Data.Accuracy.Add(currentAccuracy);
     }
 }

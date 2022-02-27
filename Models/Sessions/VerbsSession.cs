@@ -33,7 +33,7 @@ public class VerbsSession : BaseSession
     {
         string verb = GetForm(num, prompt);
         double accuracy = EditDistance.GetAccuracy(values[num - 1], verb);
-        Data.Accuracy.Add(accuracy);
+        AddAccuracy(accuracy);
         return verb;
     }
 
