@@ -38,28 +38,30 @@ public abstract class BaseSession: ISession
         Data.SetPairs(pairs);
         Data.ResetWrongPairs();
         Data.TotalPairs = pairs.Count;
-        CurrentPair = 1;
+        CurrentPair = 0;
         foreach(var words in pairs)
         {
             int cursorTop = Console.CursorTop;
+
+            CurrentPair++;
             DisplayDelimiter();
             var points = AskQuestion(words.Key, words.Value);
 
+            // Add wrong pairs
             if(points.Item1 < points.Item2)
-            {
                 Data.WrongPairs.Add(words.Key, words.Value);
-            }
 
+            // Add points
             if(CanAddTypoMistake(Data.Accuracy.GetLast(1)))
                 Data.Points += points.Item2;
             else
                 Data.Points += points.Item1;
 
             Data.TotalPoints += points.Item2;
-
             ClearScreen(cursorTop);
-            CurrentPair++;
         }
+
+        if(Data.Config.Mode != ModeType.LearnAndAnswer) DisplayDelimiter();
     }
 
     //This will return a tuple that will contain the <current points> and the <maximum> the could achive
@@ -154,10 +156,6 @@ public abstract class BaseSession: ISession
         PressKeyToContinue();
     }
 
-    private bool IsLastQuestion() => 
-        Data.Config.Mode != ModeType.LearnAndAnswer && 
-        CurrentPair == Data.Pairs.Count;
-
     protected void PressKeyToContinue(string prompt = "Press any key to continue -> ")
     {
         if(Data.Config.Layout != LayoutType.Card) return;
@@ -170,8 +168,6 @@ public abstract class BaseSession: ISession
         if(Data.Config.Layout != LayoutType.Card) return;
 
         ConsoleHelper.ClearScreen(cursorBefore);
-
-        if(IsLastQuestion()) DisplayDelimiter();
     }
 
     public string CombineWords(string[] words, bool useSetting = true)
