@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [File and name structure](#file-and-name-structure)
 - [Configuration file](#configuration-file)
+- [Files location](#files-location)
 - [Statistics](#statistics)
 - [Session Types](#session-types)
 - [Modes](#modes)
@@ -92,6 +93,13 @@ and it looks like this:
 | Layout                   | Setting it to `card` it will replace the question with the new one <br>or setting it to `list` it won't delete anything and let all the output there |
 | Mode                     | It will set the current mode, see all the modes available [here](#modes), the mode must be written in lower case |
 
+## Files location
+| Files                 | Linux                              | Windows                                               |
+|-----------------------|------------------------------------|-------------------------------------------------------|
+| Words                 | `~/.local/share/dictionary/*`      | `C:\Users\user\AppData\Local\dictionary\data\*`       |
+| Config                | `~/.config/dictionary/config.json` | `C:\Users\user\AppData\Local\dictionary\config\*`     |
+| Statistics            | `~/.cache/dictionary/*`            | `C:\Users\user\AppData\Local\dictionary\statistics\*` |
+
 ## Statistics
 | Type          | Description |
 |---------------|-------------|
@@ -113,15 +121,15 @@ and it looks like this:
 | None             | This will change nothing to the behavior of the application |
 
 ## Examples of commands
-#### Edit
+### Edit
 ![](https://s10.gifyu.com/images/edit.gif)
-#### Normal session
+### Normal session
 ![](https://s10.gifyu.com/images/none-mode.gif)
-#### Persistent mode
+### Persistent mode
 ![](https://s10.gifyu.com/images/persistent-mode.gif)
-#### Learn and answer mode
+### Learn and answer mode
 ![](https://s10.gifyu.com/images/learnandanswer-mode.gif)
-#### Status
+### Status
 This is a complete status information for 32 sessions
 
 ![](https://s10.gifyu.com/images/status_command.png)
