@@ -11,13 +11,22 @@ public class LearnAndAnswer: IMode
         {
             // Display pairs and remove them from key
             DisplayPairs(pair, session);
-            Console.WriteLine($"( Session {n} of {pairs.Count} )");
+            DisplaySessionCount(n, pairs.Count);
             session.Start(session.Data.ShufflePairs(pair));
             session.Stats.Store(session.Data);
             session.AfterSessionHook();
             Console.WriteLine();
             n++;
         }
+    }
+
+    private void DisplaySessionCount(int current, int max)
+    {
+        Console.Write("( Session ");
+        ColorWrite(current.ToString(), current != max ? ConsoleColor.DarkCyan : ConsoleColor.DarkBlue);
+        Console.Write(" of ");
+        ColorWrite(max.ToString(), ConsoleColor.DarkBlue);
+        Console.Write(" )\n");
     }
 
     private void DisplayPairs(Dictionary<string[], string[]> pairs, ISession session)
