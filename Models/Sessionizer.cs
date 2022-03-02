@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using static System.Console;
+using static ConsoleHelper;
 
 public static class Sessionizer
 {
@@ -33,12 +34,11 @@ public static class Sessionizer
                 config.CurrentFile = wordsFile;
                 config.SetFileExtension(wordsFile);
                 return Start(config);
-            case "start": 
-                return Start(config);
-            case "edit":
-                return Edit(args);
-            case "status": 
-                return Status();
+            case "start":  return Start(config);
+            case "add":    return Add();
+            case "delete": return Delete();
+            case "edit":   return Edit(args);
+            case "status": return Status();
             case "help": 
                 HelpMenu();
                 return 0;
@@ -59,6 +59,52 @@ public static class Sessionizer
         mode.Start(mainSession);
         return 0;
     }
+
+    private static int Add()
+    {
+        return 0;
+    }
+
+    private static int Delete()
+    {
+        string baseDirectory = new WordsParser().BaseDirectory;
+        string fileName = CurrentOS.GetFileName(baseDirectory, "txt") + ".txt";
+        string fullPath = Path.Join(baseDirectory, fileName);
+
+        WriteLine("Deleting: {0}", fileName);
+        Write("Are you sure? [y/n] ");
+        char key = Console.ReadKey().KeyChar;
+        Write("\n");
+        
+        if(key != 'y') return 1;
+
+        if(!DeleteFile(fullPath))
+        {
+            ColorWriteLine($"Cannot delete: {fullPath}", ConsoleColor.Red);
+            return 1;
+        }
+        ColorWriteLine("File was deleted succesfully", ConsoleColor.Green);
+        return 0;
+    }
+    private static bool DeleteFile(string fullPath)
+    {
+        if(!File.Exists(fullPath))
+        {
+            ColorWriteLine($"File: {fullPath} does not exists", ConsoleColor.Red);
+            return false;
+        }
+        try
+        {
+            File.Delete(fullPath);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return false;
+        }
+        return true;
+    }
+
     private static int Edit(string[] args)
     {
         if(args.Length < 2)
@@ -106,12 +152,14 @@ public static class Sessionizer
         WriteLine("dictionary - is a simple program to help you get better with words.\n");
         WriteLine("Usage: dictionary <options>\n");
         WriteLine("Options:");
-        WriteLine("start  - Starts a session with the current file in config.");
-        WriteLine("edit   - Opens an editor to edit either your config or words file.");
-        WriteLine("             Example: 'dictionary edit config' - To edit your config file.");
-        WriteLine("                  Or: 'dictionary edit words'  - To edit one of your words file.");
-        WriteLine("select - Select the current words file and start a session with it.");
-        WriteLine("status - Display statistics ( point / word accuracy and response time ) about your sessions.");
-        WriteLine("help   - Displays this help menu.");
+        WriteLine("start   - Starts a session with the current file in config.");
+        WriteLine("add     - Add automatically a file in file structure.");
+        WriteLine("delete  - Deletes a file.");
+        WriteLine("edit    - Opens an editor to edit either your config or words file.");
+        WriteLine("              Example: 'dictionary edit config' - To edit your config file.");
+        WriteLine("                   Or: 'dictionary edit words'  - To edit one of your words file.");
+        WriteLine("select  - Select the current words file and start a session with it.");
+        WriteLine("status  - Display statistics ( point / word accuracy and response time ) about your sessions.");
+        WriteLine("help    - Displays this help menu.");
     }
 }
