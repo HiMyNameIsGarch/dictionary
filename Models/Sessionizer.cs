@@ -60,8 +60,60 @@ public static class Sessionizer
         return 0;
     }
 
+    private static string GetExtension()
+    {
+        var types = CurrentOS.GetEnumList<FileExtension>();
+        int i = 1;
+        foreach(var type in types)
+        {
+            Console.WriteLine(i + " -> " + type.ToFormattedString());
+            i++;
+        }
+        string? key = "";
+        FileExtension extension = FileExtension.Words;
+        do
+        {
+            Write("Enter number of extension: ");
+            key = ReadLine();
+            if(!Enum.TryParse<FileExtension>(key, false, out extension))
+            {
+                continue;
+            }
+        }
+        while(string.IsNullOrWhiteSpace(key));
+        return extension.ToString().ToLower();
+    }
+
+    private static string GetFullFilePath(string extension)
+    {
+        string baseDirectory = new WordsParser().BaseDirectory;
+        string? fileName = "";
+        do
+        {
+            Write("Enter name of file: ");
+            fileName = ReadLine();
+            string fullName = fileName + "." + extension + ".txt";
+            string fullPath = Path.Join(baseDirectory, fullName);
+            if(File.Exists(fullPath))
+            {
+                fileName = "";
+                Console.WriteLine("File name {0} already exists!", fullName);
+                continue;
+            }
+            fileName = fullPath;
+        }
+        while(string.IsNullOrWhiteSpace(fileName));
+        return fileName;
+    }
+
     private static int Add()
     {
+        string extension = GetExtension();
+
+        string fullFileName = GetFullFilePath(extension);
+
+        OpenFile(fullFileName);
+
         return 0;
     }
 
@@ -86,6 +138,7 @@ public static class Sessionizer
         ColorWriteLine("File was deleted succesfully", ConsoleColor.Green);
         return 0;
     }
+
     private static bool DeleteFile(string fullPath)
     {
         if(!File.Exists(fullPath))
