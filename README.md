@@ -27,7 +27,7 @@
 ## Usage
 Try the command `dictionary help` to get the full commands.
 
-![help_menu.png](https://s10.gifyu.com/images/help_menu.png)
+![help_menu.png](https://s7.gifyu.com/images/help_menu.png)
 
 ## File and name structure
 

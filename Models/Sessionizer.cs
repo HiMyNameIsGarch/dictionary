@@ -63,7 +63,7 @@ public static class Sessionizer
     private static string GetExtension()
     {
         var types = CurrentOS.GetEnumList<FileExtension>();
-        int i = 1;
+        int i = 0;
         foreach(var type in types)
         {
             Console.WriteLine(i + " -> " + type.ToFormattedString());
@@ -75,12 +75,20 @@ public static class Sessionizer
         {
             Write("Enter number of extension: ");
             key = ReadLine();
-            if(!Enum.TryParse<FileExtension>(key, false, out extension))
+            if(!Enum.TryParse<FileExtension>(key, true, out extension))
             {
+                key = "";
+                continue;
+            }
+            int numExtension = (int)extension;
+            if(numExtension > i - 1 || numExtension < 0)
+            {
+                key = "";
                 continue;
             }
         }
         while(string.IsNullOrWhiteSpace(key));
+
         return extension.ToString().ToLower();
     }
 
@@ -97,7 +105,7 @@ public static class Sessionizer
             if(File.Exists(fullPath))
             {
                 fileName = "";
-                Console.WriteLine("File name {0} already exists!", fullName);
+                ColorWriteLine($"File name {fullName} already exists!", ConsoleColor.Red);
                 continue;
             }
             fileName = fullPath;
@@ -202,17 +210,17 @@ public static class Sessionizer
 
     private static void HelpMenu()
     {
-        WriteLine("dictionary - is a simple program to help you get better with words.\n");
+        WriteLine("dictionary - is a simple program to help you get better at words.\n");
         WriteLine("Usage: dictionary <options>\n");
         WriteLine("Options:");
         WriteLine("start   - Starts a session with the current file in config.");
-        WriteLine("add     - Add automatically a file in file structure.");
-        WriteLine("delete  - Deletes a file.");
         WriteLine("edit    - Opens an editor to edit either your config or words file.");
         WriteLine("              Example: 'dictionary edit config' - To edit your config file.");
         WriteLine("                   Or: 'dictionary edit words'  - To edit one of your words file.");
         WriteLine("select  - Select the current words file and start a session with it.");
         WriteLine("status  - Display statistics ( point / word accuracy and response time ) about your sessions.");
+        WriteLine("add     - Adds a file.");
+        WriteLine("delete  - Deletes a file.");
         WriteLine("help    - Displays this help menu.");
     }
 }
