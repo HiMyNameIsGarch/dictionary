@@ -1,5 +1,5 @@
 public enum FileExtension
 {
-    Words = 1,
-    IrregularVerbs = 2
+    Words = 0,
+    IrregularVerbs = 1
 }

@@ -9,16 +9,6 @@ public static class CurrentOS
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     }
 
-    public static string GetSeparator()
-    {
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-            return "/";
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            return "\\";
-        else 
-            return "/";
-    }
-
     public static string GetEditor()
     {
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {

@@ -22,7 +22,7 @@ public abstract class FileParser<T>
     {
         BaseDirectory = SetBaseDirectory(directory);
 
-        FilePath = $"{BaseDirectory}{CurrentOS.GetSeparator()}{fileName}";
+        FilePath = Path.Join(BaseDirectory, fileName);
 
         if(!Directory.Exists(BaseDirectory)) 
             Directory.CreateDirectory(BaseDirectory);
