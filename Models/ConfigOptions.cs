@@ -24,6 +24,14 @@ public class ConfigOptions
 
     public FileExtension FileExtension { get; private set; }
 
+    private string _questionName = "What means ";
+
+    public string QuestionName 
+    {
+        get => _questionName;
+        set { _questionName = value; }
+    }
+
     private string _currentFile = "default.words.txt";
 
     public string CurrentFile { 

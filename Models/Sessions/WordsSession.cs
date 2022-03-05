@@ -93,7 +93,7 @@ public class WordsSession : BaseSession
 
     private string GetQuestionString(string[] words)
     {
-        string question = "What means -> ";
+        string question = Data.Config.QuestionName + "-> ";
         question += CombineWords(words);
         question += ": ";
         return question;
