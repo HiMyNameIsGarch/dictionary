@@ -75,8 +75,9 @@ and it looks like this:
     "DisplayFinalStatistics": true,
     "DisplayOnPairStatistics": true,
     "DisplayAvarageStatistics": true,
-    "Layout": "card"
-    "Mode": "persistent"
+    "Layout": "card",
+    "Mode": "persistent",
+    "QuestionName": "What means "
 }
 ```
 | Option                   | Description |
@@ -92,6 +93,7 @@ and it looks like this:
 | DisplayAvarageStatistics | `Only on irregular verbs session type` <br> it will display the avarage value from all 3 values |
 | Layout                   | Setting it to `card` it will replace the question with the new one <br>or setting it to `list` it won't delete anything and let all the output there |
 | Mode                     | It will set the current mode, see all the modes available [here](#modes), the mode must be written in lower case |
+| QuestionName             | This will set the question string, change this if wanna customize your question <br> Ex: Let's say you will use this program to memorize capitals, you can set this to "What is the capital of " and it will be more logical than the default value. |
 
 ## Files location
 | Files                 | Linux                              | Windows                                               |
