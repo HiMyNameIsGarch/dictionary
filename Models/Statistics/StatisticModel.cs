@@ -7,6 +7,8 @@ public class StatisticModel
         set { _fileName = value; }
     }
 
+    public TimeSpan TimeOnSession { get; set; }
+ 
     public ModeType Mode { get; set; }
 
     public int Points { get; set; }

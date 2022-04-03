@@ -16,6 +16,8 @@ public class SessionData
             ConsoleHelper.DisableColors();
     }
 
+    public TimeSpan TimeOnSession { get; set; }
+
     public int Points { get; set; }
 
     public int TotalPairs { get; set; }

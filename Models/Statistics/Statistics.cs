@@ -35,6 +35,7 @@ public class Statistics
         model.AverageResponseTime = data.ResponseTime.AvarageNum;
         model.TimeResponses = data.ResponseTime.Values;
         model.Accuracies = data.Accuracy.Values;
+        model.TimeOnSession = data.TimeOnSession;
         return model;
     }
 
@@ -100,6 +101,7 @@ public class Statistics
     {
         WriteLine("Filename: " + lastSession.FileName);
         WriteLine("Mode: " + lastSession.Mode.ToFormattedString());
+        WriteLine("Time Spent: " + lastSession.TimeOnSession.TotalMinutes + " minutes");
 
         var timeResponses = lastSession.TimeResponses.Select(t => RoundResponseTime(t)).ToArray();
         WriteLine("\nEvolution of response time: ");

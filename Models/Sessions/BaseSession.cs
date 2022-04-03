@@ -39,6 +39,7 @@ public abstract class BaseSession: ISession
         Data.ResetWrongPairs();
         Data.TotalPairs = pairs.Count;
         CurrentPair = 0;
+        var before = DateTime.Now;
         foreach(var words in pairs)
         {
             int cursorTop = Console.CursorTop;
@@ -60,6 +61,8 @@ public abstract class BaseSession: ISession
             Data.TotalPoints += points.Item2;
             ClearScreen(cursorTop);
         }
+        var after = DateTime.Now;
+        Data.TimeOnSession = after - before;
 
         if(Data.Config.Mode != ModeType.LearnAndAnswer) DisplayDelimiter();
     }
@@ -97,6 +100,11 @@ public abstract class BaseSession: ISession
             Write("Average accuracy      -> ");
             ColorWrite(Data.Accuracy.AvarageNum.ToString(), ConsoleColor.DarkYellow);
             Write("%.\n");
+
+            Write("Time Spent            -> ");
+            var time = Math.Round(Data.TimeOnSession.TotalMinutes, 2);
+            ColorWrite(time.ToString(), ConsoleColor.DarkGreen);
+            Write(" min.\n");
         }
         Data.Points = 0;
         Data.TotalPoints = 0;
