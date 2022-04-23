@@ -27,14 +27,8 @@ public static class Sessionizer
         var config = ParseConfig();
 
         switch(args[0]) {
-            case "select":
-                string wordsFile = CurrentOS.GetFileName(new WordsParser().BaseDirectory, "txt");
-                if(string.IsNullOrEmpty(wordsFile)) return 1;
-
-                config.CurrentFile = wordsFile;
-                config.SetFileExtension(wordsFile);
-                return Start(config);
-            case "start":  return Start(config);
+            case "select": return Select(config, args);
+            case "start":  return Start(config, args);
             case "add":    return Add();
             case "delete": return Delete();
             case "edit":   return Edit(args);
@@ -49,7 +43,23 @@ public static class Sessionizer
         }
     }
 
-    private static int Start(ConfigOptions config)
+    private static int Select(ConfigOptions config, string[] args)
+    {
+        string opt = "";
+        if(args.Length > 1) opt = args[1];
+        if(!int.TryParse(opt, out int num)) num = -1;
+
+        string wordsFile = CurrentOS.GetFileName(
+                new WordsParser().BaseDirectory, 
+                "txt", num);
+        if(string.IsNullOrEmpty(wordsFile)) return 1;
+
+        config.CurrentFile = wordsFile;
+        config.SetFileExtension(wordsFile);
+        return Start(config, args);
+    }
+
+    private static int Start(ConfigOptions config, string[] args)
     {
         // Initiate the data
         SessionData data = new SessionData(config);

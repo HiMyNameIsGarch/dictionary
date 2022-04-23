@@ -34,15 +34,15 @@ public static class CurrentOS
             return "";
     }
 
-    public static string GetFileName(string path, string extension)
+    public static string GetFileName(string path, string extension, int opt = -1)
     {
-        return System.IO.Path.GetFileNameWithoutExtension(GetFullFilePath(path, extension));
+        return System.IO.Path.GetFileNameWithoutExtension(GetFullFilePath(path, extension, opt));
     }
 
-    public static string GetFullFilePath(string path, string extension)
+    public static string GetFullFilePath(string path, string extension, int opt = -1)
     {
         int currentCursor = Console.CursorTop;
-        var allFiles = GetAndDisplayFilesFrom(new DirectoryInfo(path));
+        var allFiles = GetAndDisplayFilesFrom(new DirectoryInfo(path), opt > 0);
 
         if(allFiles.Length == 1)
         {
@@ -54,7 +54,14 @@ public static class CurrentOS
             Console.WriteLine("No files found!");
             return "";
         }
-        
+        if(opt > allFiles.Length)
+        {
+            Console.WriteLine("Invalid option: {0}!", opt);
+            return "";
+        }
+        opt--;
+        if(opt > -1 && opt < allFiles.Length) return allFiles[opt];
+
         string filePath = "";
         do 
         {
@@ -71,7 +78,7 @@ public static class CurrentOS
         return filePath;
     }
 
-    private static string[] GetAndDisplayFilesFrom(DirectoryInfo di)
+    private static string[] GetAndDisplayFilesFrom(DirectoryInfo di, bool silent)
     {
         var types = GetEnumList<FileExtension>();
         ICollection<string> lFiles = new List<string>();
@@ -79,13 +86,13 @@ public static class CurrentOS
         foreach(var type in types)
         {
             string pattern = "*." + type.ToString().ToLower() + ".txt";
-            var files = di.GetFiles(pattern).OrderBy(s => s.Name).ToArray();
+            var files = di.GetFiles(pattern).OrderBy(s => s.Name).OrderBy(s => s.Name.Length).ToArray();
             // Display header
-            ConsoleHelper.ColorWriteLine(type.ToFormattedString(), ConsoleColor.Blue);
+            if(!silent) ConsoleHelper.ColorWriteLine(type.ToFormattedString(), ConsoleColor.Blue);
             // Display the list of the files
             foreach(var file in files)
             {
-                DisplayFile(file.Name, idx);
+                if(!silent) DisplayFile(file.Name, idx);
                 lFiles.Add(file.FullName);
                 idx++;
             }
