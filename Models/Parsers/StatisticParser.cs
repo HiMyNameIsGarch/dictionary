@@ -21,7 +21,7 @@ public class StatisticParser : FileParser<StatisticModel>
     public ICollection<StatisticModel> ParseFiles()
     {
         var di = new DirectoryInfo(BaseDirectory);
-        var files = di.GetFiles("*.json");
+        var files = di.GetFiles("*.json").OrderByDescending(s => s.Name).ToArray();
         ICollection<StatisticModel> stats = new List<StatisticModel>();
         if(files.Length < 1) return stats;
         foreach(var file in files)
