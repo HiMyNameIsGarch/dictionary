@@ -78,7 +78,7 @@ public static class CurrentOS
         return filePath;
     }
 
-    private static string[] GetAndDisplayFilesFrom(DirectoryInfo di, bool silent)
+    public static string[] GetAndDisplayFilesFrom(DirectoryInfo di, bool silent)
     {
         var types = GetEnumList<FileExtension>();
         ICollection<string> lFiles = new List<string>();

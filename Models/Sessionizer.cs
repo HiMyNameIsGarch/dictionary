@@ -33,14 +33,23 @@ public static class Sessionizer
             case "delete": return Delete();
             case "edit":   return Edit(args);
             case "status": return Status();
-            case "help": 
-                HelpMenu();
-                return 0;
+            case "list":   return ShowOptionList();
+            case "help":   HelpMenu(); return 0;
             default: 
                 Console.WriteLine($"Sorry but '{args[0]}' is an invalid option, check this help menu:\n");
                 HelpMenu();
                 return 1;
         }
+    }
+
+    private static int ShowOptionList()
+    {
+        var options = CurrentOS.GetAndDisplayFilesFrom(new DirectoryInfo(
+                    new WordsParser().BaseDirectory), false);
+        if(options.Length > 0) return 0;
+
+        ColorWriteLine("No files found!", ConsoleColor.Red);
+        return 1;
     }
 
     private static int Select(ConfigOptions config, string[] args)
@@ -228,6 +237,7 @@ public static class Sessionizer
         WriteLine("              Example: 'dictionary edit config' - To edit your config file.");
         WriteLine("                   Or: 'dictionary edit words'  - To edit one of your words file.");
         WriteLine("select  - Select the current words file and start a session with it.");
+        WriteLine("list    - Lists all the available files and their number.");
         WriteLine("status  - Display statistics ( point / word accuracy and response time ) about your sessions.");
         WriteLine("add     - Adds a file.");
         WriteLine("delete  - Deletes a file.");
