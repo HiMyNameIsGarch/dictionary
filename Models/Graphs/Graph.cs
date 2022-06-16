@@ -5,6 +5,7 @@ public class Graph
     private int[] _values;
     private int[] _axis;
     private bool _invertColors;
+    private int[] _initialValues;
 
     public Graph(Axis yaxis, Axis xaxis, int[] values, bool invertColors)
     {
@@ -13,6 +14,7 @@ public class Graph
         _xaxis = xaxis;
         _xaxis.ComputeValues();
         _values = values;
+        _initialValues = _values;
         _invertColors = invertColors;
         _axis = new int[_values.Length];
     }
@@ -33,6 +35,7 @@ public class Graph
     private int GetxaxisLength()
     {
         int length = 0;
+        // maybe compute this length
         for(int i = _xaxis.Max; i >= _xaxis.Min; i -= _xaxis.Rate)
         {
             length += i.Length();
@@ -45,27 +48,26 @@ public class Graph
     {
         while(Console.WindowWidth < GetxaxisLength())
         {
-            // Increase the rate
             _xaxis.Rate += _xaxis.Rate;
             _xaxis.ComputeValues();
-
-            int[] shortValues = new int[_xaxis.Values.Length];
-            _axis = new int[_xaxis.Values.Length];
-            int i = 0;
-            foreach(var v in _xaxis.Values)
-            {
-                shortValues[i] = GetValuesFrom(v, _xaxis.Rate);
-                i++;
-            }
-            _values = shortValues;
         }
+        int[] shortValues = new int[_xaxis.Values.Length];
+        _axis = new int[_xaxis.Values.Length];
+        int i = 0;
+        foreach(var v in _xaxis.Values)
+        {
+            shortValues[i] = GetValuesFrom(v, _xaxis.Rate);
+            i++;
+        }
+        _values = shortValues;
     }
+
     private int GetValuesFrom(int position, int num)
     {
         double total = 0;
         for(int i = position; i < position + num; i++)
         {
-            if(_values.Length > i - 1) total += _values[i - 1];
+            if(_initialValues.Length > i - 1) total += _initialValues[i - 1];
         }
         return (int)Math.Round(total / num);
     }
@@ -142,7 +144,7 @@ public class Graph
         for(int i = 0; i < _values.Length; i++)
         {
             // Make sure the values aren't bigger than max value on yaxis
-            _values[i] = _values[i] > _yaxis.Max ? _yaxis.Max : _values[i]; 
+            _values[i] = _values[i] > _yaxis.Max ? _yaxis.Max : _values[i];
             int valueOnGraph = _yaxis.Max - _values[i];
             valueOnGraph = (int)Math.Round((double)valueOnGraph / _yaxis.Rate);
             int startPoint = topPoint + valueOnGraph;
@@ -164,7 +166,7 @@ public class Graph
         int maxBound = _yaxis.Values.Length;
         int minBound = (int)Math.Ceiling(0.3 * maxBound);
         int middleBound = maxBound - minBound;
-        // Color 
+        // Color
         Console.ForegroundColor = GetCurrentColorFor(maxBound, minBound, middleBound, current);
         Console.Write(isFirstPoint ? "▄" : "█");
         Console.ForegroundColor = ConsoleColor.White;
@@ -178,7 +180,7 @@ public class Graph
             return ConsoleColor.Yellow;
         else if(current <= min)
             return _invertColors ? ConsoleColor.Green: ConsoleColor.Red;
-        else 
+        else
             return ConsoleColor.White;
     }
 }

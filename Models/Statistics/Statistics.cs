@@ -89,7 +89,7 @@ public class Statistics
             case '3':
                 AvaragePointsAccuracyForAllFiles(data);
                 break;
-           default: 
+           default:
                 WriteLine("Invalid Option");
                 break;
         }

@@ -32,7 +32,7 @@ public class Axis
         {
             Values = new int[0];
             return;
-        } 
+        }
 
         var num = GetValue();
         var values = new int[num];
