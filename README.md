@@ -32,17 +32,17 @@ Try the command `dictionary help` to get the full commands.
 ## File and name structure
 
 #### File Structure
-The file structure is simple, on the left you have your main word or words and 
+The file structure is simple, on the left you have your main word or words and
 on the right you have your meaning to that word and they are separated by a
 pipe `|`:
 ```
 word | meaning
 ```
-If you want to put some synonyms you can do it by adding a comma `,`: 
+If you want to put some synonyms you can do it by adding a comma `,`:
 ```
 word1, word2 | meaning
 ```
-or 
+or
 ```
 word | meaning1, meaning2
 ```
@@ -70,7 +70,7 @@ and it looks like this:
     "Over80IamCorrect": true,
     "AskMeSynonyms": true,
     "ReverseWords": true,
-    "DisplayOneRandomSynonym": true, 
+    "DisplayOneRandomSynonym": true,
     "CurrentFile": "default.words",
     "DisplayFinalStatistics": true,
     "DisplayOnPairStatistics": true,
@@ -139,11 +139,11 @@ This is a complete status information for 32 sessions
 ## How to install
 The application supports only 2 platforms `Linux` and `Windows` <br>
 If you want to install it, you can run:
-- On Linux: `dotnet publish -r linux-x64 --self-contained true --output <location>`
-- On Windows: `dotnet publish -r win-x64 --self-contained true --output <location>`
+- On Linux: `dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained false --output <location>`
+- On Windows: `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained false --output <location>`
 
 ## Report a bug
-> If you want to report a bug, please right an issue that will contain the followings: <br> 
+> If you want to report a bug, please right an issue that will contain the followings: <br>
 - Your configuration file settings
 - The pair on that the bug occured.
 
